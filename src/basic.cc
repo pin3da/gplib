@@ -1,5 +1,5 @@
 
-#include "gplib.h"
+#include "gplib.hpp"
 
 using namespace arma;
 using namespace std;
@@ -33,7 +33,7 @@ namespace gplib {
         return arma::vec(tmp);
     }
 
-    void splitIndices(const vector<bool>& predicates, vector<unsigned int>& truePart, vector<unsigned int>& falsePart) {
+    void split_indices(const vector<bool>& predicates, vector<unsigned int>& truePart, vector<unsigned int>& falsePart) {
         for (unsigned int i=0; i<predicates.size(); i++) {
             if (predicates[i]) truePart.push_back(i);
             else falsePart.push_back(i);

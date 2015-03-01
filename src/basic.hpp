@@ -21,7 +21,7 @@ namespace gplib {
     /*
      * Splits the indices (Zero indexed) on the ones where the pradicate is true and the part it is false
      */
-    void splitIndices(const std::vector<bool>& predicates, std::vector<unsigned int>& truePart, std::vector<unsigned int>& falsePart);
+    void split_indices(const std::vector<bool>& predicates, std::vector<unsigned int>& truePart, std::vector<unsigned int>& falsePart);
 
     /* Return true if all the values in the boolean vector are true. */
     bool allTrue(const std::vector<bool>& vec);

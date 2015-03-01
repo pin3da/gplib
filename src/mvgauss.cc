@@ -1,106 +1,105 @@
-#include "gplib.h"
+#include "gplib.hpp"
 
 using namespace arma;
 using namespace std;
 
 namespace gplib {
 
-    MVGauss::MVGauss() {
+    mv_gauss::mv_gauss() {
     }
 
-    MVGauss::MVGauss(const vec& mean, const mat& cov) {
+    mv_gauss::mv_gauss(const vec& mean, const mat& cov) {
         this->mean = mean;
         this->cov = cov;
         this->cov_chol = chol(cov);
     }
 
-    MVGauss::MVGauss(const MVGauss& other) {
+    mv_gauss::mv_gauss(const mv_gauss& other) {
         this->mean = other.mean;
         this->cov = other.cov;
         this->cov_chol = other.cov_chol;
     }
 
-    vec MVGauss::getMean() const {
+    vec mv_gauss::get_mean() const {
         return this->mean;
     }
 
-    void MVGauss::setMean(const vec& mean) {
+    void mv_gauss::set_mean(const vec& mean) {
         this->mean = mean;
     }
 
-    mat MVGauss::getCov() const {
+    mat mv_gauss::get_cov() const {
         return this->cov;
     }
 
-    void MVGauss::setCov(const mat& cov) {
+    void mv_gauss::set_cov(const mat& cov) {
         this->cov = cov;
         this->cov_chol = chol(cov);
     }
 
-    mat MVGauss::getCovInv() const {
+    mat mv_gauss::get_cov_inv() const {
         mat tmp = upperTriangularInverse(cov_chol);
         return tmp * tmp.t();
     }
 
-    unsigned int MVGauss::dimension() const {
+    size_t mv_gauss::dimension() const {
         return mean.n_rows;
     }
 
-    double MVGauss::log_density(const arma::vec& x) const {
+    double mv_gauss::log_density(const arma::vec& x) const {
         int D = mean.n_elem;
-        double ans = -0.5*D*log(2*pi);
+        double ans = -0.5 * D * log(2 * pi);
         //Now sum the log of the determinant of the covariance
-        for (int i=0; i<D; i++)
-            ans += -log(cov_chol(i,i));
-        mat SigmInv = getCovInv();
+        for (int i = 0; i < D; ++i)
+            ans += -log(cov_chol(i, i));
+        mat sigm_inv = get_cov_inv();
         vec diff = x - mean;
-        ans += -0.5*dot(diff, SigmInv*diff);
+        ans += -0.5 * dot(diff, sigm_inv * diff);
         return ans;
     }
 
-    double MVGauss::density(const arma::vec& x) const {
+    double mv_gauss::density(const arma::vec& x) const {
         return exp(log_density(x));
     }
 
-    mat MVGauss::sample(int nSamples) const {
-        unsigned int D = mean.n_elem;
-        mat ans = randn(nSamples,D)*cov_chol;
+    mat mv_gauss::sample(int n_samples) const {
+        size_t D = mean.n_elem;
+        mat ans = randn(n_samples, D) * cov_chol;
         ans.each_row() += mean.t();
         return ans;
     }
 
-    MVGauss MVGauss::marginalizeHidden(const vector<bool>& observed) const {
-        myassert(observed.size() == mean.n_elem);
-        vector<int> observedIds;
-        for (unsigned int i=0; i<observed.size(); i++) {
-            if (observed[i]) observedIds.push_back(i);
-        }
-        unsigned int N = observedIds.size();
+    mv_gauss mv_gauss::marginalize_hidden(const vector<bool>& observed) const {
+        // myassert(observed.size() == mean.n_elem);
+        vector<int> observed_ids;
+        for (size_t i = 0; i < observed.size(); ++i)
+            if (observed[i]) observed_ids.push_back(i);
+
+        size_t N = observed_ids.size();
         vec new_mean(N);
-        mat new_cov(N,N);
-        for (unsigned int i=0; i<N; i++) {
-            new_mean[i] = mean[observedIds[i]];
-            for (unsigned int j=0; j<N; j++) {
-                new_cov(i,j) = cov(observedIds[i],observedIds[j]);
-            }
+        mat new_cov(N, N);
+        for (size_t i = 0; i < N; ++i) {
+            new_mean[i] = mean[observed_ids[i]];
+            for (size_t j = 0; j < N; ++j)
+                new_cov(i, j) = cov(observed_ids[i], observed_ids[j]);
         }
-        return MVGauss(new_mean, new_cov);
+        return mv_gauss(new_mean, new_cov);
     }
 
-    MVGauss MVGauss::conditional(const arma::vec& observation, const vector<bool>& observed) const {
-        myassert(observation.size() == mean.n_elem);
-        myassert(observed.size() == mean.n_elem);
-        vector<unsigned int> vobsIx, vhiddenIx;
-        splitIndices(observed, vobsIx, vhiddenIx);
+    mv_gauss mv_gauss::conditional(const arma::vec& observation, const vector<bool>& observed) const {
+        // myassert(observation.size() == mean.n_elem);
+        // myassert(observed.size() == mean.n_elem);
+        vector<unsigned int> v_obs_ix, v_hidden_ix;
+        split_indices(observed, v_obs_ix, v_hidden_ix);
 
-        uvec obsIx(vobsIx), hiddenIx(vhiddenIx);
-        mat tmp = cov(hiddenIx,obsIx) * inv(cov(obsIx, obsIx));
-        vec newMean = mean(hiddenIx) + tmp*(observation(obsIx) - mean(obsIx));
-        mat newCov = cov(hiddenIx, hiddenIx) - tmp*cov(obsIx, hiddenIx);
-        return MVGauss(newMean, newCov);
+        uvec obs_ix(v_obs_ix), hidden_ix(v_hidden_ix);
+        mat tmp = cov(hidden_ix, obs_ix) * inv(cov(obs_ix, obs_ix));
+        vec new_mean = mean(hidden_ix) + tmp * (observation(obs_ix) - mean(obs_ix));
+        mat new_cov  = cov(hidden_ix, hidden_ix) - tmp * cov(obs_ix, hidden_ix);
+        return mv_gauss(new_mean, new_cov);
     }
 
-    MVGauss MVGauss::operator=(const MVGauss &other) {
+    mv_gauss mv_gauss::operator=(const mv_gauss &other) {
         if (&other != this) {
             mean = other.mean;
             cov = other.cov;
