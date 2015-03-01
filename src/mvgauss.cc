@@ -38,7 +38,7 @@ namespace gplib {
     }
 
     mat mv_gauss::get_cov_inv() const {
-        mat tmp = upperTriangularInverse(cov_chol);
+        mat tmp = upper_triangular_inverse(cov_chol);
         return tmp * tmp.t();
     }
 
@@ -86,10 +86,11 @@ namespace gplib {
         return mv_gauss(new_mean, new_cov);
     }
 
-    mv_gauss mv_gauss::conditional(const arma::vec& observation, const vector<bool>& observed) const {
+    mv_gauss mv_gauss::conditional(const arma::vec &observation, const vector<bool> &observed) const {
         // myassert(observation.size() == mean.n_elem);
         // myassert(observed.size() == mean.n_elem);
         vector<unsigned int> v_obs_ix, v_hidden_ix;
+
         split_indices(observed, v_obs_ix, v_hidden_ix);
 
         uvec obs_ix(v_obs_ix), hidden_ix(v_hidden_ix);

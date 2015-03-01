@@ -5,9 +5,9 @@
 
 #include <assert.h>
 
-#include "mvgauss.h"
-#include "basic.h"
-#include "gp.h"
-#include "kernels.h"
+#include "mvgauss.hpp"
+#include "basic.hpp"
+#include "gp.hpp"
+#include "kernels.hpp"
 
 #endif

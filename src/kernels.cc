@@ -1,4 +1,4 @@
-#include "gplib.h"
+#include "gplib.hpp"
 
 using namespace arma;
 using namespace std;

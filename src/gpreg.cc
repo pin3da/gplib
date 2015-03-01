@@ -83,7 +83,7 @@ namespace gplib {
     }
 
     void train(int maxIter) {
-      nlopt::opt mymin(LD_MMA,kernel->nparams()); 
+      nlopt::opt mymin(LD_MMA,kernel->nparams());
       mymin.set_min_objective(Implementation::trainingObj, this);
       mymin.set_xtol_rel(1e-4);
       mymin.set_maxeval(maxIter);
