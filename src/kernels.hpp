@@ -3,24 +3,24 @@
 
 namespace gplib {
   namespace kernels {
-    class squared_exponential : public kernel {
+    class SquaredExponential : public Kernel {
       private:
-        struct impementation;
-        impementation *pimpl;
+        struct Implementation;
+        Implementation *pimpl;
       public:
-        squared_exponential();
-        squared_exponential(const std::vector<double> &params);
-        ~squared_exponential();
-        arma::mat eval(const arma::mat& X, const arma::mat& Y, size_t id_out1=0, size_t id_out2=0);
-        arma::mat derivate(size_t param_id, const arma::mat& X, const arma::mat& Y,
-            size_t id_out1=0, size_t id_out2=0);
-        size_t n_params() const;
-        void set_params(const std::vector<double>& params);
-        std::vector<double> get_params() const;
-        std::vector<double> set_lowerBounds();
-        std::vector<double> get_lowerBounds() const;
-        std::vector<double> set_upperBounds();
-        std::vector<double> get_upperBounds() const;
+        SquaredExponential();
+        SquaredExponential(const std::vector<double> &params);
+        ~SquaredExponential();
+        arma::mat eval(const arma::mat& X, const arma::mat& Y, unsigned int idOut1=0, unsigned int idOut2=0);
+        arma::mat derivate(unsigned int paramId, const arma::mat& X, const arma::mat& Y,
+            unsigned int idOut1=0, unsigned int idOut2=0);
+        unsigned int nparams() const;
+        void setParams(const std::vector<double>& params);
+        std::vector<double> getParams() const;
+        std::vector<double> setLowerBounds();
+        std::vector<double> getLowerBounds() const;
+        std::vector<double> setUpperBounds();
+        std::vector<double> getUpperBounds() const;
     };
   };
 };
