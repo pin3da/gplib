@@ -1,0 +1,7 @@
+build*
+*.o
+*.so
+*~
+*.log
+*.mio
+*.out
