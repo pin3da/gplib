@@ -50,7 +50,7 @@ namespace gplib {
         int D = mean.n_elem;
         double ans = -0.5*D*log(2*pi);
         //Now sum the log of the determinant of the covariance
-        for (int i=0; i<D; i++) 
+        for (int i=0; i<D; i++)
             ans += -log(cov_chol(i,i));
         mat SigmInv = getCovInv();
         vec diff = x - mean;
@@ -93,7 +93,7 @@ namespace gplib {
         vector<unsigned int> vobsIx, vhiddenIx;
         splitIndices(observed, vobsIx, vhiddenIx);
 
-        uvec obsIx(vobsIx), hiddenIx(vhiddenIx);        
+        uvec obsIx(vobsIx), hiddenIx(vhiddenIx);
         mat tmp = cov(hiddenIx,obsIx) * inv(cov(obsIx, obsIx));
         vec newMean = mean(hiddenIx) + tmp*(observation(obsIx) - mean(obsIx));
         mat newCov = cov(hiddenIx, hiddenIx) - tmp*cov(obsIx, hiddenIx);
