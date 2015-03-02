@@ -7,11 +7,11 @@ using namespace std;
 using namespace arma;
 using namespace gplib;
 
-typedef kernels::SquaredExponential myKernel;
+typedef kernels::squared_exponential my_kernel;
 
 int main() {
 
-   myKernel cov;
+   my_kernel cov;
 
   return 0;
 }

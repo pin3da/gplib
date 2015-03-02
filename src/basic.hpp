@@ -11,20 +11,20 @@ namespace gplib {
     //definition of basic constants
     const double pi = std::acos(-1);
 
-    arma::mat upperTriangularInverse(const arma::mat& upperT);
+    arma::mat upper_triangular_inverse(const arma::mat& upper_t);
 
     /* Takes a vector of real values and a boolean vector telling which dimensions are observed
      * and returns a new vector with the observed dimensions only.
      */
-    arma::vec getObservedOnly(const arma::vec& vec, const std::vector<bool>& observed);
+    arma::vec get_observed_only(const arma::vec& vec, const std::vector<bool>& observed);
 
     /*
      * Splits the indices (Zero indexed) on the ones where the pradicate is true and the part it is false
      */
-    void splitIndices(const std::vector<bool>& predicates, std::vector<unsigned int>& truePart, std::vector<unsigned int>& falsePart);
+    void split_indices(const std::vector<bool>& predicates, std::vector<size_t>& true_part, std::vector<size_t>& false_part);
 
     /* Return true if all the values in the boolean vector are true. */
-    bool allTrue(const std::vector<bool>& vec);
+    bool all_true(const std::vector<bool>& vec);
 };
 
 #endif

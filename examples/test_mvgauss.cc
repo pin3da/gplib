@@ -15,12 +15,12 @@ int main() {
     vec mean {10,10};
     mat cov = rot*scale*rot.t();
 
-    MVGauss g(mean, cov);
+    MV_gauss g(mean, cov);
     mat samples = g.sample(30);
     cout << "samples = " << endl;
     cout << samples << endl;
 
-    mat covInv = g.getCovInv();
-    cout << "cov = " << cov << endl << "covInv = " << covInv << endl;
-    cout << "cov*covInv=" << covInv * cov << endl;
+    mat cov_inv = g.get_cov_inv();
+    cout << "cov = " << cov << endl << "covInv = " << cov_inv << endl;
+    cout << "cov*cov_inv=" << cov_inv * cov << endl;
 }
