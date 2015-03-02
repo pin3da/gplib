@@ -78,9 +78,9 @@ namespace gplib {
         size_t n = observed_ids.size();
         vec new_mean(n);
         mat new_cov(n, n);
-        for (size_t i = 0; i < N; ++i) {
+        for (size_t i = 0; i < n; ++i) {
             new_mean[i] = mean[observed_ids[i]];
-            for (size_t j = 0; j < N; ++j)
+            for (size_t j = 0; j < n; ++j)
                 new_cov(i, j) = cov(observed_ids[i], observed_ids[j]);
         }
         return mv_gauss(new_mean, new_cov);

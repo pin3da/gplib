@@ -8,7 +8,7 @@ using namespace std;
 namespace gplib {
 
   struct gp_reg::implementation {
-    shared_ptr<kernel> kernel;
+    shared_ptr<kernel_class> kernel;
     mat X; //Matrix of inputs
     vec y; //vector of outputs
     double noise;
@@ -84,17 +84,17 @@ namespace gplib {
     }
 
     void train(int max_iter) {
-      nlopt::opt my_min(LD_MMA,kernel->n_params());
-      mymin.set_min_objective(implementation::training_obj, this);
-      mymin.set_xtol_rel(1e-4);
-      mymin.set_max_eval(max_iter);
-      mymin.set_lower_bounds(kernel->get_lower_bounds());
-      mymin.set_upper_bounds(kernel->get_upper_bounds());
+      nlopt::opt my_min(nlopt::LD_MMA,kernel->n_params());
+      my_min.set_min_objective(implementation::training_obj, this);
+      my_min.set_xtol_rel(1e-4);
+      my_min.set_maxeval(max_iter);
+      my_min.set_lower_bounds(kernel->get_lower_bounds());
+      my_min.set_upper_bounds(kernel->get_upper_bounds());
 
       double error; //final value of error function (myfunction)
       vector<double> x = kernel->get_params();
-      //result r = mymin.optimize(x,error);
-      mymin.optimize(x, error);
+      //result r = my_min.optimize(x,error);
+      my_min.optimize(x, error);
       kernel->set_params(x);
     }
   };
@@ -107,11 +107,11 @@ namespace gplib {
     delete pimpl;
   }
 
-  void gp_reg::set_kernel(const std::shared_ptr<Kernel>& k) {
+  void gp_reg::set_kernel(const std::shared_ptr<kernel_class>& k) {
     pimpl->kernel = k;
   }
 
-  shared_ptr<Kernel> gp_reg::get_kernel() const {
+  shared_ptr<kernel_class> gp_reg::get_kernel() const {
     return pimpl->kernel;
   }
 

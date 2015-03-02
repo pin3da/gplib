@@ -8,9 +8,9 @@
 
 namespace gplib {
 
-    class kernel {
+    class kernel_class {
     public:
-      virtual ~kernel() = 0;
+      virtual ~kernel_class() = 0;
       virtual arma::mat eval(const arma::mat& X, const arma::mat& Y,
           size_t id_out_1=0, size_t id_out_2=0) const = 0;
       virtual arma::mat derivate(size_t param_id, const arma::mat& X,
@@ -26,13 +26,13 @@ namespace gplib {
 
     class gp_reg {
     private:
-      struct impementation;
-      impementation* pimpl;
+      struct implementation;
+      implementation* pimpl;
     public:
       gp_reg();
       ~gp_reg();
-      void set_kernel(const std::shared_ptr<kernel>& k);
-      std::shared_ptr<kernel> get_kernel() const;
+      void set_kernel(const std::shared_ptr<kernel_class>& k);
+      std::shared_ptr<kernel_class> get_kernel() const;
       void set_training_set(const arma::mat &X, const arma::vec& y);
       void train();
       mv_gauss full_predict(const arma::mat& new_data) const;
