@@ -47,10 +47,10 @@ namespace gplib {
     }
 
     double mv_gauss::log_density(const arma::vec& x) const {
-        int D = mean.n_elem;
-        double ans = -0.5 * D * log(2 * pi);
+        int d = mean.n_elem;
+        double ans = -0.5 * d * log(2 * pi);
         //Now sum the log of the determinant of the covariance
-        for (int i = 0; i < D; ++i)
+        for (int i = 0; i < d; ++i)
             ans += -log(cov_chol(i, i));
         mat sigm_inv = get_cov_inv();
         vec diff = x - mean;
@@ -63,8 +63,8 @@ namespace gplib {
     }
 
     mat mv_gauss::sample(int n_samples) const {
-        size_t D = mean.n_elem;
-        mat ans = randn(n_samples, D) * cov_chol;
+        size_t d = mean.n_elem;
+        mat ans = randn(n_samples, d) * cov_chol;
         ans.each_row() += mean.t();
         return ans;
     }
@@ -75,9 +75,9 @@ namespace gplib {
         for (size_t i = 0; i < observed.size(); ++i)
             if (observed[i]) observed_ids.push_back(i);
 
-        size_t N = observed_ids.size();
-        vec new_mean(N);
-        mat new_cov(N, N);
+        size_t n = observed_ids.size();
+        vec new_mean(n);
+        mat new_cov(n, n);
         for (size_t i = 0; i < N; ++i) {
             new_mean[i] = mean[observed_ids[i]];
             for (size_t j = 0; j < N; ++j)

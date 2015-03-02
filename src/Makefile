@@ -4,7 +4,7 @@ VERSION := $(VER_MAJOR).$(VER_MINOR)
 NAME := gplib
 LIBNAME := lib$(NAME)
 OBJ_FILES := basic.o mvgauss.o gpreg.o kernels.o
-HEADERS := $(shell find . -name "*.h")
+HEADERS := $(shell find . -name "*.hpp")
 INSTALL_PATH := /usr/local/lib
 INCLUDE_PATH := /usr/local/include
 INCFOLDER := $(INCLUDE_PATH)/$(NAME)_folder
@@ -18,7 +18,7 @@ test: $(HEADERS)
 $(LIBNAME).so: $(OBJ_FILES)
 	g++ -shared -Wl,-soname,$(LIBNAME).so.$(VER_MAJOR) -o $(LIBNAME).so $(OBJ_FILES)
 
-%.o : %.cpp
+%.o : %.cc
 	g++ -c $(FLAGS) -o $@ $<
 
 install: $(LIBNAME).so

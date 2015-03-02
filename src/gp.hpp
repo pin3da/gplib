@@ -33,7 +33,7 @@ namespace gplib {
       ~gp_reg();
       void set_kernel(const std::shared_ptr<kernel>& k);
       std::shared_ptr<kernel> get_kernel() const;
-      void set_trainingSet(const arma::mat &X, const arma::vec& y);
+      void set_training_set(const arma::mat &X, const arma::vec& y);
       void train();
       mv_gauss full_predict(const arma::mat& new_data) const;
       arma::vec predict(const arma::mat& new_data) const;

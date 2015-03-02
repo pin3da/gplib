@@ -119,7 +119,6 @@ namespace gplib {
 
     size_t squared_exponential::n_params() const {
       return pimpl->params.size();
-
     }
 
     void squared_exponential::set_params(const vector<double> &params) {

@@ -11,9 +11,9 @@ namespace gplib {
         squared_exponential();
         squared_exponential(const std::vector<double> &params);
         ~squared_exponential();
-        arma::mat eval(const arma::mat& X, const arma::mat& Y, size_t id_out_1=0, size_t id_out_2=0);
+        arma::mat eval(const arma::mat& X, const arma::mat& Y, size_t id_out_1 = 0, size_t id_out_2 = 0);
         arma::mat derivate(size_t param_id, const arma::mat& X, const arma::mat& Y,
-            size_t id_out_1=0, size_t id_out_2=0);
+            size_t id_out_1 = 0, size_t id_out_2 = 0);
         size_t n_params() const;
         void setParams(const std::vector<double>& params);
         std::vector<double> get_params() const;

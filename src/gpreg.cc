@@ -18,20 +18,21 @@ namespace gplib {
       return zeros<mat>(data.n_rows, data.n_rows);
     }
 
-    mv_gauss predict(const arma::mat& newData) {
-      mat M = join_vert(X, newData);
-      int N = X.n_rows, Nval = newData.n_rows;
-      mat cov = kernel->eval(M,M) + noise*eye<mat>(N+Nval,N+Nval);
+    mv_gauss predict(const arma::mat& new_data) {
+      mat M = join_vert(X, new_data);
+      int n = X.n_rows, n_val = new_data.n_rows;
+      mat cov = kernel->eval(M, M) + noise*eye<mat>(n + n_val, n + n_val);
       vec mean = eval_mean(M);
       mv_gauss gd(mean, cov);
-      vector<bool> observed(N+Nval, false);
-      for (int i=0; i<N; i++) observed[i] = true;
+      vector<bool> observed(n + n_val, false);
+      for (int i = 0; i < n; i++)
+        observed[i] = true;
       return gd.conditional(y, observed);
     }
 
     mv_gauss marginal() {
       vec mean = eval_mean(X);
-      mat cov = kernel->eval(X,X) + noise*eye<mat>(X.n_rows,X.n_rows);
+      mat cov = kernel->eval(X,X) + noise*eye<mat>(X.n_rows, X.n_rows);
       return mv_gauss(mean, cov);
     }
 
@@ -41,10 +42,10 @@ namespace gplib {
 
     void check_grad(const vector<double>& deriv) {
       vector<double> params = kernel->get_params();
-      int N = params.size();
-      vector<double> nderiv(N);
+      int n = params.size();
+      vector<double> nderiv(n);
       double eps = 1e-6;
-      for (int i=0; i<N; i++) {
+      for (int i = 0; i < n; i++) {
         params[i] += eps;
         kernel->set_params(params);
         double t1 = log_marginal();
@@ -52,12 +53,12 @@ namespace gplib {
         params[i] -= 2*eps;
         kernel->set_params(params);
         double t2 = log_marginal();
-        nderiv[i] = (t1-t2)/(2*eps);
+        nderiv[i] = (t1 - t2) / (2 * eps);
         params[i] += eps;
         kernel->set_params(params);
       }
       cout << "Numerical\tAnalitical\tDifference\n";
-      for (int i=0; i<N; i++) {
+      for (int i = 0; i < n; i++) {
         cout << nderiv[i] << "\t" << deriv[i] << "\t" <<
          nderiv[i] - deriv[i] << endl;
       }
@@ -72,8 +73,8 @@ namespace gplib {
       mat K = pimpl->kernel->eval(pimpl->X,pimpl->X);
       mat Kinv = K.i();
       vec diff = pimpl->y;
-      mat dLLdK = -0.5*Kinv + 0.5*Kinv*diff*diff.t()*Kinv;
-      for (size_t d=0; d<grad.size(); d++) {
+      mat dLLdK = -0.5 * Kinv + 0.5 * Kinv * diff * diff.t() * Kinv;
+      for (size_t d = 0; d < grad.size(); d++) {
         mat dKdT = pimpl->kernel->derivate(d, pimpl->X, pimpl->X);
         grad[d] = trace(dLLdK * dKdT);
       }
@@ -82,18 +83,18 @@ namespace gplib {
       return ans;
     }
 
-    void train(int maxIter) {
-      nlopt::opt mymin(LD_MMA,kernel->nparams());
-      mymin.set_min_objective(Implementation::trainingObj, this);
+    void train(int max_iter) {
+      nlopt::opt my_min(LD_MMA,kernel->n_params());
+      mymin.set_min_objective(implementation::training_obj, this);
       mymin.set_xtol_rel(1e-4);
-      mymin.set_maxeval(maxIter);
-      mymin.set_lower_bounds(kernel->getLowerBounds());
-      mymin.set_upper_bounds(kernel->getUpperBounds());
+      mymin.set_max_eval(max_iter);
+      mymin.set_lower_bounds(kernel->get_lower_bounds());
+      mymin.set_upper_bounds(kernel->get_upper_bounds());
 
       double error; //final value of error function (myfunction)
-      vector<double> x = kernel->getParams();
+      vector<double> x = kernel->get_params();
       //result r = mymin.optimize(x,error);
-      mymin.optimize(x,error);
+      mymin.optimize(x, error);
       kernel->set_params(x);
     }
   };
@@ -121,12 +122,12 @@ namespace gplib {
 
   //void train();
 
-  mv_gauss gp_reg::full_predict(const arma::mat& newData) const {
-    return pimpl->predict(newData);
+  mv_gauss gp_reg::full_predict(const arma::mat& new_data) const {
+    return pimpl->predict(new_data);
   }
 
-  arma::vec gp_reg::predict(const arma::mat& newData) const {
-    mv_gauss g = pimpl->predict(newData);
+  arma::vec gp_reg::predict(const arma::mat& new_data) const {
+    mv_gauss g = pimpl->predict(new_data);
     return g.get_mean();
   }
 
