@@ -92,10 +92,10 @@ ifeq ($(CONFIG),valgrind)
 	CONFIG_FLAGS = -g -O1 -DNO_DEBUG_LOG -DNO_TRACE_LOG
 endif
 ifeq ($(CONFIG),max)
-	CONFIG_FLAGS = -O3 -funroll-loops -ffast-math -finline-functions -fomit-frame-pointer -DNDEBUG
+	CONFIG_FLAGS = -O3 -funroll-loops -ffast-math -fomit-frame-pointer -DNDEBUG
 endif
 ifneq (,$(findstring $(CONFIG),release loadtest))
-	CONFIG_FLAGS = -O3 -funroll-loops -ffast-math -finline-functions -fomit-frame-pointer -DNO_DEBUG_LOG -DNO_TRACE_LOG -DNDEBUG
+	CONFIG_FLAGS = -O3 -funroll-loops -ffast-math -fomit-frame-pointer -DNO_DEBUG_LOG -DNO_TRACE_LOG -DNDEBUG
 endif
 
 COMMON_FLAGS = -MMD -std=c++11 -pipe -Wall -fPIC \
