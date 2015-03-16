@@ -4,7 +4,7 @@ compiler:
   - clang
 before_install:
   - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-  - sudo apt-add-repository ppa:comp-phys/stable
+  - sudo apt-add-repository ppa:comp-phys/stable -y
   - sudo apt-get update -qq
 install:
   - sudo apt-get install -qq libyajl-dev libxml2-dev libxqilla-dev
