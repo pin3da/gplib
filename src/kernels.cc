@@ -106,14 +106,15 @@ namespace gplib {
 
     }
 
-    mat squared_exponential::eval(const arma::mat& X, const arma::mat& Y, size_t id_out_1, size_t id_out_2) {
-      return pimpl->eval(X, Y, id_out_1, id_out_2);
+    mat squared_exponential::eval(const arma::mat& X, const arma::mat& Y,
+        size_t id_out_1, size_t id_out_2) const {
+      return pimpl->eval(X, Y, 0, 0);
     }
 
-    mat squared_exponential::derivate(size_t param_id, const arma::mat& X, const arma::mat& Y,
-        size_t id_out_1, size_t id_out_2) {
+    mat squared_exponential::derivate(size_t param_id, const arma::mat& X,
+        const arma::mat& Y, size_t id_out_1, size_t id_out_2) const {
 
-      return pimpl->derivative(param_id, X, Y, id_out_1, id_out_2);
+      return pimpl->derivative(param_id, X, Y, 0, 0);
     }
 
     size_t squared_exponential::n_params() const {

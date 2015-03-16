@@ -11,10 +11,10 @@ namespace gplib {
     class kernel_class {
     public:
       virtual ~kernel_class() {};
-      virtual arma::mat eval(const arma::mat& X, const arma::mat& Y,
-          size_t id_out_1=0, size_t id_out_2=0) const = 0;
+      virtual arma::mat eval(const arma::mat &X, const arma::mat &Y,
+          size_t id_out_1, size_t id_out_2) const = 0;
       virtual arma::mat derivate(size_t param_id, const arma::mat& X,
-          const arma::mat& Y, size_t id_out_1=0, size_t id_out_2=0) const = 0;
+          const arma::mat& Y, size_t id_out_1, size_t id_out_2) const = 0;
       virtual size_t n_params() const = 0;
       virtual void set_params(const std::vector<double>& params) = 0;
       virtual std::vector<double> get_params() const = 0;

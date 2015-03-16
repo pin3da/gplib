@@ -21,18 +21,18 @@ namespace gplib {
     mv_gauss predict(const arma::mat& new_data) {
       mat M = join_vert(X, new_data);
       int n = X.n_rows, n_val = new_data.n_rows;
-      mat cov = kernel->eval(M, M) + noise*eye<mat>(n + n_val, n + n_val);
+      mat cov = kernel->eval(M, M, 0, 0) + noise * eye<mat>(n + n_val, n + n_val);
       vec mean = eval_mean(M);
       mv_gauss gd(mean, cov);
       vector<bool> observed(n + n_val, false);
-      for (int i = 0; i < n; i++)
+      for (int i = 0; i < n; ++i)
         observed[i] = true;
       return gd.conditional(y, observed);
     }
 
     mv_gauss marginal() {
       vec mean = eval_mean(X);
-      mat cov = kernel->eval(X,X) + noise*eye<mat>(X.n_rows, X.n_rows);
+      mat cov = kernel->eval(X, X, 0, 0) + noise * eye<mat>(X.n_rows, X.n_rows);
       return mv_gauss(mean, cov);
     }
 
@@ -70,12 +70,12 @@ namespace gplib {
       double ans = pimpl->log_marginal();
 
       vec mx = pimpl->eval_mean(pimpl->X);
-      mat K = pimpl->kernel->eval(pimpl->X,pimpl->X);
+      mat K = pimpl->kernel->eval(pimpl->X, pimpl->X, 0, 0);
       mat Kinv = K.i();
       vec diff = pimpl->y;
       mat dLLdK = -0.5 * Kinv + 0.5 * Kinv * diff * diff.t() * Kinv;
       for (size_t d = 0; d < grad.size(); d++) {
-        mat dKdT = pimpl->kernel->derivate(d, pimpl->X, pimpl->X);
+        mat dKdT = pimpl->kernel->derivate(d, pimpl->X, pimpl->X, 0, 0);
         grad[d] = trace(dLLdK * dKdT);
       }
       pimpl->check_grad(grad);
