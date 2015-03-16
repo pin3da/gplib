@@ -7,7 +7,7 @@
 # Instance values, command line user specifiable
 #
 
-CONFIG   = max
+# CONFIG   =  max
 CPPFLAGS =
 CXXFLAGS =
 LDFLAGS  =

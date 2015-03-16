@@ -2,6 +2,9 @@ language: cpp
 compiler:
   - gcc
   - clang
+env:
+  # - if [ "$CXX" = "clang++" ]; then export config ; fi
+  - if [ "$CXX" = "g++" ]; then export CONFIG="max"; fi
 before_install:
   # gcc 4.9
   - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
