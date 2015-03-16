@@ -7,7 +7,9 @@
 # Instance values, command line user specifiable
 #
 
-# CONFIG   =  max
+ifneq ($(CONFIG),travis)
+	CONFIG = max
+endif
 CPPFLAGS =
 CXXFLAGS =
 LDFLAGS  =
