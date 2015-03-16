@@ -9,8 +9,8 @@ before_install:
 install:
   - sudo apt-get install -qq libyajl-dev libxml2-dev libxqilla-dev
   - sudo apt-get install libarmadillo-dev
-  - if [ "$CXX" = "clang++" ]; then sudo apt-get install -qq libstdc++-4.9-dev; fi
-  - if [ "$CXX" = "clang++" ]; then export CXX="clang++-3.4" CC="clang3.4"; fi
+  - if [ "$CXX" = "clang++" ]; then sudo apt-get install -qq clang-3.5; fi
+  - if [ "$CXX" = "clang++" ]; then export CXX="clang++-3.5" CC="clang-3.5"; fi
   - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.9; fi
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.9" CC="gcc-4.9"; fi
   - $CXX --version
