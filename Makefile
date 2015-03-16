@@ -21,7 +21,7 @@ INCLUDEDIR = $(DESTDIR)$(PREFIX)/include
 # Tools
 #
 
-CXX      = g++
+# CXX      = g++
 LD       = $(CXX)
 AR       = ar
 
