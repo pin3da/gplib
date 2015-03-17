@@ -44,8 +44,8 @@ LIBRARY_DIR  = $(LIBRARY_NAME)
 TESTS_DIR    = tests
 
 SRC_PATH     = ./src
-LIBRARY_PATH = $(SRC_PATH)
-TESTS_PATH   = ./test
+LIBRARY_PATH = $(SRC_PATH)/$(LIBRARY_DIR)
+TESTS_PATH   = $(SRC_PATH)/$(TESTS_DIR)
 
 BUILD_PATH   = ./build/$(CONFIG)-$(CXX)
 OBJECT_PATH  = $(BUILD_PATH)/obj
@@ -113,11 +113,10 @@ CLIENT_LIBS = -L$(BUILD_PATH) \
 	-l$(LIBRARY_NAME) \
 	-lboost_program_options
 
-# TODO uncomment needed libraries
 TEST_LIBS = -L$(BUILD_PATH) \
-	-l$(LIBRARY_NAME)
+	-l$(LIBRARY_NAME) \
+	-lboost_unit_test_framework
 #	-lsodium \
-#	-lboost_unit_test_framework \
 #	-lpthread
 
 ifeq ($(CONFIG),loadtest)
