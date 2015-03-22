@@ -8,9 +8,9 @@ C++ Gaussian Process Library
 Requirements
 ------------
 
-[Armadillo](http://arma.sourceforge.net/)
-C++11 compliant compiler. (g++ >= 4.7, clang++ >= 3.5)
-(Optinal, only for test) boost test suites.
+- [Armadillo](http://arma.sourceforge.net/)
+- C++11 compliant compiler. (g++ >= 4.7, clang++ >= 3.5)
+- (Optinal, only for test) boost test suites.
 
 Example in debian-based distributions
 
