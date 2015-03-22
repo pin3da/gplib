@@ -25,7 +25,7 @@ namespace gplib {
         std::vector<double> set_upper_bounds();
         std::vector<double> get_upper_bounds() const;
     };
-  };
-};
+  }
+}
 
 #endif

@@ -5,8 +5,6 @@ using namespace std;
 
 namespace gplib {
   namespace kernels {
-
-
     struct squared_exponential::implementation {
       vector<int> triangular_numbers = {0,1,3,6,10,15,21,28,36,45,55,66,78,91,105,120,
           136,153,171,190,210,231,253,276,300,325,351,378,
@@ -92,18 +90,19 @@ namespace gplib {
           }
         }
       }
-    };
+    }; // End of implementation.
 
     squared_exponential::squared_exponential() {
-
+      pimpl = new implementation;
     }
 
-    squared_exponential::squared_exponential(const vector<double> &params) {
+    squared_exponential::squared_exponential(const vector<double> &params) :
+     squared_exponential()  {
       pimpl->set_params(params);
     }
 
     squared_exponential::~squared_exponential() {
-
+      delete pimpl;
     }
 
     mat squared_exponential::eval(const arma::mat& X, const arma::mat& Y,

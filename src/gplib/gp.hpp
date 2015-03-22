@@ -12,7 +12,8 @@ namespace gplib {
 
     class kernel_class {
     public:
-      virtual ~kernel_class() {};
+      kernel_class() {};
+      virtual ~kernel_class() = default;
       virtual arma::mat eval(const arma::mat &X, const arma::mat &Y,
           size_t id_out_1, size_t id_out_2) const = 0;
       virtual arma::mat derivate(size_t param_id, const arma::mat& X,
