@@ -54,7 +54,7 @@ Contribution to this library is welcome and it is suggested using pull requests
 in github that will then be reviewed and merged or commented on. A more specific
 contribution guideline is outlined on the zmq site (http://zeromq.org/docs:contributing)
 
-Please feel free to add yourself to the AUTHORS file in an alphanumerically
+Please feel free to add yourself to the [AUTHORS](https://github.com/pin3da/gplib/blob/master/AUTHORS) file in an alphanumerically
 sorted way before you raise the pull request.
 
 Documentation
