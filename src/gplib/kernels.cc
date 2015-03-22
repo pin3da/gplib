@@ -17,19 +17,17 @@ namespace gplib {
 
       double kernel(const vec &X, const vec &Y) {
         mat diff = X - Y;
-        mat tmp = (diff.t() * lambda * diff);
-        // myassert(tmp.size() == 1);
-        return params.back() * params.back() * exp(tmp(0,0));;
+        mat tmp = (diff.t() * diff) * -0.5 / (params[0] * params[0]);
+        return params.back() * exp(tmp(0,0));
       }
 
       mat eval(const arma::mat& X, const arma::mat& Y, size_t id_out_1, size_t id_out_2) {
         mat ans(X.n_rows, Y.n_rows);
-        for (size_t i = 0; i < X.n_cols; ++i) {
-          for (size_t j = 0; j < Y.n_cols; ++j) {
+        for (size_t i = 0; i < X.n_rows; ++i) {
+          for (size_t j = 0; j < Y.n_rows; ++j) {
             ans(i, j) = kernel(X.row(i).t(), Y.row(j).t());
           }
         }
-        //cout << "here? return eval" << endl;
         return ans;
       }
 
@@ -82,7 +80,6 @@ namespace gplib {
       void set_params(const vector<double> &params) {
         this->params = params;
         int n = params.size() - 1;
-        // myassert(binary_search(triangular_numbers.begin(), triangular_numbers.end(), n));
         int index = lower_bound(triangular_numbers.begin(), triangular_numbers.end(), n) - triangular_numbers.begin();
         lambda = mat(index, index);
         int counter = 0;
@@ -98,8 +95,8 @@ namespace gplib {
       pimpl = new implementation;
     }
 
-    squared_exponential::squared_exponential(const vector<double> &params) :
-     squared_exponential()  {
+    squared_exponential::squared_exponential(const vector<double> &params)
+      : squared_exponential() {
       pimpl->set_params(params);
     }
 
@@ -109,13 +106,13 @@ namespace gplib {
 
     mat squared_exponential::eval(const arma::mat& X, const arma::mat& Y,
         size_t id_out_1, size_t id_out_2) const {
-      return pimpl->eval(X, Y, 0, 0);
+      return pimpl->eval(X, Y, id_out_1, id_out_2);
     }
 
     mat squared_exponential::derivate(size_t param_id, const arma::mat& X,
         const arma::mat& Y, size_t id_out_1, size_t id_out_2) const {
 
-      return pimpl->derivative(param_id, X, Y, 0, 0);
+      return pimpl->derivative(param_id, X, Y, id_out_1, id_out_2);
     }
 
     size_t squared_exponential::n_params() const {
