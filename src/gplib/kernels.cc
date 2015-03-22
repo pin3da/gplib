@@ -99,7 +99,7 @@ namespace gplib {
     }
 
     squared_exponential::squared_exponential(const vector<double> &params) {
-
+      pimpl->set_params(params);
     }
 
     squared_exponential::~squared_exponential() {
