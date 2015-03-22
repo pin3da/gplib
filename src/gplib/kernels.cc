@@ -19,7 +19,7 @@ namespace gplib {
         mat diff = X - Y;
         mat tmp = (diff.t() * lambda * diff);
         // myassert(tmp.size() == 1);
-        return params.back() * params.back() * exp(tmp(0, 0));
+        return params.back() * params.back() * exp(tmp(0,0));;
       }
 
       mat eval(const arma::mat& X, const arma::mat& Y, size_t id_out_1, size_t id_out_2) {
@@ -29,6 +29,7 @@ namespace gplib {
             ans(i, j) = kernel(X.row(i).t(), Y.row(j).t());
           }
         }
+        //cout << "here? return eval" << endl;
         return ans;
       }
 
@@ -79,6 +80,7 @@ namespace gplib {
       }
 
       void set_params(const vector<double> &params) {
+        this->params = params;
         int n = params.size() - 1;
         // myassert(binary_search(triangular_numbers.begin(), triangular_numbers.end(), n));
         int index = lower_bound(triangular_numbers.begin(), triangular_numbers.end(), n) - triangular_numbers.begin();
