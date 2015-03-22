@@ -15,17 +15,20 @@ namespace gplib {
         pimpl = new implementation();
     }
 
-    mv_gauss::mv_gauss(const vec& mean, const mat& cov) {
-        pimpl = new implementation();
+    mv_gauss::mv_gauss(const vec& mean, const mat& cov) : mv_gauss() {
         pimpl->mean = mean;
         pimpl->cov = cov;
         pimpl->cov_chol = chol(cov);
     }
 
-    mv_gauss::mv_gauss(const mv_gauss& other) {
+    mv_gauss::mv_gauss(const mv_gauss& other) : mv_gauss() {
         pimpl->mean = other.pimpl->mean;
         pimpl->cov = other.pimpl->cov;
         pimpl->cov_chol = other.pimpl->cov_chol;
+    }
+
+    mv_gauss::~mv_gauss() {
+      delete pimpl;
     }
 
     vec mv_gauss::get_mean() const {

@@ -16,6 +16,9 @@ namespace gplib {
         mv_gauss();
         mv_gauss(const mv_gauss& other);
         mv_gauss(const arma::vec& mean, const arma::mat& cov);
+
+        ~mv_gauss();
+
         arma::vec get_mean() const;
         void set_mean(const arma::vec& mean);
         arma::mat get_cov() const;
