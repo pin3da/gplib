@@ -18,10 +18,10 @@ namespace gplib {
 
       ~mv_gauss();
 
-      arma::vec get_mean() const;
       void set_mean(const arma::vec& mean);
-      arma::mat get_cov() const;
       void set_cov(const arma::mat& cov);
+      arma::vec get_mean() const;
+      arma::mat get_cov() const;
       arma::mat get_cov_inv() const;
       arma::mat get_cov_chol() const;
       size_t dimension() const;
