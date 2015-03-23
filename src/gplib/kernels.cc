@@ -12,7 +12,7 @@ namespace gplib {
         double sigma  = params[0];
         double lambda = params[1];
         mat diff = X - Y;
-        mat tmp = (diff.t() * diff) * -0.5 / (lambda * lambda);
+        mat tmp = (diff.t() * diff) / (-2.0 * (lambda * lambda));
         return sigma * sigma * exp(tmp(0,0));
       }
 
@@ -39,8 +39,12 @@ namespace gplib {
           return 2.0 * sigma * exp(tmp(0, 0));
         }
 
-        mat tmp =  kernel(X, Y) * (diff.t() * diff) * lambda;
-        return tmp(0, 0);
+        if (param_id == 1) {
+          mat tmp =  (kernel(X, Y) * (diff.t() * diff)) / (lambda * lambda * lambda);
+          return tmp(0, 0);
+        }
+
+        return 0;
       }
 
       mat derivative(size_t param_id, const arma::mat& X, const arma::mat& Y,
