@@ -18,6 +18,14 @@ namespace gplib {
       return zeros<mat>(data.n_rows, data.n_rows);
     }
 
+    void set_noise(double noise){
+      this->noise = noise;
+    }
+
+    double get_noise(){
+      return noise;
+    }
+
     mv_gauss predict(const arma::mat& new_data) {
       mat M = join_vert(X, new_data);
       int n = X.n_rows, n_val = new_data.n_rows;
@@ -120,7 +128,9 @@ namespace gplib {
     pimpl->y = y;
   }
 
-  //void train();
+  void gp_reg::train(const int max_iter){
+    pimpl->train(max_iter);
+  }
 
   mv_gauss gp_reg::full_predict(const arma::mat& new_data) const {
     return pimpl->predict(new_data);
