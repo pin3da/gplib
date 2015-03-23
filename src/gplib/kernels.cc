@@ -104,11 +104,11 @@ namespace gplib {
         pimpl->upper_bounds = upper_bounds;
     }
     vector<double> squared_exponential::get_lower_bounds() const {
-        return vector<double>();
+        return pimpl->lower_bounds;
     }
 
     vector<double> squared_exponential::get_upper_bounds() const {
-        return vector<double>();
+        return pimpl->upper_bounds;
     }
   };
 };
