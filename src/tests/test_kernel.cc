@@ -10,8 +10,7 @@ const double eps = 1e-6;
 
 BOOST_AUTO_TEST_SUITE( kernels )
 
-BOOST_AUTO_TEST_CASE( eval_kernel )
-{
+BOOST_AUTO_TEST_CASE( eval_kernel ) {
   /**
    * The evaluation of kernel must be a positive, semidefinite matrix.
    * If it is not correct, cholesky decomposition will arise an error.
@@ -22,8 +21,7 @@ BOOST_AUTO_TEST_CASE( eval_kernel )
   arma::mat tmp = arma::chol(ans);
 }
 
-BOOST_AUTO_TEST_CASE( gradiend )
-{
+BOOST_AUTO_TEST_CASE( gradiend ) {
   std::vector<double> params({0.9, 1.2});
   gplib::kernels::squared_exponential test(params);
 
@@ -32,7 +30,7 @@ BOOST_AUTO_TEST_CASE( gradiend )
   arma::mat num_grad;
 
 
-  for (int i = 0; i < params.size(); i++){
+  for (int i = 0; i < params.size(); i++) {
     an_grad = test.derivate(i, X, X, 0, 0);
 
     params[i] += eps;
@@ -44,8 +42,8 @@ BOOST_AUTO_TEST_CASE( gradiend )
 
     num_grad = num_grad / (2.0 * eps);
 
-    for(int j = 0; j < num_grad.n_rows; ++j){
-      for(int k = 0; k < num_grad.n_cols; ++k){
+    for(int j = 0; j < num_grad.n_rows; ++j) {
+      for(int k = 0; k < num_grad.n_cols; ++k) {
         BOOST_CHECK_CLOSE (num_grad (j , k), an_grad (j, k), eps);
       }
     }
