@@ -19,10 +19,10 @@ namespace gplib {
             size_t id_out_1, size_t id_out_2) const;
         size_t n_params() const;
         void set_params(const std::vector<double>& params);
+        void set_lower_bounds();
+        void set_upper_bounds();
         std::vector<double> get_params() const;
-        std::vector<double> set_lower_bounds();
         std::vector<double> get_lower_bounds() const;
-        std::vector<double> set_upper_bounds();
         std::vector<double> get_upper_bounds() const;
     };
   }

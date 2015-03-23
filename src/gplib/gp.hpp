@@ -20,10 +20,10 @@ namespace gplib {
           const arma::mat& Y, size_t id_out_1, size_t id_out_2) const = 0;
       virtual size_t n_params() const = 0;
       virtual void set_params(const std::vector<double>& params) = 0;
+      virtual void set_lower_bounds() = 0;
+      virtual void set_upper_bounds() = 0;
       virtual std::vector<double> get_params() const = 0;
-      virtual std::vector<double> set_lower_bounds()  = 0;
       virtual std::vector<double> get_lower_bounds() const = 0;
-      virtual std::vector<double> set_upper_bounds()  = 0;
       virtual std::vector<double> get_upper_bounds() const = 0;
     };
 

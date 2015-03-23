@@ -57,10 +57,6 @@ namespace gplib {
         }
         return ans;
       }
-
-      void set_params(const vector<double> &params) {
-        this->params = params;
-      }
     }; // End of implementation.
 
     squared_exponential::squared_exponential() {
@@ -69,7 +65,7 @@ namespace gplib {
 
     squared_exponential::squared_exponential(const vector<double> &params)
       : squared_exponential() {
-      pimpl->set_params(params);
+      pimpl->params = params;
     }
 
     squared_exponential::~squared_exponential() {
@@ -92,22 +88,20 @@ namespace gplib {
     }
 
     void squared_exponential::set_params(const vector<double> &params) {
-      return pimpl->set_params(params);
+      pimpl->params = params;
+    }
+
+    void squared_exponential::set_lower_bounds() {
+    }
+
+    void squared_exponential::set_upper_bounds() {
     }
 
     vector<double> squared_exponential::get_params() const {
       return pimpl->params;
     }
 
-    vector<double> squared_exponential::set_lower_bounds() {
-        return vector<double>();
-    }
-
     vector<double> squared_exponential::get_lower_bounds() const {
-        return vector<double>();
-    }
-
-    vector<double> squared_exponential::set_upper_bounds() {
         return vector<double>();
     }
 
