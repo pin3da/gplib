@@ -1,4 +1,4 @@
-#include <gplib>
+#include "gplib/gplib.hpp"
 #include <iostream>
 #include <armadillo>
 #include <cmath>
@@ -14,9 +14,10 @@ int main() {
     scale << 16 << 0 << endr << 0 << 4 << endr;
     vec mean {10,10};
     mat cov = rot*scale*rot.t();
-
-    MV_gauss g(mean, cov);
+    mv_gauss g(mean, cov);
+    cout<<"2"<<endl;
     mat samples = g.sample(30);
+    cout<<"3"<<endl;
     cout << "samples = " << endl;
     cout << samples << endl;
 
