@@ -69,6 +69,7 @@ To build the documentation with doxygen use
 And the resulting html or latex docs will be in the docs/html or docs/latex directories.
 
 An online version of this documentation brought to you by [gh-pages](http://pin3da.github.io/gplib/)
+
 *Disclaimer : This version may be outdated*
 
 Licensing
