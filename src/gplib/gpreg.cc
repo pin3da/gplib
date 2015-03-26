@@ -15,8 +15,10 @@ namespace gplib {
 
     vec eval_mean(const arma::mat& data) {
       // For the moment just use the zero mean
-      return zeros<mat>(data.n_rows, data.n_rows);
+      return zeros<vec>(data.n_rows);
     }
+
+
 
     mv_gauss predict(const arma::mat& new_data) {
       mat M = join_vert(X, new_data);
@@ -69,7 +71,7 @@ namespace gplib {
       pimpl->kernel->set_params(theta);
       double ans = pimpl->log_marginal();
 
-      vec mx = pimpl->eval_mean(pimpl->X);
+      /*vec mx = pimpl->eval_mean(pimpl->X);
       mat K = pimpl->kernel->eval(pimpl->X, pimpl->X, 0, 0);
       mat Kinv = K.i();
       vec diff = pimpl->y;
@@ -78,23 +80,26 @@ namespace gplib {
         mat dKdT = pimpl->kernel->derivate(d, pimpl->X, pimpl->X, 0, 0);
         grad[d] = trace(dLLdK * dKdT);
       }
-      pimpl->check_grad(grad);
+      pimpl->check_grad(grad);*/
 
       return ans;
     }
 
     void train(int max_iter) {
-      nlopt::opt my_min(nlopt::LD_MMA,kernel->n_params());
+      nlopt::opt my_min(nlopt::LD_MMA, kernel->n_params());
       my_min.set_min_objective(implementation::training_obj, this);
       my_min.set_xtol_rel(1e-4);
       my_min.set_maxeval(max_iter);
+
       my_min.set_lower_bounds(kernel->get_lower_bounds());
       my_min.set_upper_bounds(kernel->get_upper_bounds());
 
       double error; //final value of error function (myfunction)
       vector<double> x = kernel->get_params();
       //result r = my_min.optimize(x,error);
+
       my_min.optimize(x, error);
+
       kernel->set_params(x);
     }
   };
@@ -120,7 +125,9 @@ namespace gplib {
     pimpl->y = y;
   }
 
-  //void train();
+  void gp_reg::train(const int max_iter){
+    pimpl->train(max_iter);
+  }
 
   mv_gauss gp_reg::full_predict(const arma::mat& new_data) const {
     return pimpl->predict(new_data);
@@ -131,4 +138,11 @@ namespace gplib {
     return g.get_mean();
   }
 
+  void gp_reg::set_noise(double noise){
+    pimpl->noise = noise;
+  }
+
+  double gp_reg::get_noise(){
+    return pimpl->noise;
+  }
 };

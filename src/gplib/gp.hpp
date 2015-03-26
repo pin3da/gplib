@@ -16,12 +16,12 @@ namespace gplib {
       virtual ~kernel_class() = default;
       virtual arma::mat eval(const arma::mat &X, const arma::mat &Y,
           size_t id_out_1, size_t id_out_2) const = 0;
-      virtual arma::mat derivate(size_t param_id, const arma::mat& X,
-          const arma::mat& Y, size_t id_out_1, size_t id_out_2) const = 0;
+      virtual arma::mat derivate(size_t param_id, const arma::mat &X,
+          const arma::mat &Y, size_t id_out_1, size_t id_out_2) const = 0;
       virtual size_t n_params() const = 0;
-      virtual void set_params(const std::vector<double>& params) = 0;
-      virtual void set_lower_bounds() = 0;
-      virtual void set_upper_bounds() = 0;
+      virtual void set_params(const std::vector<double> &params) = 0;
+      virtual void set_lower_bounds(const std::vector<double> &lower_bounds) = 0;
+      virtual void set_upper_bounds(const std::vector<double> &params) = 0;
       virtual std::vector<double> get_params() const = 0;
       virtual std::vector<double> get_lower_bounds() const = 0;
       virtual std::vector<double> get_upper_bounds() const = 0;
@@ -34,12 +34,14 @@ namespace gplib {
     public:
       gp_reg();
       ~gp_reg();
-      void set_kernel(const std::shared_ptr<kernel_class>& k);
+      void set_kernel(const std::shared_ptr<kernel_class> &k);
       std::shared_ptr<kernel_class> get_kernel() const;
-      void set_training_set(const arma::mat &X, const arma::vec& y);
-      void train();
-      mv_gauss full_predict(const arma::mat& new_data) const;
-      arma::vec predict(const arma::mat& new_data) const;
+      void set_training_set(const arma::mat &X, const arma::vec &y);
+      void train(int max_iter);
+      void set_noise(double noise);
+      double get_noise();
+      mv_gauss full_predict(const arma::mat &new_data) const;
+      arma::vec predict(const arma::mat &new_data) const;
     };
 };
 

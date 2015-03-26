@@ -7,7 +7,8 @@ namespace gplib {
   namespace kernels {
     struct squared_exponential::implementation {
       vector<double> params;
-
+      vector<double> lower_bounds;
+      vector<double> upper_bounds;
       double kernel(const vec &X, const vec &Y) {
         double sigma  = params[0];
         double lambda = params[1];
@@ -91,22 +92,23 @@ namespace gplib {
       pimpl->params = params;
     }
 
-    void squared_exponential::set_lower_bounds() {
-    }
-
-    void squared_exponential::set_upper_bounds() {
-    }
-
     vector<double> squared_exponential::get_params() const {
       return pimpl->params;
     }
 
+    void squared_exponential::set_lower_bounds(const vector<double> &lower_bounds) {
+        pimpl->lower_bounds = lower_bounds;
+    }
+
+    void squared_exponential::set_upper_bounds(const vector<double> &upper_bounds) {
+        pimpl->upper_bounds = upper_bounds;
+    }
     vector<double> squared_exponential::get_lower_bounds() const {
-        return vector<double>();
+        return pimpl->lower_bounds;
     }
 
     vector<double> squared_exponential::get_upper_bounds() const {
-        return vector<double>();
+        return pimpl->upper_bounds;
     }
   };
 };

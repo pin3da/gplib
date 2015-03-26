@@ -79,21 +79,21 @@ namespace gplib {
     delete pimpl;
   }
 
-  vec mv_gauss::get_mean() const {
-    return pimpl->mean;
-  }
-
   void mv_gauss::set_mean(const vec& mean) {
     pimpl->mean = mean;
-  }
-
-  mat mv_gauss::get_cov() const {
-    return pimpl->cov;
   }
 
   void mv_gauss::set_cov(const mat& cov) {
     pimpl->cov = cov;
     pimpl->cov_chol = chol(cov);
+  }
+
+  vec mv_gauss::get_mean() const {
+    return pimpl->mean;
+  }
+
+  mat mv_gauss::get_cov() const {
+    return pimpl->cov;
   }
 
   mat mv_gauss::get_cov_chol() const {
@@ -140,4 +140,3 @@ namespace gplib {
   }
 
 };
-
