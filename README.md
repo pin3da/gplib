@@ -19,7 +19,7 @@ Example in debian-based distributions
 
 
 Note: Install Armadillo from the source code, for a more updated
-version. (link)[http://arma.sourceforge.net/download.html]
+version. [link](http://arma.sourceforge.net/download.html)
 
 Installation
 ------------
@@ -52,7 +52,7 @@ Contributing
 
 Contribution to this library is welcome and it is suggested using pull requests
 in github that will then be reviewed and merged or commented on. A more specific
-contribution guideline is outlined on the zmq site (http://zeromq.org/docs:contributing)
+contribution guideline is outlined on the [zmq site](http://zeromq.org/docs:contributing)
 
 Please feel free to add yourself to the [AUTHORS](https://github.com/pin3da/gplib/blob/master/AUTHORS) file in an alphanumerically
 sorted way before you raise the pull request.
@@ -64,7 +64,7 @@ Most of the code is now commented with doxygen style tags, and a basic configura
 
 To build the documentation with doxygen use
 
-  doxygen
+    doxygen
 
 And the resulting html or latex docs will be in the docs/html or docs/latex directories.
 
@@ -75,8 +75,7 @@ An online version of this documentation brought to you by [gh-pages](http://pin3
 Licensing
 =========
 
-Both the library and the associated command line client are released under the
-MPLv2 license.
+The library is released under the MPLv2 license.
 
 Please see LICENSE for full details.
 
