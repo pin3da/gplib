@@ -8,10 +8,10 @@ C++ Gaussian Process Library
 Requirements/Dependencies
 ------------
 
-- [Armadillo](http://arma.sourceforge.net/)
-- C++11 compliant compiler. (g++ >= 4.7, clang++ >= 3.5)
-- (Optinal, only for test) boost test suites.
-- NLOpt Optimization library.
+- [Armadillo](http://arma.sourceforge.net/).
+- C++11 compliant compiler. (g++ >= 4.7, clang++ >= 3.5).
+- (Optinal, only for test) [Boost test suites](http://www.boost.org/doc/libs/1_57_0/libs/test/doc/html/index.html).
+- [NLOpt Optimization library](http://ab-initio.mit.edu/wiki/index.php/NLopt).
 
 Example in debian-based distributions
 
