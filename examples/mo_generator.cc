@@ -30,6 +30,5 @@ int main() {
   x.save("x.mio", raw_ascii);
   y.save("y.mio", raw_ascii);
 
-
   return 0;
 }
