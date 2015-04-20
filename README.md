@@ -5,17 +5,18 @@ Build status : [![Build Status](https://travis-ci.org/pin3da/gplib.svg?branch=ma
 
 C++ Gaussian Process Library
 
-Requirements
+Requirements/Dependencies
 ------------
 
-- [Armadillo](http://arma.sourceforge.net/)
-- C++11 compliant compiler. (g++ >= 4.7, clang++ >= 3.5)
-- (Optinal, only for test) boost test suites.
+- [Armadillo](http://arma.sourceforge.net/).
+- C++11 compliant compiler. (g++ >= 4.7, clang++ >= 3.5).
+- (Optinal, only for test) [Boost test suites](http://www.boost.org/doc/libs/1_57_0/libs/test/doc/html/index.html).
+- [NLOpt Optimization library](http://ab-initio.mit.edu/wiki/index.php/NLopt).
 
 Example in debian-based distributions
 
     $apt_pref update
-    $apt_pref install libarmadillo-dev g++ libboost-test-dev
+    $apt_pref install libarmadillo-dev g++ libboost-test-dev libnlopt-dev
 
 
 Note: Install Armadillo from the source code, for a more updated
