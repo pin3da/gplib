@@ -43,6 +43,12 @@ namespace gplib {
       mv_gauss full_predict(const arma::mat &new_data) const;
       arma::vec predict(const arma::mat &new_data) const;
     };
+
+    class gp_reg_multi {
+    private:
+      struct implementation;
+      implementation* pimpl;
+    };
 };
 
 #endif
