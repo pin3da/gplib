@@ -6,14 +6,6 @@ using namespace std;
 namespace gplib {
   namespace kernels {
     struct squared_exponential::implementation {
-      /**
-       * \brief squared exponential kernel with noise inference
-       *
-       * This kernel is defined as sig ^ 2 * exp(- ((x - xp) * (x - xp)')/ 2 * l) + sig_noise ^ 2 * I
-       *
-       * @param params : vector of hyperparameters 0 : sig, 1 : l (length scale), 2 : sig_noise.
-       * */
-
       vector<double> params;
       vector<double> lower_bounds;
       vector<double> upper_bounds;

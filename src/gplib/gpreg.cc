@@ -17,12 +17,10 @@ namespace gplib {
       return zeros<vec>(data.n_rows);
     }
 
-
-
     mv_gauss predict(const arma::mat& new_data) {
       mat M = join_vert(X, new_data);
       int n = X.n_rows, n_val = new_data.n_rows;
-      mat cov = kernel->eval(M, M, 0, 0); // + noise * eye<mat>(n + n_val, n + n_val);
+      mat cov = kernel->eval(M, M, 0, 0);
       vec mean = eval_mean(M);
       mv_gauss gd(mean, cov);
       vector<bool> observed(n + n_val, false);
@@ -33,7 +31,7 @@ namespace gplib {
 
     mv_gauss marginal() {
       vec mean = eval_mean(X);
-      mat cov = kernel->eval(X, X, 0, 0);// + noise * eye<mat>(X.n_rows, X.n_rows);
+      mat cov = kernel->eval(X, X, 0, 0);
       return mv_gauss(mean, cov);
     }
 
@@ -94,10 +92,7 @@ namespace gplib {
 
       double error; //final value of error function (myfunction)
       vector<double> x = kernel->get_params();
-      //result r = my_min.optimize(x,error);
-
       my_min.optimize(x, error);
-
       kernel->set_params(x);
     }
   };
@@ -135,13 +130,5 @@ namespace gplib {
     mv_gauss g = pimpl->predict(new_data);
     return g.get_mean();
   }
-
-  /* void gp_reg::set_noise(double noise){
-    pimpl->noise = noise;
-  }
-
-  double gp_reg::get_noise(){
-    return pimpl->noise;
-  }*/
 };
 
