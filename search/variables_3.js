@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['mean',['mean',['../structgplib_1_1mv__gauss_1_1implementation.html#a600c8163d58f449a7f3dfe608ef1f82e',1,'gplib::mv_gauss::implementation']]]
+  ['lower_5fbounds',['lower_bounds',['../structgplib_1_1kernels_1_1squared__exponential_1_1implementation.html#a0ca57e3cd7b06049dab192076b6d21df',1,'gplib::kernels::squared_exponential::implementation']]]
 ];

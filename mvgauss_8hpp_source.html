@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.8"/>
-<title>gplib: src/gplib/mvgauss.hpp Source File</title>
+<title>zmqpp: src/gplib/mvgauss.hpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,10 +22,10 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">gplib
-   &#160;<span id="projectnumber">0.0.1</span>
+   <div id="projectname">zmqpp
+   &#160;<span id="projectnumber">4.1.1</span>
    </div>
-   <div id="projectbrief">C++ gaussian process libray</div>
+   <div id="projectbrief">C++ bindings for 0mq</div>
   </td>
  </tr>
  </tbody>
@@ -110,10 +110,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;      <a class="code" href="classgplib_1_1mv__gauss.html#acd01f84711eb573023bfd39f642ceac9">~mv_gauss</a>();</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;      arma::vec <a class="code" href="classgplib_1_1mv__gauss.html#ac83f5d3b9c93bebd5b0ba639c627cc66">get_mean</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;      <span class="keywordtype">void</span> <a class="code" href="classgplib_1_1mv__gauss.html#ae429810e0b508d0efacdba4516280bcf">set_mean</a>(<span class="keyword">const</span> arma::vec&amp; mean);</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;      arma::mat <a class="code" href="classgplib_1_1mv__gauss.html#a5ac66f5f061bebe891d9f4bf401526c6">get_cov</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;      <span class="keywordtype">void</span> <a class="code" href="classgplib_1_1mv__gauss.html#ade1570ec77aee22257eac92af996fa7b">set_cov</a>(<span class="keyword">const</span> arma::mat&amp; cov);</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;      <span class="keywordtype">void</span> <a class="code" href="classgplib_1_1mv__gauss.html#ae429810e0b508d0efacdba4516280bcf">set_mean</a>(<span class="keyword">const</span> arma::vec&amp; mean);</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;      <span class="keywordtype">void</span> <a class="code" href="classgplib_1_1mv__gauss.html#ade1570ec77aee22257eac92af996fa7b">set_cov</a>(<span class="keyword">const</span> arma::mat&amp; cov);</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;      arma::vec <a class="code" href="classgplib_1_1mv__gauss.html#ac83f5d3b9c93bebd5b0ba639c627cc66">get_mean</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;      arma::mat <a class="code" href="classgplib_1_1mv__gauss.html#a5ac66f5f061bebe891d9f4bf401526c6">get_cov</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;      arma::mat <a class="code" href="classgplib_1_1mv__gauss.html#aaf003ab01021b42f57e26027a6df4de7">get_cov_inv</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;      arma::mat <a class="code" href="classgplib_1_1mv__gauss.html#ae71a976f688c0d3032ca4da86d85dad2">get_cov_chol</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;      <span class="keywordtype">size_t</span> <a class="code" href="classgplib_1_1mv__gauss.html#a160d3235e8f7223d254cc9390605a9b6">dimension</a>() <span class="keyword">const</span>;</div>
@@ -147,25 +147,25 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="ttc" id="classgplib_1_1mv__gauss_html_a92791bda4f6faad2518eaefa2898dfb5"><div class="ttname"><a href="classgplib_1_1mv__gauss.html#a92791bda4f6faad2518eaefa2898dfb5">gplib::mv_gauss::mv_gauss</a></div><div class="ttdeci">mv_gauss()</div><div class="ttdef"><b>Definition:</b> mvgauss.cc:62</div></div>
 <div class="ttc" id="classgplib_1_1mv__gauss_html_a63fcc775c695f40d65ed9f68ed9baf8d"><div class="ttname"><a href="classgplib_1_1mv__gauss.html#a63fcc775c695f40d65ed9f68ed9baf8d">gplib::mv_gauss::pimpl</a></div><div class="ttdeci">implementation * pimpl</div><div class="ttdef"><b>Definition:</b> mvgauss.hpp:12</div></div>
 <div class="ttc" id="classgplib_1_1mv__gauss_html_ae71a976f688c0d3032ca4da86d85dad2"><div class="ttname"><a href="classgplib_1_1mv__gauss.html#ae71a976f688c0d3032ca4da86d85dad2">gplib::mv_gauss::get_cov_chol</a></div><div class="ttdeci">arma::mat get_cov_chol() const </div><div class="ttdef"><b>Definition:</b> mvgauss.cc:99</div></div>
-<div class="ttc" id="classgplib_1_1mv__gauss_html_ade1570ec77aee22257eac92af996fa7b"><div class="ttname"><a href="classgplib_1_1mv__gauss.html#ade1570ec77aee22257eac92af996fa7b">gplib::mv_gauss::set_cov</a></div><div class="ttdeci">void set_cov(const arma::mat &amp;cov)</div><div class="ttdef"><b>Definition:</b> mvgauss.cc:94</div></div>
+<div class="ttc" id="classgplib_1_1mv__gauss_html_ade1570ec77aee22257eac92af996fa7b"><div class="ttname"><a href="classgplib_1_1mv__gauss.html#ade1570ec77aee22257eac92af996fa7b">gplib::mv_gauss::set_cov</a></div><div class="ttdeci">void set_cov(const arma::mat &amp;cov)</div><div class="ttdef"><b>Definition:</b> mvgauss.cc:86</div></div>
 <div class="ttc" id="classgplib_1_1mv__gauss_html_a5869df86f222e5fe4e0b19bb66d95dbf"><div class="ttname"><a href="classgplib_1_1mv__gauss.html#a5869df86f222e5fe4e0b19bb66d95dbf">gplib::mv_gauss::operator=</a></div><div class="ttdeci">mv_gauss operator=(const mv_gauss &amp;other)</div><div class="ttdef"><b>Definition:</b> mvgauss.cc:133</div></div>
 <div class="ttc" id="classgplib_1_1mv__gauss_html_a1a23080245e4a25afa25576b0de381bd"><div class="ttname"><a href="classgplib_1_1mv__gauss.html#a1a23080245e4a25afa25576b0de381bd">gplib::mv_gauss::density</a></div><div class="ttdeci">double density(const arma::vec &amp;x) const </div><div class="ttdef"><b>Definition:</b> mvgauss.cc:117</div></div>
 <div class="ttc" id="classgplib_1_1mv__gauss_html_a160d3235e8f7223d254cc9390605a9b6"><div class="ttname"><a href="classgplib_1_1mv__gauss.html#a160d3235e8f7223d254cc9390605a9b6">gplib::mv_gauss::dimension</a></div><div class="ttdeci">size_t dimension() const </div><div class="ttdef"><b>Definition:</b> mvgauss.cc:108</div></div>
-<div class="ttc" id="classgplib_1_1mv__gauss_html_a5ac66f5f061bebe891d9f4bf401526c6"><div class="ttname"><a href="classgplib_1_1mv__gauss.html#a5ac66f5f061bebe891d9f4bf401526c6">gplib::mv_gauss::get_cov</a></div><div class="ttdeci">arma::mat get_cov() const </div><div class="ttdef"><b>Definition:</b> mvgauss.cc:90</div></div>
+<div class="ttc" id="classgplib_1_1mv__gauss_html_a5ac66f5f061bebe891d9f4bf401526c6"><div class="ttname"><a href="classgplib_1_1mv__gauss.html#a5ac66f5f061bebe891d9f4bf401526c6">gplib::mv_gauss::get_cov</a></div><div class="ttdeci">arma::mat get_cov() const </div><div class="ttdef"><b>Definition:</b> mvgauss.cc:95</div></div>
 <div class="ttc" id="classgplib_1_1mv__gauss_html_aaf003ab01021b42f57e26027a6df4de7"><div class="ttname"><a href="classgplib_1_1mv__gauss.html#aaf003ab01021b42f57e26027a6df4de7">gplib::mv_gauss::get_cov_inv</a></div><div class="ttdeci">arma::mat get_cov_inv() const </div><div class="ttdef"><b>Definition:</b> mvgauss.cc:103</div></div>
 <div class="ttc" id="classgplib_1_1mv__gauss_html_af99931879a151edafadbe17bbf03e4ec"><div class="ttname"><a href="classgplib_1_1mv__gauss.html#af99931879a151edafadbe17bbf03e4ec">gplib::mv_gauss::sample</a></div><div class="ttdeci">arma::mat sample(int n_samples) const </div><div class="ttdef"><b>Definition:</b> mvgauss.cc:121</div></div>
 <div class="ttc" id="namespacegplib_html"><div class="ttname"><a href="namespacegplib.html">gplib</a></div><div class="ttdef"><b>Definition:</b> basic.cc:6</div></div>
-<div class="ttc" id="classgplib_1_1mv__gauss_html_ac83f5d3b9c93bebd5b0ba639c627cc66"><div class="ttname"><a href="classgplib_1_1mv__gauss.html#ac83f5d3b9c93bebd5b0ba639c627cc66">gplib::mv_gauss::get_mean</a></div><div class="ttdeci">arma::vec get_mean() const </div><div class="ttdef"><b>Definition:</b> mvgauss.cc:82</div></div>
+<div class="ttc" id="classgplib_1_1mv__gauss_html_ac83f5d3b9c93bebd5b0ba639c627cc66"><div class="ttname"><a href="classgplib_1_1mv__gauss.html#ac83f5d3b9c93bebd5b0ba639c627cc66">gplib::mv_gauss::get_mean</a></div><div class="ttdeci">arma::vec get_mean() const </div><div class="ttdef"><b>Definition:</b> mvgauss.cc:91</div></div>
 <div class="ttc" id="classgplib_1_1mv__gauss_html_a7a6d557ad2d9ce5c8cf50267e939fd12"><div class="ttname"><a href="classgplib_1_1mv__gauss.html#a7a6d557ad2d9ce5c8cf50267e939fd12">gplib::mv_gauss::log_density</a></div><div class="ttdeci">double log_density(const arma::vec &amp;x) const </div><div class="ttdef"><b>Definition:</b> mvgauss.cc:112</div></div>
 <div class="ttc" id="structgplib_1_1mv__gauss_1_1implementation_html"><div class="ttname"><a href="structgplib_1_1mv__gauss_1_1implementation.html">gplib::mv_gauss::implementation</a></div><div class="ttdef"><b>Definition:</b> mvgauss.cc:8</div></div>
 <div class="ttc" id="classgplib_1_1mv__gauss_html_a8dc4a7e7c0a4be0b9fb33d6c1de8a359"><div class="ttname"><a href="classgplib_1_1mv__gauss.html#a8dc4a7e7c0a4be0b9fb33d6c1de8a359">gplib::mv_gauss::marginalize_hidden</a></div><div class="ttdeci">mv_gauss marginalize_hidden(const std::vector&lt; bool &gt; &amp;observed) const </div><div class="ttdef"><b>Definition:</b> mvgauss.cc:125</div></div>
 <div class="ttc" id="classgplib_1_1mv__gauss_html_acd01f84711eb573023bfd39f642ceac9"><div class="ttname"><a href="classgplib_1_1mv__gauss.html#acd01f84711eb573023bfd39f642ceac9">gplib::mv_gauss::~mv_gauss</a></div><div class="ttdeci">~mv_gauss()</div><div class="ttdef"><b>Definition:</b> mvgauss.cc:78</div></div>
 <div class="ttc" id="classgplib_1_1mv__gauss_html_af7afa5ded9bfeeeab4e11e6fe3f0bd5f"><div class="ttname"><a href="classgplib_1_1mv__gauss.html#af7afa5ded9bfeeeab4e11e6fe3f0bd5f">gplib::mv_gauss::conditional</a></div><div class="ttdeci">mv_gauss conditional(const arma::vec &amp;observation, const std::vector&lt; bool &gt; &amp;observed) const </div><div class="ttdef"><b>Definition:</b> mvgauss.cc:129</div></div>
-<div class="ttc" id="classgplib_1_1mv__gauss_html_ae429810e0b508d0efacdba4516280bcf"><div class="ttname"><a href="classgplib_1_1mv__gauss.html#ae429810e0b508d0efacdba4516280bcf">gplib::mv_gauss::set_mean</a></div><div class="ttdeci">void set_mean(const arma::vec &amp;mean)</div><div class="ttdef"><b>Definition:</b> mvgauss.cc:86</div></div>
+<div class="ttc" id="classgplib_1_1mv__gauss_html_ae429810e0b508d0efacdba4516280bcf"><div class="ttname"><a href="classgplib_1_1mv__gauss.html#ae429810e0b508d0efacdba4516280bcf">gplib::mv_gauss::set_mean</a></div><div class="ttdeci">void set_mean(const arma::vec &amp;mean)</div><div class="ttdef"><b>Definition:</b> mvgauss.cc:82</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Mar 23 2015 01:19:20 for gplib by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun May 3 2015 16:07:06 for zmqpp by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

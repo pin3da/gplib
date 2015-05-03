@@ -4,4 +4,5 @@
 <area shape="rect" id="node4" href="$kernels_8cc.html" title="src/gplib/kernels.cc" alt="" coords="304,80,439,107"/>
 <area shape="rect" id="node5" href="$mvgauss_8cc.html" title="src/gplib/mvgauss.cc" alt="" coords="463,80,610,107"/>
 <area shape="rect" id="node6" href="$test__kernel_8cc.html" title="src/tests/test_kernel.cc" alt="" coords="635,80,793,107"/>
+<area shape="rect" id="node7" href="$test__mvgauss_8cc.html" title="src/tests/test_mvgauss.cc" alt="" coords="817,80,995,107"/>
 </map>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['noise',['noise',['../structgplib_1_1gp__reg_1_1implementation.html#abd320269e09c49582d96beedf98b02da',1,'gplib::gp_reg::implementation']]]
+  ['mean',['mean',['../structgplib_1_1mv__gauss_1_1implementation.html#a600c8163d58f449a7f3dfe608ef1f82e',1,'gplib::mv_gauss::implementation']]]
 ];

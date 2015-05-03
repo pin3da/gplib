@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.8"/>
-<title>gplib: gplib::kernels::squared_exponential::implementation Struct Reference</title>
+<title>zmqpp: gplib::kernels::squared_exponential::implementation Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,10 +22,10 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">gplib
-   &#160;<span id="projectnumber">0.0.1</span>
+   <div id="projectname">zmqpp
+   &#160;<span id="projectnumber">4.1.1</span>
    </div>
-   <div id="projectbrief">C++ gaussian process libray</div>
+   <div id="projectbrief">C++ bindings for 0mq</div>
   </td>
  </tr>
  </tbody>
@@ -112,13 +112,15 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a48242e954796abb2c0523f568e2b9a45"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0cfb5992612b7ca2f3d58022eaf9126e"><td class="memItemLeft" align="right" valign="top">mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgplib_1_1kernels_1_1squared__exponential_1_1implementation.html#a0cfb5992612b7ca2f3d58022eaf9126e">derivative</a> (size_t param_id, const arma::mat &amp;X, const arma::mat &amp;Y, size_t id_out_1, size_t id_out_2)</td></tr>
 <tr class="separator:a0cfb5992612b7ca2f3d58022eaf9126e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aac703b1ba632a87291f7eddd830c32ac"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgplib_1_1kernels_1_1squared__exponential_1_1implementation.html#aac703b1ba632a87291f7eddd830c32ac">set_params</a> (const vector&lt; double &gt; &amp;<a class="el" href="structgplib_1_1kernels_1_1squared__exponential_1_1implementation.html#ae0d161fb972a891f610cbd8514da7752">params</a>)</td></tr>
-<tr class="separator:aac703b1ba632a87291f7eddd830c32ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:ae0d161fb972a891f610cbd8514da7752"><td class="memItemLeft" align="right" valign="top">vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgplib_1_1kernels_1_1squared__exponential_1_1implementation.html#ae0d161fb972a891f610cbd8514da7752">params</a></td></tr>
 <tr class="separator:ae0d161fb972a891f610cbd8514da7752"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ca57e3cd7b06049dab192076b6d21df"><td class="memItemLeft" align="right" valign="top">vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgplib_1_1kernels_1_1squared__exponential_1_1implementation.html#a0ca57e3cd7b06049dab192076b6d21df">lower_bounds</a></td></tr>
+<tr class="separator:a0ca57e3cd7b06049dab192076b6d21df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12a4e04232a1401b2e08a2a317ee54aa"><td class="memItemLeft" align="right" valign="top">vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgplib_1_1kernels_1_1squared__exponential_1_1implementation.html#a12a4e04232a1401b2e08a2a317ee54aa">upper_bounds</a></td></tr>
+<tr class="separator:a12a4e04232a1401b2e08a2a317ee54aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a class="anchor" id="a0cfb5992612b7ca2f3d58022eaf9126e"></a>
@@ -305,31 +307,19 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="aac703b1ba632a87291f7eddd830c32ac"></a>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a class="anchor" id="a0ca57e3cd7b06049dab192076b6d21df"></a>
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void gplib::kernels::squared_exponential::implementation::set_params </td>
-          <td>(</td>
-          <td class="paramtype">const vector&lt; double &gt; &amp;&#160;</td>
-          <td class="paramname"><em>params</em></td><td>)</td>
-          <td></td>
+          <td class="memname">vector&lt;double&gt; gplib::kernels::squared_exponential::implementation::lower_bounds</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<h2 class="groupheader">Member Data Documentation</h2>
 <a class="anchor" id="ae0d161fb972a891f610cbd8514da7752"></a>
 <div class="memitem">
 <div class="memproto">
@@ -342,13 +332,25 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a12a4e04232a1401b2e08a2a317ee54aa"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">vector&lt;double&gt; gplib::kernels::squared_exponential::implementation::upper_bounds</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>src/gplib/<a class="el" href="kernels_8cc.html">kernels.cc</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Mar 23 2015 01:19:20 for gplib by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun May 3 2015 16:07:06 for zmqpp by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>
