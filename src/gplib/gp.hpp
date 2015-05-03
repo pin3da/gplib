@@ -38,8 +38,8 @@ namespace gplib {
       std::shared_ptr<kernel_class> get_kernel() const;
       void set_training_set(const arma::mat &X, const arma::vec &y);
       void train(int max_iter);
-      void set_noise(double noise);
-      double get_noise();
+      // void set_noise(double noise);
+      // double get_noise();
       mv_gauss full_predict(const arma::mat &new_data) const;
       arma::vec predict(const arma::mat &new_data) const;
     };

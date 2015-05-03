@@ -6,4 +6,4 @@ all: regression
 regression: regression.cc
 	$(CXX) regression.cc -o regression.mio $(FLAGS)
 clean:
-	rm -rf regression
+	rm -rf *.mio
