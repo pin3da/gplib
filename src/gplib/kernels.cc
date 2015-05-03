@@ -25,7 +25,7 @@ namespace gplib {
             ans(i, j) = kernel(X.row(i).t(), Y.row(j).t());
           }
         }
-        return ans;
+        return ans + params[2] * params[2] * eye(X.n_rows, Y.n_rows);
       }
 
       double derivative_entry(size_t param_id, const vec &X, const vec &Y,
@@ -35,28 +35,33 @@ namespace gplib {
         double lambda = params[1];
         mat diff = X - Y;
 
-        if (param_id == 0) {
+        if (param_id == 0) { // Sigma
           mat tmp = (diff.t() * diff) * -0.5 / (lambda * lambda);
           return 2.0 * sigma * exp(tmp(0, 0));
         }
 
-        if (param_id == 1) {
+        if (param_id == 1) { // lenght scale
           mat tmp =  (kernel(X, Y) * (diff.t() * diff)) / (lambda * lambda * lambda);
           return tmp(0, 0);
         }
-
         return 0;
       }
 
       mat derivative(size_t param_id, const arma::mat& X, const arma::mat& Y,
           size_t id_out_1, size_t id_out_2) {
-        mat ans(X.n_rows, Y.n_rows);
-        for (size_t i = 0; i < ans.n_rows; ++i) {
-          for (size_t j = 0; j < ans.n_cols; ++j) {
-            ans(i, j) = derivative_entry(param_id, X.row(i).t(), Y.row(j).t(), id_out_1, id_out_2);
+
+        if (param_id < 2) {
+          mat ans(X.n_rows, Y.n_rows);
+          for (size_t i = 0; i < ans.n_rows; ++i) {
+            for (size_t j = 0; j < ans.n_cols; ++j) {
+              ans(i, j) = derivative_entry(param_id, X.row(i).t(), Y.row(j).t(), id_out_1, id_out_2);
+            }
           }
+          return ans;
         }
-        return ans;
+
+        return 2.0 * params[2] * eye(X.n_rows, Y.n_rows);
+
       }
     }; // End of implementation.
 

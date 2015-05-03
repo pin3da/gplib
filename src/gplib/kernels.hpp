@@ -6,6 +6,13 @@
 namespace gplib {
   namespace kernels {
     class squared_exponential : public kernel_class {
+     /**
+      * \brief squared exponential kernel with noise inference
+      *
+      * This kernel is defined as sig ^ 2 * exp(- ((x - xp) * (x - xp)')/ 2 * l) + sig_noise ^ 2 * I
+      *
+      * @param params : vector of hyperparameters 0 : sig, 1 : l (length scale), 2 : sig_noise.
+      * */
       private:
         struct implementation;
         implementation *pimpl;

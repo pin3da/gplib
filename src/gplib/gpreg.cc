@@ -1,4 +1,3 @@
-
 #include "gplib.hpp"
 #include <nlopt.hpp>
 
@@ -11,19 +10,17 @@ namespace gplib {
     shared_ptr<kernel_class> kernel;
     mat X; //Matrix of inputs
     vec y; //vector of outputs
-    double noise;
+    // double noise;
 
     vec eval_mean(const arma::mat& data) {
       // For the moment just use the zero mean
       return zeros<vec>(data.n_rows);
     }
 
-
-
     mv_gauss predict(const arma::mat& new_data) {
       mat M = join_vert(X, new_data);
       int n = X.n_rows, n_val = new_data.n_rows;
-      mat cov = kernel->eval(M, M, 0, 0) + noise * eye<mat>(n + n_val, n + n_val);
+      mat cov = kernel->eval(M, M, 0, 0);
       vec mean = eval_mean(M);
       mv_gauss gd(mean, cov);
       vector<bool> observed(n + n_val, false);
@@ -34,7 +31,7 @@ namespace gplib {
 
     mv_gauss marginal() {
       vec mean = eval_mean(X);
-      mat cov = kernel->eval(X, X, 0, 0) + noise * eye<mat>(X.n_rows, X.n_rows);
+      mat cov = kernel->eval(X, X, 0, 0);
       return mv_gauss(mean, cov);
     }
 
@@ -52,7 +49,7 @@ namespace gplib {
         kernel->set_params(params);
         double t1 = log_marginal();
 
-        params[i] -= 2*eps;
+        params[i] -= 2 * eps;
         kernel->set_params(params);
         double t2 = log_marginal();
         nderiv[i] = (t1 - t2) / (2 * eps);
@@ -71,7 +68,7 @@ namespace gplib {
       pimpl->kernel->set_params(theta);
       double ans = pimpl->log_marginal();
 
-      /*vec mx = pimpl->eval_mean(pimpl->X);
+      vec mx = pimpl->eval_mean(pimpl->X);
       mat K = pimpl->kernel->eval(pimpl->X, pimpl->X, 0, 0);
       mat Kinv = K.i();
       vec diff = pimpl->y;
@@ -80,14 +77,13 @@ namespace gplib {
         mat dKdT = pimpl->kernel->derivate(d, pimpl->X, pimpl->X, 0, 0);
         grad[d] = trace(dLLdK * dKdT);
       }
-      pimpl->check_grad(grad);*/
-
+      // pimpl->check_grad(grad);
       return ans;
     }
 
     void train(int max_iter) {
       nlopt::opt my_min(nlopt::LD_MMA, kernel->n_params());
-      my_min.set_min_objective(implementation::training_obj, this);
+      my_min.set_max_objective(implementation::training_obj, this);
       my_min.set_xtol_rel(1e-4);
       my_min.set_maxeval(max_iter);
 
@@ -96,10 +92,7 @@ namespace gplib {
 
       double error; //final value of error function (myfunction)
       vector<double> x = kernel->get_params();
-      //result r = my_min.optimize(x,error);
-
       my_min.optimize(x, error);
-
       kernel->set_params(x);
     }
   };
@@ -137,12 +130,5 @@ namespace gplib {
     mv_gauss g = pimpl->predict(new_data);
     return g.get_mean();
   }
-
-  void gp_reg::set_noise(double noise){
-    pimpl->noise = noise;
-  }
-
-  double gp_reg::get_noise(){
-    return pimpl->noise;
-  }
 };
+
