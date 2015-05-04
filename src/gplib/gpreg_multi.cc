@@ -14,7 +14,7 @@ namespace gplib{
     mat params;
 
     vec eval_mean(vector<mat> &data){
-      unsigned long total_size;
+      unsigned long total_size = 0;
       for (unsigned int i = 0; i < data.size(); i++){
         total_size += data[i].n_rows;
       }
@@ -59,5 +59,34 @@ namespace gplib{
       mv_gauss gd(mean, cov);
       return gd.conditional(y, observed);
     }
+
   };
+
+  gp_reg_multi::gp_reg_multi(){
+    pimpl = new implementation();
+  }
+
+  gp_reg_multi::~gp_reg_multi(){
+    delete pimpl;
+  }
+
+  void gp_reg_multi::set_kernels(const vector<shared_ptr<kernel_class>> &k){
+    pimpl->kernels = k;
+  }
+
+  void gp_reg_multi::set_training_set(const vector<mat> &X, const vec & y){
+    pimpl->X = X;
+    pimpl->y = y;
+  }
+  //Temporal!!!!
+  void gp_reg_multi::set_params(const mat &params){
+    pimpl->params = params;
+  }
+
+  void gp_reg_multi::set_lf_number(const int lf_number){
+    pimpl->lf_number = lf_number;
+  }
+  mv_gauss gp_reg_multi::full_predict(const vector<mat> &new_data){
+    return pimpl->predict(new_data);
+  }
 };
