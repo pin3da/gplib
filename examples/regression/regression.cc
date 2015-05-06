@@ -32,7 +32,7 @@ int main(int argc, char **argv) {
   mv_gauss noise_dist(noise_dist_mean, noise_dist_cov);
   //Generate Data
   for (int i = 0; i < 100; i++, j += 0.5){
-    noise = noise_dist.sample(1)(0,0);
+    noise = noise_dist.sample(1)(0, 0);
     x(i, 0) = j;
     //Add noise to the sin function
     y(i) = sin(j) + noise;
@@ -47,11 +47,11 @@ int main(int argc, char **argv) {
 
   /*Creating a kernel for the GPR, in this case
   we use the squared exponential kernel that receives
-  two paramters*/
-  vector<double> kernel_params({0.5, 0.5});
+  three paramters*/
+  vector<double> kernel_params({0.1, 0.1, 0.05});
   //Set lower and upper bounds for parameters
-  vector<double> lower_bounds({0, 0});
-  vector<double> upper_bounds({5, 5});
+  vector<double> lower_bounds({0.00001, 0.00001, 0.0001});
+  vector<double> upper_bounds({5, 5, 0.1});
   /*we use a shared pointer so that the GPR class
   can handle the destruction and other management functions
   of the kernel*/
@@ -67,7 +67,7 @@ int main(int argc, char **argv) {
   //Set training set as the generated Data (with noise)
   test_reg.set_training_set(x, y);
   //Set the noise of the generated Data
-  test_reg.set_noise(0.001);
+  // test_reg.set_noise(0.1);
   //Train with a mximum of 10000 iterations
   test_reg.train(10000);
   //Take the posterior distribution for the new data

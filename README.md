@@ -71,7 +71,7 @@ And the resulting html or latex docs will be in the docs/html or docs/latex dire
 
 An online version of this documentation brought to you by [gh-pages](http://pin3da.github.io/gplib/)
 
-*Disclaimer : This version may be outdated*
+*Disclaimer : The online documentation may be outdated*
 
 Licensing
 =========

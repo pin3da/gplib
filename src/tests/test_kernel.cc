@@ -16,19 +16,18 @@ BOOST_AUTO_TEST_CASE( eval_kernel ) {
    * If it is not correct, cholesky decomposition will arise an error.
    * */
   arma::mat X = arma::randn(4, 3);
-  gplib::kernels::squared_exponential K(std::vector<double>({1.0, 2.3}));
+  gplib::kernels::squared_exponential K(std::vector<double>({1.0, 2.3, 0.1}));
   arma::mat ans = K.eval(X, X, 0, 0);
   arma::mat tmp = arma::chol(ans);
 }
 
 BOOST_AUTO_TEST_CASE( gradiend ) {
-  std::vector<double> params({0.9, 1.2});
+  std::vector<double> params({0.9, 1.2, 0.1});
   gplib::kernels::squared_exponential test(params);
 
   arma::mat X = arma::randn(3, 1);
   arma::mat an_grad;
   arma::mat num_grad;
-
 
   for (size_t i = 0; i < params.size(); ++i) {
     an_grad = test.derivate(i, X, X, 0, 0);
