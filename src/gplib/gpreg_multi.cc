@@ -13,48 +13,47 @@ namespace gplib{
     vec y;
     mat params;
 
-    vec eval_mean(vector<mat> &data){
+    vec eval_mean(vector<mat> &data) {
       unsigned long total_size = 0;
-      for (unsigned int i = 0; i < data.size(); i++){
+      for (unsigned int i = 0; i < data.size(); i++) {
         total_size += data[i].n_rows;
       }
       return zeros<vec> (total_size);
     }
 
-    mv_gauss predict(const vector<mat> &new_data){
+    mv_gauss predict(const vector<mat> &new_data) {
       //Add new data to observations
       vector<mat> M(X.size());
-      unsigned long total_cols = 0;
-      for (unsigned int i = 0; i < X.size(); i++){
+      unsigned long total_rows = 0;
+      for (unsigned int i = 0; i < X.size(); i++) {
         M[i] = join_vert (X[i], new_data[i]);
-        total_cols += M[i].n_cols;
+        total_rows += M[i].n_rows;
       }
 
-      //Compute Covariance Matrix
-      mat cov(total_cols, total_cols);
+      //Compute Covariance Matrixkernels[k]->eval(M[i], M[j], i, j))
+      mat cov(total_rows, total_rows);
       unsigned long first_row = 0, first_col = 0;
-      for (unsigned int i = 0; i < M.size(); i++){
-        for (unsigned int j = 0; j < M.size(); j++){
-          mat cov_ab = zeros<mat> (M[i].n_rows, M[j].n_cols);
+      for (unsigned int i = 0; i < M.size(); i++) {
+        for (unsigned int j = 0; j < M.size(); j++) {
+          mat cov_ab = zeros<mat> (M[i].n_rows, M[j].n_rows);
           for (unsigned int k = 0; k < lf_number; k++)
             cov_ab += params(i,j) * (kernels[k]->eval(M[i], M[j], i, j));
-          cov.submat (first_row, first_col, first_row + M[i].n_rows, first_col + M[j].n_cols) = cov_ab;
-          first_col += M[j].n_cols;
+          cov.submat (first_row, first_col, first_row + M[i].n_rows - 1, first_col + M[j].n_rows - 1) = cov_ab;
+          first_col += M[j].n_rows;
         }
         first_row += M[i].n_rows;
+        first_col = 0;
       }
-
       //Set mean
       vec mean = eval_mean(M);
       //Set alredy observed Values
       vector<bool> observed(mean.n_rows, false);
       unsigned long start = 0;
-      for (unsigned int i = 0; i < M.size(); i++){
+      for (unsigned int i = 0; i < M.size(); i++) {
         for (unsigned int j = 0; j < X[i].n_rows; j++)
           observed[start + j] = true;
         start += M[i].n_rows;
       }
-
       //Conditon Multivariate Gaussian
       mv_gauss gd(mean, cov);
       return gd.conditional(y, observed);
@@ -72,6 +71,7 @@ namespace gplib{
 
   void gp_reg_multi::set_kernels(const vector<shared_ptr<kernel_class>> &k){
     pimpl->kernels = k;
+    pimpl->lf_number = k.size();
   }
 
   void gp_reg_multi::set_training_set(const vector<mat> &X, const vec & y){
