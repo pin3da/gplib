@@ -30,7 +30,7 @@ namespace gplib{
         total_rows += M[i].n_rows;
       }
 
-      //Compute Covariance Matrixkernels[k]->eval(M[i], M[j], i, j))
+      //Compute Covariance
       mat cov(total_rows, total_rows);
       unsigned long first_row = 0, first_col = 0;
       for (unsigned int i = 0; i < M.size(); i++) {

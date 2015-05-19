@@ -25,7 +25,7 @@ int main(int argc, char **argv) {
 
   mat x(MN, 1);
   mat new_x(MN, 1);
-  vec y(MN * 3);
+  vec y(MN * 6);
   vec new_y(MN * 3);
 
   mv_gauss noise_dist(nd_mean, nd_cov);
@@ -40,12 +40,12 @@ int main(int argc, char **argv) {
     new_y(i) = sin(new_j) + noise;
     //new_y(i) = new_j + noise;
 
-    y(i + MN) = sin(j + m_pi * 0.25) + noise;
+    y(i + 2*MN) = sin(j + m_pi * 0.25) + noise;
     //y(i + MN) = j + 0.25 + noise;
     new_y(i + MN) = sin(new_j + m_pi * 0.25) + noise;
     //new_y(i + MN) = new_j + 0.25 + noise;
 
-    y(i + 2*MN) = 0.3 * sin(j) + noise;
+    y(i + 4*MN) = 0.3 * sin(j) + noise;
     //y(i + 2*MN) = 0.8 * j + noise;
     new_y(i + 2*MN) = 0.3 * sin(new_j) + noise;
     //new_y(i + 2*MN) = 0.8 * new_j + noise;
@@ -69,6 +69,7 @@ int main(int argc, char **argv) {
   sp_kernel1->set_lower_bounds(lower_bounds);
 
   vector<shared_ptr<kernel_class> > kernels;
+
   //Create Regression object
   gp_reg_multi test_reg;
 
@@ -97,7 +98,7 @@ int main(int argc, char **argv) {
   y_1.save("new_y1.mio", raw_ascii);
   //Save results from GPR
   mat pos_cov = posterior.get_cov();
-  cout << pos_cov.n_rows << endl;
+
   vec pos_mean = posterior.get_mean();
 
   vec mean1 = (pos_mean.subvec(0, MN - 1));
@@ -105,7 +106,6 @@ int main(int argc, char **argv) {
 
   vec mean2 = (pos_mean.subvec(MN, 2 * MN -1));
   mean2.save("mean2.mio", raw_ascii);
-
   vec mean3 = (pos_mean.subvec(2 * MN, 3 * MN - 1));
   mean3.save("mean3.mio", raw_ascii);
   pos_cov.save("cov.mio", raw_ascii);
