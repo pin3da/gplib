@@ -10,7 +10,7 @@ namespace gplib{
     size_t lf_number;
     vector<shared_ptr<kernel_class>> kernels;
     vector<mat> X;
-    vec y;
+    vector<vec> y;
     mat params;
 
     vec eval_mean(vector<mat> &data) {
@@ -24,9 +24,12 @@ namespace gplib{
     mv_gauss predict(const vector<mat> &new_data) {
       //Add new data to observations
       vector<mat> M(X.size());
+      vec fill_y;
       unsigned long total_rows = 0;
       for (unsigned int i = 0; i < X.size(); i++) {
         M[i] = join_vert (X[i], new_data[i]);
+        fill_y = join_cols<mat> (fill_y, y[i]);
+        fill_y = join_cols<mat> (fill_y, zeros<vec>(new_data[i].n_rows));
         total_rows += M[i].n_rows;
       }
 
@@ -56,7 +59,7 @@ namespace gplib{
       }
       //Conditon Multivariate Gaussian
       mv_gauss gd(mean, cov);
-      return gd.conditional(y, observed);
+      return gd.conditional(fill_y, observed);
     }
 
   };
@@ -74,7 +77,7 @@ namespace gplib{
     pimpl->lf_number = k.size();
   }
 
-  void gp_reg_multi::set_training_set(const vector<mat> &X, const vec & y){
+  void gp_reg_multi::set_training_set(const vector<mat> &X, const vector<vec> & y){
     pimpl->X = X;
     pimpl->y = y;
   }

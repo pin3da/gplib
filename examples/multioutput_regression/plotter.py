@@ -40,6 +40,23 @@ nY = np.loadtxt("mean1.mio")
 #sin = np.sin(x)
 pb.plot(X, Y, 'r', label='Original function')
 pb.plot(nX, nY, 'b', label='predict function')
-pb.savefig("tmp.png")
+pb.savefig("out1.png")
+pb.clf();
+
+
+Y = np.loadtxt("new_y2.mio")
+nY = np.loadtxt("mean2.mio")
+pb.plot(X, Y, 'r', label='Original function')
+pb.plot(nX, nY, 'b', label='predict function')
+pb.savefig("out2.png")
+pb.clf();
+
+Y = np.loadtxt("new_y3.mio")
+nY = np.loadtxt("mean3.mio")
+pb.plot(X, Y, 'r', label='Original function')
+pb.plot(nX, nY, 'b', label='predict function')
+pb.savefig("out3.png")
+pb.clf();
+
 
 #plotModel(nX, nY, cov)
