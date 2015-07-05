@@ -42,6 +42,18 @@ namespace gplib {
       arma::vec predict(const arma::mat &new_data) const;
     };
 
+    class multioutput_kernel_class {
+    public:
+      multioutput_kernel_class () {};
+      virtual ~multioutput_kernel_class() = default;
+      virtual arma::mat eval(const std::vector<arma::mat> &X, unsigned int lf_number) const = 0;
+      virtual arma::mat derivate() const = 0;
+      virtual void set_params(const std::vector<arma::mat> &params) = 0;
+      virtual void set_kernels(const std::vector<std::shared_ptr<kernel_class>> &kernels) = 0;
+      virtual std::vector<arma::mat> get_params() const = 0;
+      virtual std::vector<std::shared_ptr<kernel_class>> get_kernels() const = 0;
+    };
+
     class gp_reg_multi {
     private:
       struct implementation;
@@ -49,9 +61,8 @@ namespace gplib {
     public:
       gp_reg_multi();
       ~gp_reg_multi();
-      void set_kernels(const std::vector<std::shared_ptr<kernel_class>> &k);
+      void set_kernel(const std::shared_ptr<multioutput_kernel_class> &k);
       void set_training_set(const std::vector<arma::mat> &X, const std::vector<arma::vec> &y);
-      void set_params(const arma::mat &params);
       void set_lf_number(const int lf_number);
       mv_gauss full_predict(const std::vector<arma::mat> &new_data);
     };

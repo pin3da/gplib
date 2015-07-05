@@ -8,10 +8,9 @@ namespace gplib{
 
   struct gp_reg_multi::implementation{
     size_t lf_number;
-    vector<shared_ptr<kernel_class>> kernels;
+    shared_ptr<multioutput_kernel_class> kernel;
     vector<mat> X;
     vector<vec> y;
-    mat params;
 
     vec eval_mean(vector<mat> &data) {
       unsigned long total_size = 0;
@@ -34,19 +33,7 @@ namespace gplib{
       }
 
       //Compute Covariance
-      mat cov(total_rows, total_rows);
-      unsigned long first_row = 0, first_col = 0;
-      for (unsigned int i = 0; i < M.size(); i++) {
-        for (unsigned int j = 0; j < M.size(); j++) {
-          mat cov_ab = zeros<mat> (M[i].n_rows, M[j].n_rows);
-          for (unsigned int k = 0; k < lf_number; k++)
-            cov_ab += params(i,j) * (kernels[k]->eval(M[i], M[j], i, j));
-          cov.submat (first_row, first_col, first_row + M[i].n_rows - 1, first_col + M[j].n_rows - 1) = cov_ab;
-          first_col += M[j].n_rows;
-        }
-        first_row += M[i].n_rows;
-        first_col = 0;
-      }
+      mat cov = kernel -> eval(M, lf_number);
       //Set mean
       vec mean = eval_mean(M);
       //Set alredy observed Values
@@ -72,9 +59,9 @@ namespace gplib{
     delete pimpl;
   }
 
-  void gp_reg_multi::set_kernels(const vector<shared_ptr<kernel_class>> &k){
-    pimpl->kernels = k;
-    pimpl->lf_number = k.size();
+  void gp_reg_multi::set_kernel(const shared_ptr<multioutput_kernel_class> &k){
+    pimpl->kernel = k;
+    pimpl->lf_number = k->get_kernels().size();
   }
 
   void gp_reg_multi::set_training_set(const vector<mat> &X, const vector<vec> & y){
@@ -82,9 +69,6 @@ namespace gplib{
     pimpl->y = y;
   }
   //Temporal!!!!
-  void gp_reg_multi::set_params(const mat &params){
-    pimpl->params = params;
-  }
 
   void gp_reg_multi::set_lf_number(const int lf_number){
     pimpl->lf_number = lf_number;
