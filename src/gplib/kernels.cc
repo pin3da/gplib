@@ -53,7 +53,7 @@ namespace gplib {
         if (param_id < 2) {
           mat ans(X.n_rows, Y.n_rows);
           for (size_t i = 0; i < ans.n_rows; ++i) {
-            for (size_t j = 0; j < ans.n_cols; ++j) {
+            for (size_t j = 0; j < ans.n_rows; ++j) {
               ans(i, j) = derivative_entry(param_id, X.row(i).t(), Y.row(j).t(), id_out_1, id_out_2);
             }
           }
