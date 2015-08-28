@@ -20,7 +20,7 @@ BOOST_AUTO_TEST_CASE( eval_kernel ) {
    * */
   arma::mat X = arma::randn(4, 3);
   gplib::kernels::squared_exponential K(std::vector<double>({1.0, 2.3, 0.1}));
-  arma::mat ans = K.eval(X, X, 0, 0);
+  arma::mat ans = K.eval(X, X);
   arma::mat tmp = arma::chol(ans);
 
   std::cout << "\033[32m\t eval kernel passed ... \033[0m\n";
@@ -35,13 +35,13 @@ BOOST_AUTO_TEST_CASE( gradiend ) {
   arma::mat num_grad;
 
   for (size_t i = 0; i < params.size(); ++i) {
-    an_grad = test.derivate(i, X, X, 0, 0);
+    an_grad = test.derivate(i, X, X);
     params[i] += eps;
     test.set_params(params);
-    num_grad = test.eval (X, X, 0, 0);
+    num_grad = test.eval (X, X);
     params[i] -= 2.0 * eps;
     test.set_params(params);
-    num_grad -= test.eval (X, X, 0, 0);
+    num_grad -= test.eval (X, X);
 
     num_grad = num_grad / (2.0 * eps);
 
