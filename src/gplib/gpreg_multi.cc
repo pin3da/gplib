@@ -33,7 +33,7 @@ namespace gplib{
       }
 
       //Compute Covariance
-      mat cov = kernel -> eval(M, lf_number);
+      mat cov = kernel -> eval(M);
       //Set mean
       vec mean = eval_mean(M);
       //Set alredy observed Values
