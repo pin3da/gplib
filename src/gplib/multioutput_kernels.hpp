@@ -23,7 +23,7 @@ namespace gplib{
             const std::vector<arma::mat> &params);
         ~lmc_kernel();
 
-        arma::mat eval(const std::vector<arma::mat> &X, size_t lf_number) const ;
+        arma::mat eval(const std::vector<arma::mat> &X) const ;
         arma::mat derivate(size_t param_id, const std::vector<arma::mat> &X,
           const std::vector<arma::mat> &Y, size_t id_out_1, size_t id_out_2) const;
         void set_params(const std::vector<arma::mat> &params);

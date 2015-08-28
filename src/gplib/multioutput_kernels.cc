@@ -10,8 +10,9 @@ namespace gplib{
       vector<mat> A; // A * A.t() = params, where A is lower triangular.
       vector<shared_ptr<kernel_class>> kernels;
 
-      mat eval(const vector<mat> &X, size_t lf_number) {
+      mat eval(const vector<mat> &X) {
         //Comput cov mat total size;
+        size_t lf_number = A.size();
         size_t total_rows = 0;
         for (size_t i = 0; i < X.size(); ++i) {
           total_rows += X[i].n_rows;
@@ -123,8 +124,8 @@ namespace gplib{
       delete pimpl;
     }
 
-    mat lmc_kernel::eval(const vector<mat> &X, size_t lf_number) const {
-      return pimpl-> eval(X, lf_number);
+    mat lmc_kernel::eval(const vector<mat> &X) const {
+      return pimpl-> eval(X);
     }
 
     mat lmc_kernel::derivate(size_t param_id, const vector<mat> &X, const vector<mat> &Y,
