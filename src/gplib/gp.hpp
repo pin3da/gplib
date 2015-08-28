@@ -14,10 +14,9 @@ namespace gplib {
     public:
       kernel_class() {};
       virtual ~kernel_class() = default;
-      virtual arma::mat eval(const arma::mat &X, const arma::mat &Y,
-          size_t id_out_1, size_t id_out_2) const = 0;
+      virtual arma::mat eval(const arma::mat &X, const arma::mat &Y) const = 0;
       virtual arma::mat derivate(size_t param_id, const arma::mat &X,
-          const arma::mat &Y, size_t id_out_1, size_t id_out_2) const = 0;
+          const arma::mat &Y) const = 0;
       virtual size_t n_params() const = 0;
       virtual void set_params(const std::vector<double> &params) = 0;
       virtual void set_lower_bounds(const std::vector<double> &lower_bounds) = 0;
