@@ -25,7 +25,7 @@ BOOST_AUTO_TEST_CASE( mo_eval_lmc_kernel ) {
     latent_functions.push_back(kernel);
   }
   gplib::multioutput_kernels::lmc_kernel K(latent_functions, params);
-  arma::mat ans = K.eval(X, 0); // Which is the value of lf_number in this case ? ... latent_functions.size() ?
+  arma::mat ans = K.eval(X); // Which is the value of lf_number in this case ? ... latent_functions.size() ?
   arma::mat tmp = arma::chol(ans);
   std::cout << "\033[32m\t eval multioutput lmc_kernel passed ... \033[0m\n";
 }

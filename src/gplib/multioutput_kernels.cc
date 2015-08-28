@@ -25,7 +25,7 @@ namespace gplib{
           for (size_t j = 0; j < X.size(); j++) {
             mat cov_ab = zeros<mat> (X[i].n_rows, X[j].n_rows);
             for (size_t k = 0; k < lf_number; k++)
-              cov_ab += params[k](i, j) * (kernels[k]-> eval(X[i], X[j], i, j));
+              cov_ab += params[k](i, j) * (kernels[k]-> eval(X[i], X[j]));
 
             cov.submat (first_row, first_col, first_row + X[i].n_rows - 1,
                 first_col + X[j].n_rows - 1) = cov_ab;
@@ -56,12 +56,12 @@ namespace gplib{
               for (size_t j = 0; j < Y.size(); j++) {
                 mat ans_ab = zeros<mat> (X[i].n_rows, Y[j].n_rows);
                 if (i == id_out_1 && j != id_out_1) {
-                  ans_ab = A[q](j, id_out_2) * (kernels[q]-> eval(X[i], Y[j], i, j));
+                  ans_ab = A[q](j, id_out_2) * (kernels[q]-> eval(X[i], Y[j]));
                 } else if (i != id_out_1 && j == id_out_1) {
-                  ans_ab = A[q](i, id_out_2) * (kernels[q]-> eval(X[i], Y[j], i, j));
+                  ans_ab = A[q](i, id_out_2) * (kernels[q]-> eval(X[i], Y[j]));
                 } else if (i == id_out_1 && j == id_out_1) {
                   ans_ab = 2.0 * A[q](id_out_1, id_out_2) *
-                    (kernels[q]-> eval(X[i], X[j], i, j));
+                    (kernels[q]-> eval(X[i], X[j]));
                 }
 
                 ans.submat (first_row, first_col, first_row + X[i].n_rows - 1,
@@ -83,7 +83,7 @@ namespace gplib{
             size_t first_row = 0, first_col = 0;
             for (size_t i = 0; i < X.size(); i++) {
               for (size_t j = 0; j < Y.size(); j++) {
-                mat ans_ab = params[q](i, j) * kernels[q]-> derivate(param_id, X[i], Y[j], i, j);
+                mat ans_ab = params[q](i, j) * kernels[q]-> derivate(param_id, X[i], Y[j]);
 
                 ans.submat (first_row, first_col, first_row + X[i].n_rows - 1,
                     first_col + X[j].n_rows - 1) = ans_ab;
