@@ -15,17 +15,21 @@ BOOST_AUTO_TEST_CASE( mo_eval_lmc_kernel ) {
    * If it is not correct, cholesky decomposition will arise an error.
    * */
   std::vector<arma::mat> X;
-  for (int i = 0; i < 4; ++i)
+  const int noutputs = 4;
+  for (int i = 0; i < noutputs; ++i)
     X.push_back(arma::randn(100, 3));
 
-  std::vector<arma::mat> params;
   std::vector<std::shared_ptr<gplib::kernel_class>> latent_functions;
+  std::vector<double> ker_par({0.9, 1.2, 0.1});
   for (int i = 0; i < 3; ++i) {
-    auto kernel = std::make_shared<gplib::kernels::squared_exponential>();
+    auto kernel = std::make_shared<gplib::kernels::squared_exponential>(ker_par);
     latent_functions.push_back(kernel);
   }
+  std::vector<arma::mat> params(latent_functions.size(), arma::eye<arma::mat>(noutputs, noutputs));
   gplib::multioutput_kernels::lmc_kernel K(latent_functions, params);
-  arma::mat ans = K.eval(X); // Which is the value of lf_number in this case ? ... latent_functions.size() ?
+  arma::mat ans = K.eval(X, X);
+  // std::cout << ans.n_cols << " " << ans.n_rows << std::endl;
+  // ans.print();
   arma::mat tmp = arma::chol(ans);
   std::cout << "\033[32m\t eval multioutput lmc_kernel passed ... \033[0m\n";
 }
