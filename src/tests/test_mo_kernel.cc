@@ -21,7 +21,7 @@ BOOST_AUTO_TEST_CASE( mo_eval_lmc_kernel ) {
 
   std::vector<std::shared_ptr<gplib::kernel_class>> latent_functions;
   std::vector<double> ker_par({0.9, 1.2, 0.1});
-  for (int i = 0; i < 3; ++i) {
+  for (int i = 0; i < noutputs - 1; ++i) {
     auto kernel = std::make_shared<gplib::kernels::squared_exponential>(ker_par);
     latent_functions.push_back(kernel);
   }
@@ -34,24 +34,33 @@ BOOST_AUTO_TEST_CASE( mo_eval_lmc_kernel ) {
   std::cout << "\033[32m\t eval multioutput lmc_kernel passed ... \033[0m\n";
 }
 
-BOOST_AUTO_TEST_CASE( mo_lmc_gradiend ) {
+BOOST_AUTO_TEST_CASE( mo_lmc_gradient ) {
   std::vector<arma::mat> X;
-  const int class_number = 3;
-  const int lf_number = 2;
-  for (int i = 0; i < class_number; ++i)
+  const int noutputs = 4;
+  for (int i = 0; i < noutputs; ++i)
     X.push_back(arma::randn(100, 3));
-
-  std::vector<arma::mat> params;
-  for (int i = 0; i < lf_number; ++i)
-    params.push_back(arma::randi(class_number, class_number, distr_param(0, 1)));
 
   std::vector<std::shared_ptr<gplib::kernel_class>> latent_functions;
   std::vector<double> k_params({0.9, 1.2, 0.1});
-  for (int i = 0; i < lf_number; ++i){
-    auto kernel = std::make_shared<gplib::kernels::squared_exponential(k_params)>();
+  std::vector<arma::mat> params(latent_functions.size(), arma::eye<arma::mat>(noutputs, noutputs));
+  for (int i = 0; i < noutputs - 1; ++i){
+    auto kernel = std::make_shared<gplib::kernels::squared_exponential>(k_params);
     latent_functions.push_back(kernel);
   }
   gplib::multioutput_kernels::lmc_kernel K(latent_functions, params);
+  int param_id = 0;
+
+  //param_id = (q*d*d) + i * d + j for MO kernel
+  //param_id = (Q * d * d) + q * params + i for normal kernel
+  for (int k = 0; k < noutputs - 1; ++k){
+    for (int i = 0; i < noutputs; ++i){
+      for (int j = 0; j < noutputs; ++j){
+        param_id = (k * noutputs * noutputs) + i * noutputs + j;
+        K.derivate(param_id, X, X, i, j);
+
+      }
+    }
+  }
   std::cout << "\033[32m\t gradient multioutput lmc_kernel passed ... \033[0m\n";
 }
 
