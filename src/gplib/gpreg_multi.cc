@@ -7,7 +7,6 @@ using namespace std;
 namespace gplib{
 
   struct gp_reg_multi::implementation{
-    size_t lf_number;
     shared_ptr<multioutput_kernel_class> kernel;
     vector<mat> X;
     vector<vec> y;
@@ -38,9 +37,9 @@ namespace gplib{
       vec mean = eval_mean(M);
       //Set alredy observed Values
       vector<bool> observed(mean.n_rows, false);
-      unsigned long start = 0;
-      for (unsigned int i = 0; i < M.size(); i++) {
-        for (unsigned int j = 0; j < X[i].n_rows; j++)
+      size_t start = 0;
+      for (size_t i = 0; i < M.size(); i++) {
+        for (size_t j = 0; j < X[i].n_rows; j++)
           observed[start + j] = true;
         start += M[i].n_rows;
       }
@@ -59,21 +58,16 @@ namespace gplib{
     delete pimpl;
   }
 
-  void gp_reg_multi::set_kernel(const shared_ptr<multioutput_kernel_class> &k){
+  void gp_reg_multi::set_kernel(const shared_ptr<multioutput_kernel_class> &k) {
     pimpl->kernel = k;
-    pimpl->lf_number = k->get_kernels().size();
   }
 
-  void gp_reg_multi::set_training_set(const vector<mat> &X, const vector<vec> & y){
+  void gp_reg_multi::set_training_set(const vector<mat> &X, const vector<vec> &y) {
     pimpl->X = X;
     pimpl->y = y;
   }
-  //Temporal!!!!
 
-  void gp_reg_multi::set_lf_number(const int lf_number){
-    pimpl->lf_number = lf_number;
-  }
-  mv_gauss gp_reg_multi::full_predict(const vector<mat> &new_data){
+  mv_gauss gp_reg_multi::full_predict(const vector<mat> &new_data) {
     return pimpl->predict(new_data);
   }
 };

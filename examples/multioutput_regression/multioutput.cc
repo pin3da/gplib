@@ -19,23 +19,24 @@ inline void db(int line){
 }
 
 int main(int argc, char **argv) {
+  size_t noutputs = 3, l_functions = 2;
   vec nd_mean {0};
   mat nd_cov ({0.001});
   srand (time(NULL));
 
   mat x(MN, 1);
   mat new_x(MN, 1);
-  vector<vec> y(3);
-  vector<vec> new_y(3);
+  vector<vec> y(noutputs);
+  vector<vec> new_y(noutputs);
 
-  for(int i = 0; i < 3; i++) {
+  for(int i = 0; i < noutputs; i++) {
     y[i].resize(MN);
     new_y[i].resize(MN);
   }
 
   mv_gauss noise_dist(nd_mean, nd_cov);
   double j = 0.0, new_j;
-  for (int i = 0; i < MN; i++, j+= 0.5) {
+  for (size_t i = 0; i < MN; i++, j+= 0.5) {
     double noise = noise_dist.sample(1)(0, 0);
     x(i, 0) = j;
     new_j = j + ((rand() % 10) + 1) / 25.0;
@@ -50,9 +51,8 @@ int main(int argc, char **argv) {
     new_y[2](i) = 0.3 * sin(new_j) + noise;
   }
 
-  vector<mat> X_set(3), new_X_set(3);
+  vector<mat> X_set(noutputs), new_X_set(noutputs);
   vector<double> kernel_params({0.1, 0.1, 0.05});
-  vector<double> kernel1_params({1, 1, 0.05});
 
   //Set lower and upper bounds for parameters
   vector<double> lower_bounds({0.00001, 0.00001, 0.0001});
@@ -61,36 +61,30 @@ int main(int argc, char **argv) {
   /*we use a shared pointer so that the GPR class
   can handle the destruction and other management functions
   of the kernel*/
-  auto sp_kernel = make_shared<kernels::squared_exponential>(kernel_params);
-  sp_kernel->set_upper_bounds(upper_bounds);
-  sp_kernel->set_lower_bounds(lower_bounds);
 
-  auto sp_kernel1 = make_shared<kernels::squared_exponential>(kernel1_params);
-  sp_kernel1->set_upper_bounds(upper_bounds);
-  sp_kernel1->set_lower_bounds(lower_bounds);
+  vector<shared_ptr<kernel_class> > latent_functions;
+  for(size_t i = 0; i < l_functions; i++) {
+    latent_functions.push_back(make_shared<kernels::squared_exponential>(kernel_params));
+    latent_functions[i] -> set_upper_bounds(upper_bounds);
+    latent_functions[i] -> set_lower_bounds(lower_bounds);
+  }
 
-  vector<shared_ptr<kernel_class> > kernels;
+  vector<mat> params(latent_functions.size(), eye<mat>(noutputs, noutputs));
+  auto K = make_shared<multioutput_kernels::lmc_kernel> (latent_functions, params);
+
 
   //Create Regression object
   gp_reg_multi test_reg;
-
-  for(int i = 0; i < 3; i++) {
+  test_reg.set_kernel(K);
+  for(size_t i = 0; i < noutputs; i++) {
     X_set[i] = x;
     new_X_set[i] = new_x;
   }
 
-  //Set the params
-  mat params(X_set.size(), X_set.size());
-  params.eye();
-  test_reg.set_params(params);
-
-  //Set the Kernel
-  kernels.push_back(sp_kernel);
-  kernels.push_back(sp_kernel1);
-  test_reg.set_kernels(kernels);
-
   //Set training set as the generated Data (with noise)
   test_reg.set_training_set(X_set, y);
+
+  //test_reg.train(1000);
 
   //Take the posterior distribution for the new data
   mv_gauss posterior = test_reg.full_predict(new_X_set);
