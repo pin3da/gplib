@@ -29,7 +29,7 @@ namespace gplib {
     }
 
     mv_gauss marginalize_hidden(const vector<bool>& observed) {
-      vector<int> observed_ids;
+      vector<size_t> observed_ids;
       for (size_t i = 0; i < observed.size(); ++i)
         if (observed[i]) observed_ids.push_back(i);
 
@@ -45,7 +45,7 @@ namespace gplib {
     }
 
     mv_gauss conditional(const arma::vec &observation, const vector<bool> &observed) {
-      vector<unsigned int> v_obs_ix, v_hidden_ix;
+      vector<uword> v_obs_ix, v_hidden_ix;
 
       split_indices(observed, v_obs_ix, v_hidden_ix);
 

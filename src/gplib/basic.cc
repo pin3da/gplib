@@ -33,7 +33,7 @@ namespace gplib {
         return arma::vec(tmp);
     }
 
-    void split_indices(const vector<bool> &predicates, vector<unsigned int> &true_part, vector<unsigned int> &false_part) {
+    void split_indices(const vector<bool> &predicates, vector<arma::uword> &true_part, vector<arma::uword> &false_part) {
         for (size_t i = 0; i < predicates.size(); ++i) {
             if (predicates[i])
               true_part.push_back(i);
