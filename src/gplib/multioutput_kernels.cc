@@ -114,6 +114,41 @@ namespace gplib{
           B[i] = params[i];
         }
       }
+
+      void set_param(size_t q, size_t a, size_t b, double param) {
+        if (q > B.size())
+          throw out_of_range("latent function id out of range");
+        if (a > B[q].n_rows || b > B[q].n_cols)
+          throw out_of_range("Param id out of range");
+        B[q](a, b) = param;
+      }
+
+      void set_param(size_t q, size_t param_id, double param) {
+        if (q > kernels.size())
+          throw out_of_range("Kernel id out of range");
+        vector<double> params = kernels[q]-> get_params();
+        if (param_id > params.size())
+          throw out_of_range("Param id out of range");
+        params[param_id] = param;
+        kernels[q]-> set_params(params);
+      }
+
+      double get_param(size_t q, size_t a, size_t b) {
+        if (q > B.size())
+          throw out_of_range("latent function id out of range");
+        if (a > B[q].n_rows || b > B[q].n_cols)
+          throw out_of_range("Param id out of range");
+        return B[q](a, b);
+      }
+
+      double get_param(size_t q, size_t param_id) {
+        if (q > kernels.size())
+          throw out_of_range("Kernel id out of range");
+        const vector<double> &params = kernels[q]-> get_params();
+        if (param_id > params.size())
+          throw out_of_range("Param id out of range");
+        return params[param_id];
+      }
     };
 
     lmc_kernel::lmc_kernel() {
@@ -144,8 +179,24 @@ namespace gplib{
       pimpl-> set_params(params);
     }
 
+    void lmc_kernel::set_param(size_t q, size_t a, size_t b, double param) {
+      pimpl-> set_param(q, a, b, param);
+    }
+
+    void lmc_kernel::set_param(size_t q, size_t param_id, double param) {
+      pimpl-> set_param(q, param_id, param);
+    }
+
     void lmc_kernel::set_kernels(const vector<shared_ptr<kernel_class>> &kernels) {
       pimpl-> kernels = kernels;
+    }
+
+    double lmc_kernel::get_param(size_t q, size_t a, size_t b) const {
+      return pimpl-> get_param(q, a, b);
+    }
+
+    double lmc_kernel::get_param(size_t q, size_t param_id) const {
+      return pimpl-> get_param(q, param_id);
     }
 
     vector<mat> lmc_kernel::get_params() const {
