@@ -58,18 +58,12 @@ BOOST_AUTO_TEST_CASE( mo_lmc_gradient ) {
       for (int j = 0; j < noutputs; ++j){
         param_id = (k * noutputs * noutputs) + i * noutputs + j;
         analitical = K.derivate(param_id, X, X, i, j);
-        params = K.get_params();
-        params[k](i, j) += eps;
-        K.set_params(params);
+        K.set_param(k, i, j, K.get_param(k, i, j) + eps);
         numeric = K.eval(X, X);
-        params = K.get_params();
-        params[k](i, j) -= 2.0 * eps;
-        K.set_params(params);
+        K.set_param(k, i, j, K.get_param(k, i, j) - 2.0 * eps);
         numeric -= K.eval(X, X);
         numeric = numeric / (2.0 * eps);
-        params = K.get_params();
-        params[k](i, j) += eps;
-        K.set_params(params);
+        K.set_param(k, i, j, K.get_param(k, i, j) + eps);
         for (size_t l = 0; l < numeric.n_rows; ++l){
           for( size_t n = 0; n < numeric.n_cols; ++n){
             //BOOST_CHECK_CLOSE (numeric (l, n), analitical (l, n), eps);
@@ -84,24 +78,12 @@ BOOST_AUTO_TEST_CASE( mo_lmc_gradient ) {
     for (size_t j = 0; j < latent_functions[i] -> n_params(); ++j) {
       param_id = offset + i * latent_functions[i] -> n_params() + j;
       analitical = K.derivate(param_id, X, X, i, j);
-      latent_functions = K.get_kernels();
-      lil_params = latent_functions[i] -> get_params();
-      lil_params[j] += eps;
-      latent_functions[i] -> set_params(lil_params);
-      K.set_kernels(latent_functions);
+      K.set_param(i, j, K.get_param(i, j) + eps);
       numeric = K.eval(X, X);
-      latent_functions = K.get_kernels();
-      lil_params = latent_functions[i] -> get_params();
-      lil_params[j] -= 2.0 * eps;
-      latent_functions[i] -> set_params(lil_params);
-      K.set_kernels(latent_functions);
+      K.set_param(i, j, K.get_param(i, j) - (2.0 * eps));
       numeric -= K.eval(X, X);
       numeric = numeric / (2.0 * eps);
-      latent_functions = K.get_kernels();
-      lil_params = latent_functions[i] -> get_params();
-      lil_params[j] += eps;
-      latent_functions[i] -> set_params(lil_params);
-      K.set_kernels(latent_functions);
+      K.set_param(i, j, K.get_param(i, j) + eps);
       for (size_t l = 0; l < numeric.n_rows; ++l){
         for( size_t n = 0; n < numeric.n_cols; ++n){
           BOOST_CHECK_CLOSE (numeric (l, n), analitical (l, n), eps);
