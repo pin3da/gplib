@@ -12,7 +12,6 @@ namespace gplib{
 
       mat eval(const vector<mat> &X, const vector<mat> &Y) {
         //Comput cov mat total size;
-        size_t lf_number = B.size();
         size_t total_rows = 0, total_cols = 0;
         for (size_t i = 0; i < X.size(); ++i) {
           total_rows += X[i].n_rows;
@@ -27,7 +26,7 @@ namespace gplib{
         for (size_t i = 0; i < X.size(); i++) {
           for (size_t j = 0; j < Y.size(); j++) {
             mat cov_ab = zeros<mat> (X[i].n_rows, Y[j].n_rows);
-            for (size_t k = 0; k < lf_number; k++) {
+            for (size_t k = 0; k < B.size(); k++) {
               cov_ab += B[k](i, j) * (kernels[k]-> eval(X[i], Y[j]));
             }
 
@@ -42,8 +41,13 @@ namespace gplib{
         return cov;
       }
 
+      mat derivate(size_t param_id, const vector<mat> &X, const vector<mat> &Y) {
+        // TODO:
+        return mat();
+      }
+
       mat derivate(size_t param_id, const vector<mat> &X, const vector<mat> &Y,
-        size_t id_out_1, size_t id_out_2) {
+          size_t id_out_1, size_t id_out_2) {
 
         size_t tot_rows = 0, tot_cols = 0;
         for (size_t i = 0; i < X.size(); ++i)
@@ -62,14 +66,14 @@ namespace gplib{
                 if (i == id_out_1 && j == id_out_1) {
                   ans_ab = A[q](id_out_1, id_out_2) * (kernels[q]-> eval(X[i], X[j]));
                 }
-                 else if (j == id_out_1) {
+                else if (j == id_out_1) {
                   ans_ab = A[q](i, id_out_2) * (kernels[q]-> eval(X[i], Y[j]));
                 } else if (i == id_out_1) {
                   ans_ab = A[q](j, id_out_2) * (kernels[q]-> eval(X[i], Y[j]));
                 }
                 if (i * X.size() + j == param_id)
-                ans.submat (first_row, first_col, first_row + X[i].n_rows - 1,
-                    first_col + X[j].n_rows - 1) = ans_ab;
+                  ans.submat (first_row, first_col, first_row + X[i].n_rows - 1,
+                      first_col + X[j].n_rows - 1) = ans_ab;
                 first_col += X[j].n_rows;
               }
               first_row += X[i].n_rows;
@@ -98,7 +102,7 @@ namespace gplib{
             }
             return ans;
 
-           //  ans must be equals to kron(B[q], kernels[q]-> derivate(param_id, X, Y));
+            //  ans must be equals to kron(B[q], kernels[q]-> derivate(param_id, X, Y));
           }
           param_id -= kernels[q]-> n_params();
         }
@@ -120,6 +124,7 @@ namespace gplib{
         if (a > B[q].n_rows || b > B[q].n_cols)
           throw out_of_range("Param id out of range");
         B[q](a, b) = param;
+        A[q] = chol(B[q]);
       }
 
       void set_param(size_t q, size_t param_id, double param) {
@@ -168,14 +173,26 @@ namespace gplib{
       return pimpl-> eval(X, Y);
     }
 
+    mat lmc_kernel::derivate(size_t param_id, const vector<mat> &X, const vector<mat> &Y) const {
+      return pimpl-> derivate(param_id, X, Y);
+    }
+
     mat lmc_kernel::derivate(size_t param_id, const vector<mat> &X, const vector<mat> &Y,
         size_t id_out_1, size_t id_out_2) const {
       return pimpl-> derivate(param_id, X, Y, id_out_1, id_out_2);
     }
 
-    void lmc_kernel::set_params(const vector<mat> &params) {
-      // pimpl-> params = params;
+    size_t lmc_kernel::n_params() const {
+      // TODO:
+      return 0;
+    }
+
+    void lmc_kernel::set_params_k(const vector<mat> &params) {
       pimpl-> set_params(params);
+    }
+
+    void lmc_kernel::set_params(const vector<double> &params) {
+      // TODO:
     }
 
     void lmc_kernel::set_param(size_t q, size_t a, size_t b, double param) {
@@ -198,13 +215,36 @@ namespace gplib{
       return pimpl-> get_param(q, param_id);
     }
 
-    vector<mat> lmc_kernel::get_params() const {
+    vector<double> lmc_kernel::get_params() const {
+      // TODO:
+      return vector<double>();
+    }
+
+    vector<mat> lmc_kernel::get_params_k() const {
       return pimpl-> B;
     }
 
     vector<shared_ptr<kernel_class>> lmc_kernel::get_kernels() const {
       return pimpl-> kernels;
     }
+
+    void lmc_kernel::set_lower_bounds(const vector<double> &lower_bounds) {
+      // TODO:
+    }
+
+    void lmc_kernel::set_upper_bounds(const vector<double> &upper_bounds) {
+      // TODO:
+    }
+    vector<double> lmc_kernel::get_lower_bounds() const {
+      // TODO:
+      return vector<double>();
+    }
+
+    vector<double> lmc_kernel::get_upper_bounds() const {
+      // TODO:
+      return vector<double>();
+    }
+
 
   };
 };

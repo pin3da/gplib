@@ -53,7 +53,6 @@ namespace gplib {
         mat dKdT = pimpl->kernel->derivate(d, pimpl->X, pimpl->X);
         grad[d] = trace(dLLdK * dKdT);
       }
-      // pimpl->check_grad(grad);
       return ans;
     }
 
@@ -94,15 +93,15 @@ namespace gplib {
     pimpl->y = y;
   }
 
-  void gp_reg::train(const int max_iter){
+  void gp_reg::train(const int max_iter) {
     pimpl->train(max_iter);
   }
 
-  mv_gauss gp_reg::full_predict(const arma::mat& new_data) const {
+  mv_gauss gp_reg::full_predict(const arma::mat &new_data) const {
     return pimpl->predict(new_data);
   }
 
-  arma::vec gp_reg::predict(const arma::mat& new_data) const {
+  arma::vec gp_reg::predict(const arma::mat &new_data) const {
     mv_gauss g = pimpl->predict(new_data);
     return g.get_mean();
   }
