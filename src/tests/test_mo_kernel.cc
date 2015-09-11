@@ -66,7 +66,7 @@ BOOST_AUTO_TEST_CASE( mo_lmc_gradient ) {
         K.set_param(k, i, j, K.get_param(k, i, j) + eps);
         for (size_t l = 0; l < numeric.n_rows; ++l){
           for( size_t n = 0; n < numeric.n_cols; ++n){
-            //BOOST_CHECK_CLOSE (numeric (l, n), analitical (l, n), eps);
+            BOOST_CHECK_CLOSE (numeric (l, n), analitical (l, n), eps);
           }
         }
       }
