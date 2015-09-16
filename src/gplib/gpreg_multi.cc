@@ -55,8 +55,11 @@ namespace gplib{
     }
 
     vec flatten(vector<vec> &y) {
-      // TODO:
-      return vec();
+      vec flat;
+      for (size_t i = 0; i < y.size(); i++) {
+        flat = join_cols<mat> (flat, y[i]);
+      }
+      return flat;
     }
 
     double log_marginal() {

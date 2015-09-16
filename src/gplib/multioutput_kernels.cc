@@ -11,6 +11,7 @@ namespace gplib{
       vector<shared_ptr<kernel_class>> kernels;
       vector<double> lower_bounds;
       vector<double> upper_bounds;
+
       mat eval(const vector<mat> &X, const vector<mat> &Y) {
         //Comput cov mat total size;
         size_t total_rows = 0, total_cols = 0;
