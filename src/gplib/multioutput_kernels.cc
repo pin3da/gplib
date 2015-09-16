@@ -9,7 +9,8 @@ namespace gplib{
       vector<mat> B;
       vector<mat> A; // A * A.t() = B, where A is lower triangular.
       vector<shared_ptr<kernel_class>> kernels;
-
+      vector<double> lower_bounds;
+      vector<double> upper_bounds;
       mat eval(const vector<mat> &X, const vector<mat> &Y) {
         //Comput cov mat total size;
         size_t total_rows = 0, total_cols = 0;
@@ -228,21 +229,31 @@ namespace gplib{
       return pimpl-> kernels;
     }
 
+    void lmc_kernel::set_lower_bounds(const double &lower_bounds) {
+      size_t size = pimpl-> A.n_rows * pimpl-> A.n_cols;
+      vector<double> lower_bound(size, lower_bounds);
+      set_lower_bounds(lower_bound);
+    }
+
+    void lmc_kernel::set_upper_bounds(const double &upper_bounds) {
+      vector<double> upper_bound(pimpl-> A.n_elem, upper_bounds);
+      set_lower_bounds(upper_bound);
+    }
+
     void lmc_kernel::set_lower_bounds(const vector<double> &lower_bounds) {
-      // TODO:
+      pimpl-> lower_bounds = lower_bounds;
     }
 
     void lmc_kernel::set_upper_bounds(const vector<double> &upper_bounds) {
-      // TODO:
+      pimpl-> upper_bounds = upper_bounds;
     }
+
     vector<double> lmc_kernel::get_lower_bounds() const {
-      // TODO:
-      return vector<double>();
+      return pimpl-> lower_bounds;
     }
 
     vector<double> lmc_kernel::get_upper_bounds() const {
-      // TODO:
-      return vector<double>();
+      return pimpl-> upper_bounds;
     }
 
 
