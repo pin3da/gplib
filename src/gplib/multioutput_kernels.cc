@@ -109,7 +109,33 @@ namespace gplib{
         return ans;
       }
 
-      void set_params(const vector<mat> &params) {
+      vector<double> get_params(){
+        vector<double> ans;
+        for (size_t q = 0; q < B.size(); ++q)
+          ans.insert(ans.end(), B[q].begin(), B[q].end());
+        for (size_t k = 0; k < kernels.size(); ++k)
+          ans.insert(ans.end(), kernels[k]->get_params().begin(), kernels[k]->get_params().end());
+        return ans;
+      }
+
+      void set_params(const vector<double> &params){
+        size_t iter = 0;
+        for (size_t q = 0; q < B.size(); ++q){
+          for (size_t i = 0; i < B[0].n_rows; ++i){
+            for (size_t j = 0; j < B[0].n_cols; ++j){
+              B[q](i, j) = params[iter];
+              ++iter;
+            }
+          }
+        }
+        for (size_t k = 0; k < kernels.size(); ++k){
+          vector<double> subparams(params.begin() + iter, params.begin() + iter + kernels[k]->n_params());
+          kernels[k]->set_params(subparams);
+          iter += (kernels[k]->n_params() + 1);
+        }
+      }
+
+      void set_params_k(const vector<mat> &params) {
         A.resize(params.size());
         B.resize(params.size());
         for (size_t i = 0; i < params.size(); ++i) {
@@ -162,7 +188,7 @@ namespace gplib{
     lmc_kernel::lmc_kernel(const vector<shared_ptr<kernel_class>> &kernels,
         const vector<mat> &params) : lmc_kernel() {
       pimpl-> kernels = kernels;
-      pimpl-> set_params(params);
+      pimpl-> set_params_k(params);
     }
 
     lmc_kernel::~lmc_kernel() {
@@ -188,7 +214,7 @@ namespace gplib{
     }
 
     void lmc_kernel::set_params_k(const vector<mat> &params) {
-      pimpl-> set_params(params);
+      pimpl-> set_params_k(params);
     }
 
     void lmc_kernel::set_params(const vector<double> &params) {
@@ -217,7 +243,7 @@ namespace gplib{
 
     vector<double> lmc_kernel::get_params() const {
       // TODO:
-      return vector<double>();
+      return pimpl->get_params();
     }
 
     vector<mat> lmc_kernel::get_params_k() const {
