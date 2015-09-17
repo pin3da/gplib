@@ -48,9 +48,6 @@ namespace gplib {
             const std::vector<arma::mat> &params) {}
       virtual ~multioutput_kernel_class() = default;
       virtual arma::mat eval(const std::vector<arma::mat> &X, const std::vector<arma::mat> &Y) const = 0;
-      // TODO: erase this method.
-      virtual arma::mat derivate(size_t param_id, const std::vector<arma::mat> &X,
-          const std::vector<arma::mat> &Y, size_t id_out_1, size_t id_out_2) const = 0;
       virtual arma::mat derivate(size_t param_id, const std::vector<arma::mat> &X,
           const std::vector<arma::mat> &Y) const = 0;
       virtual size_t n_params() const = 0;
