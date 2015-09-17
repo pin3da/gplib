@@ -150,6 +150,17 @@ namespace gplib{
           throw out_of_range("Param id out of range");
         return params[param_id];
       }
+
+      size_t n_params() {
+        size_t ans = 0;
+        for (size_t i = 0; B.size(); ++i)
+          ans += B[i].size();
+
+        for (size_t i = 0; i < kernels.size(); ++i)
+          ans += kernels[i]->n_params();
+
+        return ans;
+      }
     };
 
     lmc_kernel::lmc_kernel() {
@@ -175,8 +186,7 @@ namespace gplib{
     }
 
     size_t lmc_kernel::n_params() const {
-      // TODO:
-      return 0;
+      return pimpl-> n_params();
     }
 
     void lmc_kernel::set_params_k(const vector<mat> &params) {
