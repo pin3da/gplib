@@ -25,8 +25,6 @@ namespace gplib{
 
         arma::mat eval(const std::vector<arma::mat> &X, const std::vector<arma::mat> &Y) const ;
         arma::mat derivate(size_t param_id, const std::vector<arma::mat> &X,
-          const std::vector<arma::mat> &Y, size_t id_out_1, size_t id_out_2) const;
-        arma::mat derivate(size_t param_id, const std::vector<arma::mat> &X,
           const std::vector<arma::mat> &Y) const;
         size_t n_params() const;
         void set_params_k(const std::vector<arma::mat> &params);
