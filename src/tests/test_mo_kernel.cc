@@ -54,7 +54,7 @@ BOOST_AUTO_TEST_CASE( mo_lmc_gradient ) {
     for (int i = 0; i < noutputs; ++i) {
       for (int j = 0; j < noutputs; ++j) {
         param_id = (k * noutputs * noutputs) + i * noutputs + j;
-        analitical = K.derivate(param_id, X, X, i, j);
+        analitical = K.derivate(param_id, X, X);
         K.set_param(k, i, j, K.get_param(k, i, j) + eps);
         numeric = K.eval(X, X);
         K.set_param(k, i, j, K.get_param(k, i, j) - 2.0 * eps);
@@ -74,7 +74,7 @@ BOOST_AUTO_TEST_CASE( mo_lmc_gradient ) {
   for (size_t i = 0; i < latent_functions.size(); ++i) {
     for (size_t j = 0; j < latent_functions[i] -> n_params(); ++j) {
       param_id = offset + i * latent_functions[i] -> n_params() + j;
-      analitical = K.derivate(param_id, X, X, i, j);
+      analitical = K.derivate(param_id, X, X);
       K.set_param(i, j, K.get_param(i, j) + eps);
       numeric = K.eval(X, X);
       K.set_param(i, j, K.get_param(i, j) - (2.0 * eps));

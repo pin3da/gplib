@@ -41,13 +41,8 @@ namespace gplib{
         return cov;
       }
 
-      mat derivate(size_t param_id, const vector<mat> &X, const vector<mat> &Y) {
-        // TODO:
-        return mat();
-      }
 
-      mat derivate(size_t param_id, const vector<mat> &X, const vector<mat> &Y,
-          size_t id_out_1, size_t id_out_2) {
+      mat derivate(size_t param_id, const vector<mat> &X, const vector<mat> &Y) {
 
         size_t tot_rows = 0, tot_cols = 0;
         for (size_t i = 0; i < X.size(); ++i)
@@ -59,6 +54,8 @@ namespace gplib{
         mat ans = zeros(tot_rows, tot_cols);
         for (size_t q = 0; q < B.size(); ++q) { // current latent fuction.
           if (param_id < B[q].size()) {
+            size_t id_out_1 = param_id / B[q].n_rows;
+            size_t id_out_2 = param_id % B[q].n_rows;
             size_t first_row = 0, first_col = 0;
             for (size_t i = 0; i < X.size(); i++) {
               for (size_t j = 0; j < Y.size(); j++) {
@@ -175,11 +172,6 @@ namespace gplib{
 
     mat lmc_kernel::derivate(size_t param_id, const vector<mat> &X, const vector<mat> &Y) const {
       return pimpl-> derivate(param_id, X, Y);
-    }
-
-    mat lmc_kernel::derivate(size_t param_id, const vector<mat> &X, const vector<mat> &Y,
-        size_t id_out_1, size_t id_out_2) const {
-      return pimpl-> derivate(param_id, X, Y, id_out_1, id_out_2);
     }
 
     size_t lmc_kernel::n_params() const {
