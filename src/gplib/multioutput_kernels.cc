@@ -233,20 +233,12 @@ namespace gplib{
     }
 
     void lmc_kernel::set_lower_bounds(const double &lower_bounds) {
-      size_t size = 0;
-      for(size_t i = 0; i < pimpl-> A.size(); i++) {
-        size += pimpl-> A[i].n_rows * pimpl-> A[i].n_cols;
-      }
-      vector<double> lower_bound(size, lower_bounds);
+      vector<double> lower_bound(pimpl-> n_params(), lower_bounds);
       set_lower_bounds(lower_bound);
     }
 
     void lmc_kernel::set_upper_bounds(const double &upper_bounds) {
-      size_t size = 0;
-      for(size_t i = 0; i < pimpl-> A.size(); i++) {
-        size += pimpl-> A[i].n_rows * pimpl-> A[i].n_cols;
-      }
-      vector<double> upper_bound(size, upper_bounds);
+      vector<double> upper_bound(pimpl-> n_params(), upper_bounds);
       set_lower_bounds(upper_bound);
     }
 
@@ -265,7 +257,6 @@ namespace gplib{
     vector<double> lmc_kernel::get_upper_bounds() const {
       return pimpl-> upper_bounds;
     }
-
 
   };
 };
