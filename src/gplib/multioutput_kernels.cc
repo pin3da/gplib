@@ -1,4 +1,5 @@
 #include "gplib.hpp"
+#include <algorithm>
 
 using namespace arma;
 using namespace std;
@@ -108,7 +109,58 @@ namespace gplib{
         return ans;
       }
 
-      void set_params(const vector<mat> &params) {
+      vector<double> get_params() {
+        //set total size of vector
+        if (B.size() <= 0)
+          return vector<double> ({-1.0});
+        size_t t_size = B.size() + B[0].size();
+        for (size_t k = 0; k< kernels.size(); ++k)
+          t_size += kernels[k]->  n_params();
+        vector<double> ans(t_size);
+        size_t iter = 0;
+        for (size_t q = 0; q < B.size(); ++q) {
+          copy (B[q].begin(), B[q].end(), ans.begin() + iter);
+          iter += B[q].size();
+        }
+        for (size_t k = 0; k < kernels.size(); ++k) {
+          copy (kernels[k]-> get_params().begin(), kernels[k]-> get_params().end(), ans.begin() + iter);
+          iter += kernels[k]-> n_params();
+        }
+        return ans;
+      }
+
+      void set_params(const vector<double> &params, size_t n_outputs = -1) {
+        if (n_outputs == -1){
+          if (B.size() > 0)
+            n_outputs = B[0].n_cols;
+          else
+            throw logic_error("Parameters Uninitialized");//Throw exception here
+        }
+        size_t t_size = B.size() * n_outputs * n_outputs;
+        for (size_t k = 0; k < kernels.size(); ++k)
+          t_size += kernels[k]-> n_params();
+        if(t_size != params.size()){
+          throw length_error("Wrong parameter vector size");
+        }
+        size_t iter =0;
+        for (size_t q = 0; q < B.size(); ++q) {
+          if (B[q].size() <= 0)
+            B[q] = mat(n_outputs, n_outputs, fill::zeros);
+          for (size_t i = 0; i < B[0].n_rows; ++i) {
+            for (size_t j = 0; j < B[0].n_cols; ++j) {
+              B[q](i, j) = params[iter];
+              ++iter;
+            }
+          }
+        }
+        for (size_t k = 0; k < kernels.size(); ++k) {
+          vector<double> subparams(params.begin() + iter, params.begin() + iter + kernels[k]-> n_params());
+          kernels[k]->set_params(subparams);
+          iter += (kernels[k]-> n_params() + 1);
+        }
+      }
+
+      void set_params_k(const vector<mat> &params) {
         A.resize(params.size());
         B.resize(params.size());
         for (size_t i = 0; i < params.size(); ++i) {
@@ -172,7 +224,7 @@ namespace gplib{
     lmc_kernel::lmc_kernel(const vector<shared_ptr<kernel_class>> &kernels,
         const vector<mat> &params) : lmc_kernel() {
       pimpl-> kernels = kernels;
-      pimpl-> set_params(params);
+      pimpl-> set_params_k(params);
     }
 
     lmc_kernel::~lmc_kernel() {
@@ -192,11 +244,12 @@ namespace gplib{
     }
 
     void lmc_kernel::set_params_k(const vector<mat> &params) {
-      pimpl-> set_params(params);
+      pimpl-> set_params_k(params);
     }
 
-    void lmc_kernel::set_params(const vector<double> &params) {
+    void lmc_kernel::set_params(const vector<double> &params, size_t n_outputs) {
       // TODO:
+      pimpl-> set_params(params, n_outputs);
     }
 
     void lmc_kernel::set_param(size_t q, size_t a, size_t b, double param) {
@@ -209,6 +262,8 @@ namespace gplib{
 
     void lmc_kernel::set_kernels(const vector<shared_ptr<kernel_class>> &kernels) {
       pimpl-> kernels = kernels;
+      pimpl-> B.resize (kernels.size());
+      pimpl-> A.resize (kernels.size());
     }
 
     double lmc_kernel::get_param(size_t q, size_t a, size_t b) const {
@@ -221,7 +276,7 @@ namespace gplib{
 
     vector<double> lmc_kernel::get_params() const {
       // TODO:
-      return vector<double>();
+      return pimpl->get_params();
     }
 
     vector<mat> lmc_kernel::get_params_k() const {
