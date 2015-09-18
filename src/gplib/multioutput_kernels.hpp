@@ -30,7 +30,7 @@ namespace gplib{
           const std::vector<arma::mat> &Y) const;
         size_t n_params() const;
         void set_params_k(const std::vector<arma::mat> &params);
-        void set_params(const std::vector<double> &params);
+        void set_params(const std::vector<double> &params, size_t n_outputs = -1);
         void set_param(size_t q, size_t a, size_t b, const double param);
         void set_param(size_t q, size_t param_id, const double param);
         void set_kernels(const std::vector<std::shared_ptr<kernel_class>> &kernels);
