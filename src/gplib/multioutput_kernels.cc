@@ -113,7 +113,7 @@ namespace gplib{
         //set total size of vector
         if (B.size() <= 0)
           return vector<double> ({-1.0});
-        size_t t_size = B.size() + B[0].size();
+        size_t t_size = B.size() * B[0].size();
         for (size_t k = 0; k< kernels.size(); ++k)
           t_size += kernels[k]->  n_params();
         vector<double> ans(t_size);
@@ -122,14 +122,18 @@ namespace gplib{
           copy (B[q].begin(), B[q].end(), ans.begin() + iter);
           iter += B[q].size();
         }
+        vector<double> tmp;
         for (size_t k = 0; k < kernels.size(); ++k) {
-          copy (kernels[k]-> get_params().begin(), kernels[k]-> get_params().end(), ans.begin() + iter);
+          tmp = kernels[k]-> get_params();
+          copy (tmp.begin(), tmp.end(), ans.begin() + iter);
+          //this produce a segmentation fault, why?, I will never know
+          //copy (kernels[k]-> get_params().begin(), kernels[k]-> get_params().end(), ans.begin() + iter);
           iter += kernels[k]-> n_params();
         }
         return ans;
       }
 
-      void set_params(const vector<double> &params, size_t n_outputs = -1) {
+      void set_params(const vector<double> &params, int n_outputs = -1) {
         if (n_outputs == -1){
           if (B.size() > 0)
             n_outputs = B[0].n_cols;
@@ -207,7 +211,7 @@ namespace gplib{
 
       size_t n_params() {
         size_t ans = 0;
-        for (size_t i = 0; B.size(); ++i)
+        for (size_t i = 0; i < B.size(); ++i)
           ans += B[i].size();
 
         for (size_t i = 0; i < kernels.size(); ++i)
@@ -215,6 +219,26 @@ namespace gplib{
 
         return ans;
       }
+
+      void set_lower_bounds(const vector<double> &lower_bound) {
+        lower_bounds = lower_bound;
+      }
+
+      void set_upper_bounds(const vector<double> &upper_bound) {
+        upper_bounds = upper_bound;
+      }
+
+      void set_lower_bounds(const double &lower_bounds) {
+        vector<double> lower_bound(n_params(), lower_bounds);
+        set_lower_bounds(lower_bound);
+      }
+
+      void set_upper_bounds(const double &upper_bounds) {
+        vector<double> upper_bound(n_params(), upper_bounds);
+        set_upper_bounds(upper_bound);
+      }
+
+
     };
 
     lmc_kernel::lmc_kernel() {
@@ -248,7 +272,6 @@ namespace gplib{
     }
 
     void lmc_kernel::set_params(const vector<double> &params, size_t n_outputs) {
-      // TODO:
       pimpl-> set_params(params, n_outputs);
     }
 
@@ -275,8 +298,7 @@ namespace gplib{
     }
 
     vector<double> lmc_kernel::get_params() const {
-      // TODO:
-      return pimpl->get_params();
+      return pimpl-> get_params();
     }
 
     vector<mat> lmc_kernel::get_params_k() const {
@@ -288,21 +310,19 @@ namespace gplib{
     }
 
     void lmc_kernel::set_lower_bounds(const double &lower_bounds) {
-      vector<double> lower_bound(pimpl-> n_params(), lower_bounds);
-      set_lower_bounds(lower_bound);
+      pimpl-> set_lower_bounds(lower_bounds);
     }
 
     void lmc_kernel::set_upper_bounds(const double &upper_bounds) {
-      vector<double> upper_bound(pimpl-> n_params(), upper_bounds);
-      set_lower_bounds(upper_bound);
+      pimpl-> set_upper_bounds(upper_bounds);
     }
 
     void lmc_kernel::set_lower_bounds(const vector<double> &lower_bounds) {
-      pimpl-> lower_bounds = lower_bounds;
+      pimpl-> set_lower_bounds(lower_bounds);
     }
 
     void lmc_kernel::set_upper_bounds(const vector<double> &upper_bounds) {
-      pimpl-> upper_bounds = upper_bounds;
+      pimpl-> set_upper_bounds(upper_bounds);
     }
 
     vector<double> lmc_kernel::get_lower_bounds() const {

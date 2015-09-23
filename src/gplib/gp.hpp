@@ -61,6 +61,8 @@ namespace gplib {
       virtual std::vector<std::shared_ptr<kernel_class>> get_kernels() const = 0;
       virtual double get_param(size_t q, size_t a, size_t b) const = 0;
       virtual double get_param(size_t q, size_t param_id) const = 0;
+      virtual void set_lower_bounds(const double &lower_bounds) = 0;
+      virtual void set_upper_bounds(const double &upper_bounds) = 0;
       virtual void set_lower_bounds(const std::vector<double> &lower_bounds) = 0;
       virtual void set_upper_bounds(const std::vector<double> &params) = 0;
       virtual std::vector<double> get_lower_bounds() const = 0;
