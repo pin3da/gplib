@@ -68,7 +68,7 @@ namespace gplib{
 
     static double training_obj(const vector<double> &theta, vector<double> &grad, void *fdata) {
       implementation *pimpl = (implementation*) fdata;
-      // pimpl->kernel->set_params(theta);
+      pimpl->kernel->set_params(theta);
       double ans = pimpl-> log_marginal();
 
       vec mx = pimpl->eval_mean(pimpl-> X);
