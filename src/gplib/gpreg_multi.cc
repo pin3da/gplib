@@ -94,6 +94,7 @@ namespace gplib{
 
       double error; //final value of error function
       vector<double> x = kernel-> get_params();
+      //my_min.set_maxtime(5);
       my_min.optimize(x, error);
       kernel->set_params(x);
     }
