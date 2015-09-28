@@ -111,17 +111,21 @@ namespace gplib{
 
       vector<double> get_params() {
         //set total size of vector
-        if (B.size() <= 0)
+        if (A.size() <= 0)
           return vector<double> ({-1.0});
-        size_t t_size = B.size() * B[0].size();
-        for (size_t k = 0; k< kernels.size(); ++k)
+
+        size_t t_size = A.size() * A[0].size();
+        for (size_t k = 0; k < kernels.size(); ++k)
           t_size += kernels[k]->  n_params();
+
         vector<double> ans(t_size);
         size_t iter = 0;
-        for (size_t q = 0; q < B.size(); ++q) {
-          copy (B[q].begin(), B[q].end(), ans.begin() + iter);
-          iter += B[q].size();
+        for (size_t q = 0; q < A.size(); ++q) {
+          copy (A[q].begin(), A[q].end(), ans.begin() + iter);
+          iter += A[q].size();
+
         }
+
         vector<double> tmp;
         for (size_t k = 0; k < kernels.size(); ++k) {
           tmp = kernels[k]-> get_params();
@@ -135,27 +139,28 @@ namespace gplib{
 
       void set_params(const vector<double> &params, int n_outputs = -1) {
         if (n_outputs == -1){
-          if (B.size() > 0)
-            n_outputs = B[0].n_cols;
+          if (A.size() > 0)
+            n_outputs = A[0].n_cols;
           else
             throw logic_error("Parameters Uninitialized");//Throw exception here
         }
-        size_t t_size = B.size() * n_outputs * n_outputs;
+        size_t t_size = A.size() * n_outputs * n_outputs;
         for (size_t k = 0; k < kernels.size(); ++k)
           t_size += kernels[k]-> n_params();
         if(t_size != params.size()){
           throw length_error("Wrong parameter vector size");
         }
-        size_t iter =0;
-        for (size_t q = 0; q < B.size(); ++q) {
-          if (B[q].size() <= 0)
-            B[q] = mat(n_outputs, n_outputs, fill::zeros);
-          for (size_t i = 0; i < B[0].n_rows; ++i) {
-            for (size_t j = 0; j < B[0].n_cols; ++j) {
-              B[q](i, j) = params[iter];
+        size_t iter = 0;
+        for (size_t q = 0; q < A.size(); ++q) {
+          if (A[q].size() <= 0)
+            A[q] = mat(n_outputs, n_outputs, fill::zeros);
+          for (size_t i = 0; i < A[0].n_rows; ++i) {
+            for (size_t j = 0; j < A[0].n_cols; ++j) {
+              A[q](i, j) = params[iter];
               ++iter;
             }
           }
+          B[q] = A[q] * A[q].t();
         }
         for (size_t k = 0; k < kernels.size(); ++k) {
           vector<double> subparams(params.begin() + iter, params.begin() + iter + kernels[k]-> n_params());
@@ -230,11 +235,33 @@ namespace gplib{
 
       void set_lower_bounds(const double &lower_bounds) {
         vector<double> lower_bound(n_params(), lower_bounds);
+        //Temporal, to avoid optimization of undesired parameters
+        size_t iter = 0;
+        for (size_t q = 0; q < A.size(); ++q){
+          for (size_t i = 0; i < A[q].n_rows; ++i){
+            for (size_t j = 0; j < A[q].n_cols; ++j){
+              if (j > i)
+                lower_bound[iter] = 0.0;
+              iter++;
+            }
+          }
+        }
         set_lower_bounds(lower_bound);
       }
 
       void set_upper_bounds(const double &upper_bounds) {
         vector<double> upper_bound(n_params(), upper_bounds);
+        //Temporal, to avoid optimization of undesired parameters
+        size_t iter = 0;
+        for (size_t q = 0; q < A.size(); ++q){
+          for (size_t i = 0; i < A[q].n_rows; ++i){
+            for (size_t j = 0; j < A[q].n_cols; ++j){
+              if (j > i)
+                upper_bound[iter] = 0.0;
+              iter++;
+            }
+          }
+        }
         set_upper_bounds(upper_bound);
       }
 

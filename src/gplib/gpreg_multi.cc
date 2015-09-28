@@ -80,6 +80,8 @@ namespace gplib{
         mat dKdT = pimpl-> kernel-> derivate(d, pimpl-> X, pimpl-> X);
         grad[d] = trace(dLLdK * dKdT);
       }
+      //cout << "----" << endl;
+      //cout << ans << endl << grad[0] << endl;
       return ans;
     }
 
