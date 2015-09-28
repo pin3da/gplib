@@ -55,8 +55,8 @@ int main(int argc, char **argv) {
   vector<double> kernel_params({0.1, 0.1, 0.05});
 
   //Set lower and upper bounds for parameters
-  vector<double> lower_bounds({0.00001, 0.00001, 0.0001});
-  vector<double> upper_bounds({5, 5, 0.1});
+  //vector<double> lower_bounds({0.00001, 0.00001, 0.0001});
+  //vector<double> upper_bounds({5, 5, 0.1});
 
   /*we use a shared pointer so that the GPR class
   can handle the destruction and other management functions
@@ -65,8 +65,6 @@ int main(int argc, char **argv) {
   vector<shared_ptr<kernel_class> > latent_functions;
   for(size_t i = 0; i < l_functions; i++) {
     latent_functions.push_back(make_shared<kernels::squared_exponential>(kernel_params));
-    latent_functions[i] -> set_upper_bounds(upper_bounds);
-    latent_functions[i] -> set_lower_bounds(lower_bounds);
   }
 
   vector<mat> params(latent_functions.size(), eye<mat>(noutputs, noutputs));
@@ -75,6 +73,8 @@ int main(int argc, char **argv) {
 
   //Create Regression object
   gp_reg_multi test_reg;
+  K-> set_upper_bounds(1.0);
+  K-> set_lower_bounds(-1.0);
   test_reg.set_kernel(K);
   for(size_t i = 0; i < noutputs; i++) {
     X_set[i] = x;
@@ -83,8 +83,7 @@ int main(int argc, char **argv) {
 
   //Set training set as the generated Data (with noise)
   test_reg.set_training_set(X_set, y);
-
-  //test_reg.train(1000);
+  test_reg.train(1000);
 
   //Take the posterior distribution for the new data
   mv_gauss posterior = test_reg.full_predict(new_X_set);

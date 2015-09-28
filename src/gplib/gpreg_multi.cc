@@ -68,18 +68,20 @@ namespace gplib{
 
     static double training_obj(const vector<double> &theta, vector<double> &grad, void *fdata) {
       implementation *pimpl = (implementation*) fdata;
-      // pimpl->kernel->set_params(theta);
-      double ans = pimpl->log_marginal();
+      pimpl->kernel->set_params(theta);
+      double ans = pimpl-> log_marginal();
 
-      vec mx = pimpl->eval_mean(pimpl->X);
-      mat K = pimpl->kernel->eval(pimpl->X, pimpl->X);
+      vec mx = pimpl->eval_mean(pimpl-> X);
+      mat K = pimpl->kernel->eval(pimpl-> X, pimpl-> X);
       mat Kinv = K.i();
-      vec diff = pimpl->flatten(pimpl->y);
+      vec diff = pimpl->flatten(pimpl-> y);
       mat dLLdK = -0.5 * Kinv + 0.5 * Kinv * diff * diff.t() * Kinv;
       for (size_t d = 0; d < grad.size(); d++) {
-        mat dKdT = pimpl->kernel->derivate(d, pimpl->X, pimpl->X);
+        mat dKdT = pimpl-> kernel-> derivate(d, pimpl-> X, pimpl-> X);
         grad[d] = trace(dLLdK * dKdT);
       }
+      //cout << "----" << endl;
+      //cout << ans << endl << grad[0] << endl;
       return ans;
     }
 
@@ -89,11 +91,12 @@ namespace gplib{
       my_min.set_xtol_rel(1e-4);
       my_min.set_maxeval(max_iter);
 
-      my_min.set_lower_bounds(kernel->get_lower_bounds());
-      my_min.set_upper_bounds(kernel->get_upper_bounds());
+      my_min.set_lower_bounds(kernel-> get_lower_bounds());
+      my_min.set_upper_bounds(kernel-> get_upper_bounds());
 
       double error; //final value of error function
-      vector<double> x = kernel->get_params();
+      vector<double> x = kernel-> get_params();
+      //my_min.set_maxtime(5);
       my_min.optimize(x, error);
       kernel->set_params(x);
     }
