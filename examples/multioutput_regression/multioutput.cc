@@ -73,8 +73,8 @@ int main(int argc, char **argv) {
 
   //Create Regression object
   gp_reg_multi test_reg;
-  K-> set_upper_bounds(100.0);
-  K-> set_lower_bounds(-100.0);
+  K-> set_upper_bounds(1.0);
+  K-> set_lower_bounds(-1.0);
   test_reg.set_kernel(K);
   for(size_t i = 0; i < noutputs; i++) {
     X_set[i] = x;
