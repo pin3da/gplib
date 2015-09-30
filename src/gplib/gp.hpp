@@ -14,10 +14,9 @@ namespace gplib {
     public:
       kernel_class() {};
       virtual ~kernel_class() = default;
-      virtual arma::mat eval(const arma::mat &X, const arma::mat &Y,
-          size_t id_out_1, size_t id_out_2) const = 0;
+      virtual arma::mat eval(const arma::mat &X, const arma::mat &Y) const = 0;
       virtual arma::mat derivate(size_t param_id, const arma::mat &X,
-          const arma::mat &Y, size_t id_out_1, size_t id_out_2) const = 0;
+          const arma::mat &Y) const = 0;
       virtual size_t n_params() const = 0;
       virtual void set_params(const std::vector<double> &params) = 0;
       virtual void set_lower_bounds(const std::vector<double> &lower_bounds) = 0;
@@ -40,6 +39,48 @@ namespace gplib {
       void train(int max_iter);
       mv_gauss full_predict(const arma::mat &new_data) const;
       arma::vec predict(const arma::mat &new_data) const;
+    };
+
+    class multioutput_kernel_class {
+    public:
+      multioutput_kernel_class () {};
+      multioutput_kernel_class (const std::vector<std::shared_ptr<kernel_class>> &kernels,
+            const std::vector<arma::mat> &params) {}
+      virtual ~multioutput_kernel_class() = default;
+      virtual arma::mat eval(const std::vector<arma::mat> &X, const std::vector<arma::mat> &Y) const = 0;
+      virtual arma::mat derivate(size_t param_id, const std::vector<arma::mat> &X,
+          const std::vector<arma::mat> &Y) const = 0;
+      virtual size_t n_params() const = 0;
+      virtual void set_params_k(const std::vector<arma::mat> &params) = 0;
+      virtual void set_params(const std::vector<double> &params, size_t n_outputs = -1) = 0;
+      virtual void set_param(size_t q, size_t a, size_t b, const double param) = 0;
+      virtual void set_param(size_t q, size_t param_id, const double param) = 0;
+      virtual void set_kernels(const std::vector<std::shared_ptr<kernel_class>> &kernels) = 0;
+      virtual std::vector<arma::mat> get_params_k() const = 0;
+      virtual std::vector<double> get_params() const = 0;
+      virtual std::vector<std::shared_ptr<kernel_class>> get_kernels() const = 0;
+      virtual double get_param(size_t q, size_t a, size_t b) const = 0;
+      virtual double get_param(size_t q, size_t param_id) const = 0;
+      virtual void set_lower_bounds(const double &lower_bounds) = 0;
+      virtual void set_upper_bounds(const double &upper_bounds) = 0;
+      virtual void set_lower_bounds(const std::vector<double> &lower_bounds) = 0;
+      virtual void set_upper_bounds(const std::vector<double> &params) = 0;
+      virtual std::vector<double> get_lower_bounds() const = 0;
+      virtual std::vector<double> get_upper_bounds() const = 0;
+    };
+
+    class gp_reg_multi {
+    private:
+      struct implementation;
+      implementation* pimpl;
+    public:
+      gp_reg_multi();
+      ~gp_reg_multi();
+      void set_kernel(const std::shared_ptr<multioutput_kernel_class> &k);
+      void set_training_set(const std::vector<arma::mat> &X, const std::vector<arma::vec> &y);
+      void train(int max_iter);
+      mv_gauss full_predict(const std::vector<arma::mat> &new_data);
+      arma::vec predict(const std::vector<arma::mat> &new_data) const;
     };
 };
 

@@ -5,5 +5,6 @@
 #include "basic.hpp"
 #include "gp.hpp"
 #include "kernels.hpp"
+#include "multioutput_kernels.hpp"
 
 #endif

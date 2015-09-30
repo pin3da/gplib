@@ -63,7 +63,6 @@ LIBRARY_SHARED  = lib$(LIBRARY_NAME).so
 LIBRARY_VERSION_SHARED = $(LIBRARY_SHARED).$(VERSION_MAJOR)
 LIBRARY_FULL_VERSION_SHARED = $(LIBRARY_SHARED).$(APP_VERSION)
 LIBRARY_ARCHIVE = lib$(LIBRARY_NAME).a
-CLIENT_TARGET   = $(LIBRARY_NAME)
 TESTS_TARGET    = $(LIBRARY_NAME)-tests
 
 
@@ -102,16 +101,11 @@ COMMON_FLAGS = -MMD -std=c++11 -pipe -Wall -fPIC \
 	-DBUILD_ENV=$(CONFIG) \
 	-DBUILD_DATESTAMP='$(APP_DATESTAMP)' \
 	-DBUILD_LIBRARY_NAME='"$(LIBRARY_NAME)"' \
-	-DBUILD_CLIENT_NAME='"$(CLIENT_TARGET)"' \
 	-I$(SRC_PATH) $(CUSTOM_INCLUDE_PATH)
 
 COMMON_LIBS = -larmadillo -lnlopt
 
 LIBRARY_LIBS =
-
-CLIENT_LIBS = -L$(BUILD_PATH) \
-	-l$(LIBRARY_NAME) \
-	-lboost_program_options
 
 TEST_LIBS = -L$(BUILD_PATH) \
 	-l$(LIBRARY_NAME) \
@@ -128,8 +122,6 @@ ALL_LIBRARY_OBJECTS := $(patsubst $(SRC_PATH)/%.cc, $(OBJECT_PATH)/%.o, $(shell 
 
 ALL_LIBRARY_INCLUDES := $(shell find $(LIBRARY_PATH) -iname '*.hpp')
 
-ALL_CLIENT_OBJECTS := $(patsubst $(SRC_PATH)/%.cc, $(OBJECT_PATH)/%.o, $(shell find $(CLIENT_PATH) -iname '*.cc'))
-
 ALL_TEST_OBJECTS := $(patsubst $(SRC_PATH)/%.cc, $(OBJECT_PATH)/%.o, $(shell find $(TESTS_PATH) -iname '*.cc'))
 
 TEST_SUITES := ${addprefix test-,${sort ${shell find ${TESTS_PATH} -iname *.cc | xargs grep BOOST_AUTO_TEST_SUITE\( | sed 's/.*BOOST_AUTO_TEST_SUITE( \(.*\) )/\1/' }}}
@@ -143,7 +135,7 @@ TEST_SUITES := ${addprefix test-,${sort ${shell find ${TESTS_PATH} -iname *.cc |
 main: $(LIBRARY_SHARED) $(LIBRARY_ARCHIVE)
 	@echo "use make check to test the build"
 
-all: $(LIBRARY_SHARED) $(LIBRARY_ARCHIVE) $(CLIENT_TARGET)
+all: $(LIBRARY_SHARED) $(LIBRARY_ARCHIVE)
 	@echo "use make check to test the build"
 
 check: $(LIBRARY_SHARED) $(LIBRARY_ARCHIVE) test
@@ -156,7 +148,6 @@ install:
 	install -m 755 $(BUILD_PATH)/$(LIBRARY_ARCHIVE) $(LIBDIR)/$(LIBRARY_ARCHIVE)
 	ln -sf $(LIBRARY_FULL_VERSION_SHARED) $(LIBDIR)/$(LIBRARY_VERSION_SHARED)
 	ln -sf $(LIBRARY_FULL_VERSION_SHARED) $(LIBDIR)/$(LIBRARY_SHARED)
-	if [ -f $(BUILD_PATH)/$(CLIENT_TARGET) ]; then install -m 755 $(BUILD_PATH)/$(CLIENT_TARGET) $(BINDIR); fi
 	$(LDCONFIG)
 	@echo "use make installcheck to test the install"
 
@@ -169,13 +160,11 @@ uninstall:
 	rm -f $(LIBDIR)/$(LIBRARY_VERSION_SHARED)
 	rm -f $(LIBDIR)/$(LIBRARY_SHARED)
 	rm -f $(LIBDIR)/$(LIBRARY_ARCHIVE)
-	rm -f $(BINDIR)/$(CLIENT_TARGET)
 
 clean:
 	rm -rf build/*
 	rm -rf docs
 
-client: $(CLIENT_TARGET)
 
 library: $(LIBRARY_SHARED) $(LIBRARY_ARCHIVE)
 
@@ -188,9 +177,6 @@ $(LIBRARY_SHARED): $(ALL_LIBRARY_OBJECTS)
 
 $(LIBRARY_ARCHIVE): $(ALL_LIBRARY_OBJECTS)
 	$(AR) $(AR_EXTRA) $(BUILD_PATH)/$@ $^
-
-$(CLIENT_TARGET): $(LIBRARY_SHARED) $(LIBRARY_ARCHIVE) $(ALL_CLIENT_OBJECTS)
-	$(LD) $(LDFLAGS) -o $(BUILD_PATH)/$@ $(ALL_CLIENT_OBJECTS) $(CLIENT_LIBS) $(COMMON_LIBS)
 
 $(TESTS_TARGET): $(LIBRARY_SHARED) $(LIBRARY_ARCHIVE) $(ALL_TEST_OBJECTS)
 	$(LD) $(LDFLAGS) -o $(BUILD_PATH)/$@ $(ALL_TEST_OBJECTS) $(TEST_LIBS) $(COMMON_LIBS)

@@ -4,6 +4,7 @@ FLAGS := -lgplib -larmadillo -std=c++11
 all: regression
 
 regression: regression.cc
-	$(CXX) regression.cc -o regression.mio $(FLAGS)
+	$(CXX) $(FLAGS) regression.cc -o regression.mio
+
 clean:
 	rm -rf *.mio
