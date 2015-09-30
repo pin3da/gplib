@@ -56,7 +56,7 @@ namespace gplib {
       return ans;
     }
 
-    void train(int max_iter) {
+    double train(int max_iter) {
       nlopt::opt my_min(nlopt::LD_MMA, kernel->n_params());
       my_min.set_max_objective(implementation::training_obj, this);
       my_min.set_xtol_rel(1e-4);
@@ -69,6 +69,7 @@ namespace gplib {
       vector<double> x = kernel->get_params();
       my_min.optimize(x, error);
       kernel->set_params(x);
+      return error;
     }
   };
 
@@ -93,8 +94,8 @@ namespace gplib {
     pimpl->y = y;
   }
 
-  void gp_reg::train(const int max_iter) {
-    pimpl->train(max_iter);
+  double gp_reg::train(const int max_iter) {
+    return pimpl->train(max_iter);
   }
 
   mv_gauss gp_reg::full_predict(const arma::mat &new_data) const {

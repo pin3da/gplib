@@ -21,6 +21,14 @@ namespace gplib{
          * */
         lmc_kernel(const std::vector<std::shared_ptr<kernel_class>> &kernels,
             const std::vector<arma::mat> &params);
+
+        /**
+         *  Constructor with default kernels and parameters.
+         *  @param lf_number : Number of latent functions.
+         *  @param n_outputs : Number of outputs.
+         * */
+        lmc_kernel(const size_t lf_number, size_t n_outputs);
+
         ~lmc_kernel();
 
         arma::mat eval(const std::vector<arma::mat> &X, const std::vector<arma::mat> &Y) const ;

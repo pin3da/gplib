@@ -4,16 +4,16 @@
 using namespace arma;
 using namespace std;
 
-namespace gplib{
+namespace gplib {
 
-  struct gp_reg_multi::implementation{
+  struct gp_reg_multi::implementation {
     shared_ptr<multioutput_kernel_class> kernel;
     vector<mat> X;
     vector<vec> y;
 
     vec eval_mean(vector<mat> &data) {
-      unsigned long total_size = 0;
-      for (unsigned int i = 0; i < data.size(); i++) {
+      size_t total_size = 0;
+      for (size_t i = 0; i < data.size(); ++i) {
         total_size += data[i].n_rows;
       }
       return zeros<vec> (total_size);
@@ -80,12 +80,10 @@ namespace gplib{
         mat dKdT = pimpl-> kernel-> derivate(d, pimpl-> X, pimpl-> X);
         grad[d] = trace(dLLdK * dKdT);
       }
-      //cout << "----" << endl;
-      //cout << ans << endl << grad[0] << endl;
       return ans;
     }
 
-    void train(int max_iter) {
+    double train(int max_iter) {
       nlopt::opt my_min(nlopt::LD_MMA, kernel->n_params());
       my_min.set_max_objective(implementation::training_obj, this);
       my_min.set_xtol_rel(1e-4);
@@ -96,9 +94,9 @@ namespace gplib{
 
       double error; //final value of error function
       vector<double> x = kernel-> get_params();
-      //my_min.set_maxtime(5);
       my_min.optimize(x, error);
       kernel->set_params(x);
+      return error;
     }
 
   };
@@ -120,8 +118,8 @@ namespace gplib{
     pimpl->y = y;
   }
 
-  void gp_reg_multi::train(const int max_iter) {
-    pimpl->train(max_iter);
+  double gp_reg_multi::train(const int max_iter) {
+    return pimpl->train(max_iter);
   }
 
   mv_gauss gp_reg_multi::full_predict(const vector<mat> &new_data) {

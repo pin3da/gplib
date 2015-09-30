@@ -13,8 +13,19 @@ namespace gplib{
       vector<double> lower_bounds;
       vector<double> upper_bounds;
 
+      void default_constructor(size_t lf_number, size_t n_outputs) {
+        vector<double> kernel_params(3, 0.1);
+        kernels.clear();
+        for (size_t i = 0; i < lf_number; ++i)
+          kernels.push_back(make_shared<kernels::squared_exponential>\
+              (kernel_params));
+
+
+        A = vector<mat>(kernels.size(), eye<mat>(n_outputs, n_outputs));
+        B = vector<mat>(kernels.size(), eye<mat>(n_outputs, n_outputs));
+      }
+
       mat eval(const vector<mat> &X, const vector<mat> &Y) {
-        //Comput cov mat total size;
         size_t total_rows = 0, total_cols = 0;
         for (size_t i = 0; i < X.size(); ++i) {
           total_rows += X[i].n_rows;
@@ -84,7 +95,7 @@ namespace gplib{
           param_id -= B[q].size();
         }
 
-        // from here they must be params of each kernel.
+        // from here they must be params of each little kernel.
         for (size_t q = 0; q < kernels.size(); ++q) {
           if (param_id < kernels[q]-> n_params()) {
             size_t first_row = 0, first_col = 0;
@@ -111,8 +122,8 @@ namespace gplib{
 
       vector<double> get_params() {
         //set total size of vector
-        if (A.size() <= 0)
-          return vector<double> ({-1.0});
+        if (A.size() <= 0 || A[0].size() <= 0)
+          return vector<double> ();
 
         size_t t_size = A.size() * A[0].size();
         for (size_t k = 0; k < kernels.size(); ++k)
@@ -130,8 +141,6 @@ namespace gplib{
         for (size_t k = 0; k < kernels.size(); ++k) {
           tmp = kernels[k]-> get_params();
           copy (tmp.begin(), tmp.end(), ans.begin() + iter);
-          //this produce a segmentation fault, why?, I will never know
-          //copy (kernels[k]-> get_params().begin(), kernels[k]-> get_params().end(), ans.begin() + iter);
           iter += kernels[k]-> n_params();
         }
         return ans;
@@ -139,14 +148,15 @@ namespace gplib{
 
       void set_params(const vector<double> &params, int n_outputs = -1) {
         if (n_outputs == -1){
-          if (A.size() > 0)
+          if (A.size() > 0 && A[0].size() > 0)
             n_outputs = A[0].n_cols;
           else
-            throw logic_error("Parameters Uninitialized");//Throw exception here
+            throw logic_error("Parameters Uninitialized");
         }
         size_t t_size = A.size() * n_outputs * n_outputs;
         for (size_t k = 0; k < kernels.size(); ++k)
           t_size += kernels[k]-> n_params();
+
         if(t_size != params.size()){
           throw length_error("Wrong parameter vector size");
         }
@@ -235,7 +245,6 @@ namespace gplib{
 
       void set_lower_bounds(const double &lower_bounds) {
         vector<double> lower_bound(n_params(), lower_bounds);
-        //Temporal, to avoid optimization of undesired parameters
         size_t iter = 0;
         for (size_t q = 0; q < A.size(); ++q){
           for (size_t i = 0; i < A[q].n_rows; ++i){
@@ -251,7 +260,6 @@ namespace gplib{
 
       void set_upper_bounds(const double &upper_bounds) {
         vector<double> upper_bound(n_params(), upper_bounds);
-        //Temporal, to avoid optimization of undesired parameters
         size_t iter = 0;
         for (size_t q = 0; q < A.size(); ++q){
           for (size_t i = 0; i < A[q].n_rows; ++i){
@@ -276,6 +284,10 @@ namespace gplib{
         const vector<mat> &params) : lmc_kernel() {
       pimpl-> kernels = kernels;
       pimpl-> set_params_k(params);
+    }
+
+    lmc_kernel::lmc_kernel(const size_t lf_number, size_t n_outputs) : lmc_kernel() {
+      pimpl-> default_constructor(lf_number, n_outputs);
     }
 
     lmc_kernel::~lmc_kernel() {
