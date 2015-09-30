@@ -166,6 +166,9 @@ namespace gplib{
             A[q] = mat(n_outputs, n_outputs, fill::zeros);
           for (size_t i = 0; i < A[0].n_rows; ++i) {
             for (size_t j = 0; j < A[0].n_cols; ++j) {
+              if (j > i && fabs(params[iter]) < datum::eps) {
+                throw logic_error("Params matrix must be lower triangular");
+              }
               A[q](i, j) = params[iter];
               ++iter;
             }
@@ -235,31 +238,46 @@ namespace gplib{
         return ans;
       }
 
+      void check_bounds(const vector<double> &bounds) {
+        size_t iter = 0;
+        for (size_t q = 0; q < A.size(); ++q) {
+          for (size_t i = 0; i < A[q].n_rows; ++i) {
+            for (size_t j = 0; j < A[q].n_cols; ++j) {
+              if (j > i && fabs(bounds[iter]) < datum::eps)
+                throw logic_error("Wrong bounds: Params matrix must be lower triangular");
+              iter++;
+            }
+          }
+        }
+      }
+
       void set_lower_bounds(const vector<double> &lower_bound) {
+        check_bounds(lower_bound);
         lower_bounds = lower_bound;
       }
 
       void set_upper_bounds(const vector<double> &upper_bound) {
+        check_bounds(upper_bound);
         upper_bounds = upper_bound;
       }
 
-      void set_lower_bounds(const double &lower_bounds) {
-        vector<double> lower_bound(n_params(), lower_bounds);
+      void set_lower_bounds(const double &l_bound) {
+        vector<double> lower_bound(n_params(), l_bound);
         size_t iter = 0;
-        for (size_t q = 0; q < A.size(); ++q){
-          for (size_t i = 0; i < A[q].n_rows; ++i){
-            for (size_t j = 0; j < A[q].n_cols; ++j){
+        for (size_t q = 0; q < A.size(); ++q) {
+          for (size_t i = 0; i < A[q].n_rows; ++i) {
+            for (size_t j = 0; j < A[q].n_cols; ++j) {
               if (j > i)
                 lower_bound[iter] = 0.0;
               iter++;
             }
           }
         }
-        set_lower_bounds(lower_bound);
+        lower_bounds = lower_bound;
       }
 
-      void set_upper_bounds(const double &upper_bounds) {
-        vector<double> upper_bound(n_params(), upper_bounds);
+      void set_upper_bounds(const double &u_bound) {
+        vector<double> upper_bound(n_params(), u_bound);
         size_t iter = 0;
         for (size_t q = 0; q < A.size(); ++q){
           for (size_t i = 0; i < A[q].n_rows; ++i){
@@ -270,7 +288,7 @@ namespace gplib{
             }
           }
         }
-        set_upper_bounds(upper_bound);
+        upper_bounds = upper_bound;
       }
 
 
