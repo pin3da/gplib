@@ -11,6 +11,10 @@
 namespace gplib {
 
     class kernel_class {
+    /**
+     * Kernel Class definition
+
+     * */
     public:
       kernel_class() {};
       virtual ~kernel_class() = default;
