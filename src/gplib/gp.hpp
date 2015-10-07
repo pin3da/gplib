@@ -13,11 +13,14 @@ namespace gplib {
     class kernel_class {
     /**
      * Kernel Class definition
-
      * */
     public:
       kernel_class() {};
       virtual ~kernel_class() = default;
+      /**
+       *  @param X : Temporal.
+       *  @param Y : Temporal.
+       * */
       virtual arma::mat eval(const arma::mat &X, const arma::mat &Y) const = 0;
       virtual arma::mat derivate(size_t param_id, const arma::mat &X,
           const arma::mat &Y) const = 0;
