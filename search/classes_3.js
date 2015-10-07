@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['mv_5fgauss',['mv_gauss',['../classgplib_1_1mv__gauss.html',1,'gplib']]]
+  ['lmc_5fkernel',['lmc_kernel',['../classgplib_1_1multioutput__kernels_1_1lmc__kernel.html',1,'gplib::multioutput_kernels']]]
 ];

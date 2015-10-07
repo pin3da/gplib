@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['upper_5fbounds',['upper_bounds',['../structgplib_1_1kernels_1_1squared__exponential_1_1implementation.html#a12a4e04232a1401b2e08a2a317ee54aa',1,'gplib::kernels::squared_exponential::implementation']]]
+  ['mean',['mean',['../structgplib_1_1mv__gauss_1_1implementation.html#a600c8163d58f449a7f3dfe608ef1f82e',1,'gplib::mv_gauss::implementation']]]
 ];

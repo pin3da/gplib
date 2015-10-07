@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['kernel',['kernel',['../structgplib_1_1gp__reg_1_1implementation.html#a127ae16e6d7f6e7f5b63341d4e3469cb',1,'gplib::gp_reg::implementation']]]
+  ['cov',['cov',['../structgplib_1_1mv__gauss_1_1implementation.html#a464eb14157f4565e54793256332b314c',1,'gplib::mv_gauss::implementation']]],
+  ['cov_5fchol',['cov_chol',['../structgplib_1_1mv__gauss_1_1implementation.html#a99cb4c74fd3cf281d7841c0d571518ad',1,'gplib::mv_gauss::implementation']]]
 ];

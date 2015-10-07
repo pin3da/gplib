@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['squared_5fexponential',['squared_exponential',['../classgplib_1_1kernels_1_1squared__exponential.html',1,'gplib::kernels']]]
+  ['multioutput_5fkernel_5fclass',['multioutput_kernel_class',['../classgplib_1_1multioutput__kernel__class.html',1,'gplib']]],
+  ['mv_5fgauss',['mv_gauss',['../classgplib_1_1mv__gauss.html',1,'gplib']]]
 ];
