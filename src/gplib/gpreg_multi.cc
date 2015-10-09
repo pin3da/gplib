@@ -10,6 +10,7 @@ namespace gplib {
     shared_ptr<multioutput_kernel_class> kernel;
     vector<mat> X;
     vector<vec> y;
+    size_t state;
 
     vec eval_mean(vector<mat> &data) {
       size_t total_size = 0;
@@ -47,6 +48,34 @@ namespace gplib {
       mv_gauss gd(mean, cov);
       return gd.conditional(fill_y, observed);
     }
+
+    mat comp_Q(vector<mat> &a, vector<mat> &b, vector<mat> &u) {
+      mat kuu =  kernel-> eval(u, u).i();
+      return kernel-> eval(a, u) * kuu * kernel-> eval(u, b);
+    }
+
+    mv_gauss predict_FITC(const vector<mat> &new_x) {
+      vector<mat> M(X.size());
+      for (size_t i = 0; i < M.size(); ++i) {
+        M[i] = X[i].rows(0, min(5, (int)X[i].size()));
+        M[i] += 1.6;
+      }
+      double sigma = 0.01;
+      mat Qn = comp_Q(X, X, M);
+      mat lambda = diagmat(kernel-> eval(X, X) - Qn);
+      mat tmp = (lambda + sigma * eye(lambda.n_rows, lambda.n_cols)).i();
+      mat B = kernel-> eval(M, M) * tmp * kernel-> eval(X, M);
+
+      mat Y = flatten(y);
+      mat mean = kernel-> eval(new_x, M) * B.i() * kernel-> eval(M, X) * tmp * Y;
+
+      tmp     = kernel-> eval(M, M).i() - B.i();
+      mat cov = kernel-> eval(new_x, new_x) - kernel-> eval(new_x, M) *
+                tmp * kernel-> eval(M, new_x) + sigma;
+
+      return mv_gauss(mean, cov);
+    }
+
 
     mv_gauss marginal() {
       vec mean = eval_mean(X);
@@ -99,6 +128,23 @@ namespace gplib {
       return error;
     }
 
+    double train_FITC(int max_iter) {
+      /* nlopt::opt my_min(nlopt::LD_MMA, kernel->n_params());
+      my_min.set_max_objective(implementation::training_obj, this);
+      my_min.set_xtol_rel(1e-4);
+      my_min.set_maxeval(max_iter);
+
+      my_min.set_lower_bounds(kernel-> get_lower_bounds());
+      my_min.set_upper_bounds(kernel-> get_upper_bounds());
+
+      double error; //final value of error function
+      vector<double> x = kernel-> get_params();
+      my_min.optimize(x, error);
+      kernel->set_params(x);
+      return error;*/
+      return 1e100;
+    }
+
   };
 
   gp_reg_multi::gp_reg_multi() {
@@ -110,24 +156,35 @@ namespace gplib {
   }
 
   void gp_reg_multi::set_kernel(const shared_ptr<multioutput_kernel_class> &k) {
-    pimpl->kernel = k;
+    pimpl-> kernel = k;
   }
 
   void gp_reg_multi::set_training_set(const vector<mat> &X, const vector<vec> &y) {
-    pimpl->X = X;
-    pimpl->y = y;
+    pimpl-> X = X;
+    pimpl-> y = y;
   }
 
-  double gp_reg_multi::train(const int max_iter) {
-    return pimpl->train(max_iter);
+  double gp_reg_multi::train(const int max_iter, const size_t type) {
+    pimpl-> state = type;
+    if (type == FITC)
+      return pimpl-> train_FITC(max_iter);
+    else
+      return pimpl-> train(max_iter);
   }
 
   mv_gauss gp_reg_multi::full_predict(const vector<mat> &new_data) {
-    return pimpl->predict(new_data);
+    if (pimpl-> state == FITC)
+      return pimpl-> predict_FITC(new_data);
+    else
+      return pimpl-> predict(new_data);
   }
 
   arma::vec gp_reg_multi::predict(const vector<arma::mat> &new_data) const {
-    mv_gauss g = pimpl->predict(new_data);
+    mv_gauss g;
+    if (pimpl-> state == FITC)
+      g = pimpl-> predict_FITC(new_data);
+    else
+      g = pimpl-> predict(new_data);
     return g.get_mean();
   }
 };
