@@ -166,7 +166,7 @@ namespace gplib{
             A[q] = mat(n_outputs, n_outputs, fill::zeros);
           for (size_t i = 0; i < A[0].n_rows; ++i) {
             for (size_t j = 0; j < A[0].n_cols; ++j) {
-              if (j > i && fabs(params[iter]) < datum::eps) {
+              if (j > i && fabs(params[iter]) > datum::eps) {
                 throw logic_error("Params matrix must be lower triangular");
               }
               A[q](i, j) = params[iter];
@@ -243,7 +243,7 @@ namespace gplib{
         for (size_t q = 0; q < A.size(); ++q) {
           for (size_t i = 0; i < A[q].n_rows; ++i) {
             for (size_t j = 0; j < A[q].n_cols; ++j) {
-              if (j > i && fabs(bounds[iter]) < datum::eps)
+              if (j > i && fabs(bounds[iter]) > datum::eps)
                 throw logic_error("Wrong bounds: Params matrix must be lower triangular");
               iter++;
             }
