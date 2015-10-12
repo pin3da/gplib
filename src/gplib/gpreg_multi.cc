@@ -10,6 +10,7 @@ namespace gplib {
     shared_ptr<multioutput_kernel_class> kernel;
     vector<mat> X;
     vector<vec> y;
+    vector<mat> M;
     size_t state;
 
     vec eval_mean(vector<mat> &data) {
@@ -55,11 +56,6 @@ namespace gplib {
     }
 
     mv_gauss predict_FITC(const vector<mat> &new_x) {
-      vector<mat> M(X.size());
-      for (size_t i = 0; i < M.size(); ++i) {
-        M[i] = X[i].rows(0, min(5, (int)X[i].size()));
-        M[i] += 1.6;
-      }
       double sigma = 0.01;
       mat Qn = comp_Q(X, X, M);
       mat lambda = diagmat(kernel-> eval(X, X) - Qn);
@@ -169,11 +165,15 @@ namespace gplib {
     pimpl-> y = y;
   }
 
-  double gp_reg_multi::train(const int max_iter, const size_t type) {
+  double gp_reg_multi::train(const int max_iter, const size_t type, void *param) {
     pimpl-> state = type;
-    if (type == FITC)
+    if (type == FITC){
+      size_t num_pi = *((size_t *) param);
+      pimpl-> M = vector<mat> (pimpl-> X.size(),
+                  zeros<mat>(num_pi, pimpl-> X[0].n_cols));
+
       return pimpl-> train_FITC(max_iter);
-    else
+    } else
       return pimpl-> train(max_iter);
   }
 
