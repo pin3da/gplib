@@ -64,15 +64,14 @@ namespace gplib {
       mat Qn = comp_Q(X, X, M);
       mat lambda = diagmat(kernel-> eval(X, X) - Qn);
       mat tmp = (lambda + sigma * eye(lambda.n_rows, lambda.n_cols)).i();
-      mat B = kernel-> eval(M, M) * tmp * kernel-> eval(X, M);
-
+      mat B = kernel-> eval(M, M) * kernel-> eval(M, X) * tmp *
+              kernel-> eval(X, M);
       mat Y = flatten(y);
-      mat mean = kernel-> eval(new_x, M) * B.i() * kernel-> eval(M, X) * tmp * Y;
-
+      mat mean = kernel-> eval(new_x, M) * B.i() * kernel-> eval(M, X) *
+                 tmp * Y;
       tmp     = kernel-> eval(M, M).i() - B.i();
       mat cov = kernel-> eval(new_x, new_x) - kernel-> eval(new_x, M) *
                 tmp * kernel-> eval(M, new_x) + sigma;
-
       return mv_gauss(mean, cov);
     }
 
