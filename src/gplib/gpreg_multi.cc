@@ -129,6 +129,12 @@ namespace gplib {
     }
 
     double train_FITC(int max_iter) {
+
+      /**
+       * In this case we need to optimize this:
+       * http://www.gatsby.ucl.ac.uk/~snelson/thesis.pdf#appendix.C
+       **/
+
       /* nlopt::opt my_min(nlopt::LD_MMA, kernel->n_params());
       my_min.set_max_objective(implementation::training_obj, this);
       my_min.set_xtol_rel(1e-4);
