@@ -74,7 +74,7 @@ namespace gplib {
 
     mv_gauss marginal() {
       vec mean = eval_mean(X);
-      mat cov = kernel->eval(X, X);
+      mat cov = kernel-> eval(X, X);
       return mv_gauss(mean, cov);
     }
 
@@ -86,19 +86,45 @@ namespace gplib {
       return flat;
     }
 
+    vector<double> flatten(vector<mat> &M) {
+      size_t t_size = M.size() * M[0].size();
+      vector<double> ans(t_size);
+      size_t iter = 0;
+      for (size_t q = 0; q < M.size(); ++q) {
+        copy (M[q].begin(), M[q].end(), ans.begin() + iter);
+        iter += M[q].size();
+      }
+      return ans;
+    }
+
+    void unflatten(vector<double> &M_params) {
+      size_t iter = 0;
+      for(size_t q = 0; q < M.size(); ++q)
+        for(size_t i = 0; i < M[0].n_rows; ++i)
+          for(size_t j = 0; j < M[0].n_cols; ++j) {
+            M[q](i, j) = M_params[iter];
+            ++iter;
+          }
+    }
+
+    void split(const vector<double> &theta, vector<double> &kernel_params, vector<double> &M_params) {
+      copy(theta.begin(), theta.begin() + kernel_params.size(), kernel_params);
+      copy(theta.begin() + kernel_params.size() + 1, theta.end(), M_params);
+    }
+
     double log_marginal() {
       return marginal().log_density(flatten(y));
     }
 
     static double training_obj(const vector<double> &theta, vector<double> &grad, void *fdata) {
       implementation *pimpl = (implementation*) fdata;
-      pimpl->kernel->set_params(theta);
+      pimpl-> kernel-> set_params(theta);
       double ans = pimpl-> log_marginal();
 
-      vec mx = pimpl->eval_mean(pimpl-> X);
-      mat K = pimpl->kernel->eval(pimpl-> X, pimpl-> X);
+      vec mx = pimpl-> eval_mean(pimpl-> X);
+      mat K = pimpl-> kernel-> eval(pimpl-> X, pimpl-> X);
       mat Kinv = K.i();
-      vec diff = pimpl->flatten(pimpl-> y);
+      vec diff = pimpl-> flatten(pimpl-> y);
       mat dLLdK = -0.5 * Kinv + 0.5 * Kinv * diff * diff.t() * Kinv;
       for (size_t d = 0; d < grad.size(); d++) {
         mat dKdT = pimpl-> kernel-> derivate(d, pimpl-> X, pimpl-> X);
@@ -107,8 +133,30 @@ namespace gplib {
       return ans;
     }
 
+    static double training_obj_FITC(const vector<double> &theta, vector<double> &grad, void *fdata) {
+      implementation *pimpl = (implementation*) fdata;
+      size_t M_size = pimpl-> M.size() - pimpl-> M[0].size();
+      vector<double> kernel_params(theta.size() - M_size), M_params(M_size);
+      pimpl-> split(theta, kernel_params, M_params);
+      pimpl-> kernel-> set_params(kernel_params);
+       pimpl-> unflatten(M_params);
+      double ans = pimpl-> log_marginal();
+
+      vec mx = pimpl-> eval_mean(pimpl-> X);
+      mat K = pimpl-> kernel-> eval(pimpl-> X, pimpl-> X);
+      mat Kinv = K.i();
+      vec diff = pimpl-> flatten(pimpl-> y);
+      mat dLLdK = -0.5 * Kinv + 0.5 * Kinv * diff * diff.t() * Kinv;
+      for (size_t d = 0; d < grad.size(); d++) {
+        mat dKdT = pimpl-> kernel-> derivate(d, pimpl-> X, pimpl-> X);
+        grad[d] = trace(dLLdK * dKdT);
+      }
+      return ans;
+    }
+
+
     double train(int max_iter) {
-      nlopt::opt my_min(nlopt::LD_MMA, kernel->n_params());
+      nlopt::opt my_min(nlopt::LD_MMA, kernel-> n_params());
       my_min.set_max_objective(implementation::training_obj, this);
       my_min.set_xtol_rel(1e-4);
       my_min.set_maxeval(max_iter);
@@ -119,7 +167,7 @@ namespace gplib {
       double error; //final value of error function
       vector<double> x = kernel-> get_params();
       my_min.optimize(x, error);
-      kernel->set_params(x);
+      kernel-> set_params(x);
       return error;
     }
 
@@ -130,7 +178,7 @@ namespace gplib {
        * http://www.gatsby.ucl.ac.uk/~snelson/thesis.pdf#appendix.C
        **/
 
-      /* nlopt::opt my_min(nlopt::LD_MMA, kernel->n_params());
+       nlopt::opt my_min(nlopt::LD_MMA, kernel-> n_params());
       my_min.set_max_objective(implementation::training_obj, this);
       my_min.set_xtol_rel(1e-4);
       my_min.set_maxeval(max_iter);
@@ -140,9 +188,15 @@ namespace gplib {
 
       double error; //final value of error function
       vector<double> x = kernel-> get_params();
-      my_min.optimize(x, error);
-      kernel->set_params(x);
-      return error;*/
+      
+      //my_min.optimize(x, error);
+      size_t M_size = M.size() - M[0].size();
+      vector<double> kernel_params(x.size() - M_size), M_params(M_size);
+      split(x, kernel_params, M_params);
+      kernel-> set_params(kernel_params);
+      unflatten(M_params);
+
+      kernel-> set_params(x);
       return 1e100;
     }
 
