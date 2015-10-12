@@ -55,8 +55,50 @@ namespace gplib{
         return cov;
       }
 
+      mat derivate_wrt_data(size_t param_id, const vector<mat> &X,
+                            const vector<mat> &Y) {
 
-      mat derivate(size_t param_id, const vector<mat> &X, const vector<mat> &Y) {
+        /**
+         * Warning:
+         * This is the numerical differentiation and could
+         * be too slow.
+         * TODO: Implement analitical differentiation (:
+         * */
+
+        size_t tot_rows = 0, tot_cols = 0;
+        for (size_t i = 0; i < X.size(); ++i)
+          tot_rows += X[i].n_rows;
+
+        for (size_t i = 0; i < Y.size(); ++i)
+          tot_cols += Y[i].n_rows;
+
+        mat ans = zeros(tot_rows, tot_cols);
+
+        for (size_t k = 0; k < X.size(); ++k) {
+          if (param_id < X[k].size()) {
+            vector<mat> Xp = X, Yp = Y;
+            for (size_t i = 0; i < X[k].n_rows; ++i) {
+              for (size_t j = 0; j < X[k].n_cols; ++j) {
+                if (param_id == 0) {
+                  Xp[k](i, j) += datum::eps;
+                  Yp[k](i, j) += datum::eps;
+                  ans = eval(Xp, Yp);
+                  Xp[k](i, j) -= 2.0 * datum::eps;
+                  Yp[k](i, j) -= 2.0 * datum::eps;
+                  ans = ans - eval(Xp, Yp);
+                  ans /=  2.0 * datum::eps;
+                  return ans;
+                }
+              }
+            }
+          }
+          param_id -= X[k].size();
+        }
+        return ans;
+      }
+
+      mat derivate(size_t param_id, const vector<mat> &X,
+                   const vector<mat> &Y) {
 
         size_t tot_rows = 0, tot_cols = 0;
         for (size_t i = 0; i < X.size(); ++i)
@@ -75,7 +117,8 @@ namespace gplib{
               for (size_t j = 0; j < Y.size(); j++) {
                 mat ans_ab = zeros<mat> (X[i].n_rows, Y[j].n_rows);
                 if (i == id_out_1 && j == id_out_1) {
-                  ans_ab = A[q](id_out_1, id_out_2) * (kernels[q]-> eval(X[i], X[j]));
+                  ans_ab = A[q](id_out_1, id_out_2) *
+                            (kernels[q]-> eval(X[i], X[j]));
                 }
                 else if (j == id_out_1) {
                   ans_ab = A[q](i, id_out_2) * (kernels[q]-> eval(X[i], Y[j]));
@@ -101,7 +144,8 @@ namespace gplib{
             size_t first_row = 0, first_col = 0;
             for (size_t i = 0; i < X.size(); i++) {
               for (size_t j = 0; j < Y.size(); j++) {
-                mat ans_ab = B[q](i, j) * kernels[q]-> derivate(param_id, X[i], Y[j]);
+                mat ans_ab = B[q](i, j) *
+                             kernels[q]-> derivate(param_id, X[i], Y[j]);
 
                 ans.submat (first_row, first_col, first_row + X[i].n_rows - 1,
                     first_col + X[j].n_rows - 1) = ans_ab;
@@ -113,11 +157,13 @@ namespace gplib{
             }
             return ans;
 
-            //  ans must be equals to kron(B[q], kernels[q]-> derivate(param_id, X, Y));
+            //  ans must be equals to
+            //  kron(B[q], kernels[q]-> derivate(param_id, X, Y));
           }
           param_id -= kernels[q]-> n_params();
         }
-        return ans;
+
+        return derivate_wrt_data(param_id, X, Y);
       }
 
       vector<double> get_params() {
@@ -176,7 +222,9 @@ namespace gplib{
           B[q] = A[q] * A[q].t();
         }
         for (size_t k = 0; k < kernels.size(); ++k) {
-          vector<double> subparams(params.begin() + iter, params.begin() + iter + kernels[k]-> n_params());
+          vector<double> subparams(params.begin() + iter,
+              params.begin() + iter + kernels[k]-> n_params());
+
           kernels[k]->set_params(subparams);
           iter += (kernels[k]-> n_params() + 1);
         }
