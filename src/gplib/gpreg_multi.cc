@@ -113,8 +113,8 @@ namespace gplib {
     }
 
     void split(const vector<double> &theta, vector<double> &kernel_params, vector<double> &M_params) {
-      copy(theta.begin(), theta.begin() + kernel_params.size(), kernel_params);
-      copy(theta.begin() + kernel_params.size() + 1, theta.end(), M_params);
+      copy(theta.begin(), theta.begin() + kernel_params.size(), kernel_params.begin());
+      copy(theta.begin() + kernel_params.size() + 1, theta.end(), M_params.begin());
     }
 
     double log_marginal() {
