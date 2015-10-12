@@ -188,16 +188,17 @@ namespace gplib {
 
       double error; //final value of error function
       vector<double> x = kernel-> get_params();
-      
-      //my_min.optimize(x, error);
+      vector<double> flatten_M = flatten(M);
+      x.insert(x.end(), flatten_M.begin(), flatten_M.end());
+
+      my_min.optimize(x, error);
       size_t M_size = M.size() - M[0].size();
       vector<double> kernel_params(x.size() - M_size), M_params(M_size);
       split(x, kernel_params, M_params);
       kernel-> set_params(kernel_params);
       unflatten(M_params);
 
-      kernel-> set_params(x);
-      return 1e100;
+      return error;
     }
 
   };
