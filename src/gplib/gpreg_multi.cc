@@ -100,8 +100,8 @@ namespace gplib {
     void unflatten(vector<double> &M_params) {
       size_t iter = 0;
       for(size_t q = 0; q < M.size(); ++q)
-        for(size_t i = 0; i < M[0].n_rows; ++i)
-          for(size_t j = 0; j < M[0].n_cols; ++j) {
+        for(size_t i = 0; i < M[q].n_rows; ++i)
+          for(size_t j = 0; j < M[q].n_cols; ++j) {
             M[q](i, j) = M_params[iter];
             ++iter;
           }
@@ -135,11 +135,11 @@ namespace gplib {
 
     static double training_obj_FITC(const vector<double> &theta, vector<double> &grad, void *fdata) {
       implementation *pimpl = (implementation*) fdata;
-      size_t M_size = pimpl-> M.size() - pimpl-> M[0].size();
+      size_t M_size = pimpl-> M.size() * pimpl-> M[0].size();
       vector<double> kernel_params(theta.size() - M_size), M_params(M_size);
       pimpl-> split(theta, kernel_params, M_params);
       pimpl-> kernel-> set_params(kernel_params);
-       pimpl-> unflatten(M_params);
+      pimpl-> unflatten(M_params);
       double ans = pimpl-> log_marginal();
 
       vec mx = pimpl-> eval_mean(pimpl-> X);
@@ -148,7 +148,8 @@ namespace gplib {
       vec diff = pimpl-> flatten(pimpl-> y);
       mat dLLdK = -0.5 * Kinv + 0.5 * Kinv * diff * diff.t() * Kinv;
       for (size_t d = 0; d < grad.size(); d++) {
-        mat dKdT = pimpl-> kernel-> derivate(d, pimpl-> X, pimpl-> X);
+        mat dKdT = pimpl-> kernel-> derivate(d, pimpl-> M, pimpl-> M);
+        //incompatible matrix dimensions
         grad[d] = trace(dLLdK * dKdT);
       }
       return ans;
@@ -177,14 +178,18 @@ namespace gplib {
        * In this case we need to optimize this:
        * http://www.gatsby.ucl.ac.uk/~snelson/thesis.pdf#appendix.C
        **/
-
-       nlopt::opt my_min(nlopt::LD_MMA, kernel-> n_params());
-      my_min.set_max_objective(implementation::training_obj, this);
+      size_t M_size = M.size() * M[0].size();
+      size_t n_params = kernel-> n_params() + M_size;
+      nlopt::opt my_min(nlopt::LD_MMA, n_params);
+      my_min.set_max_objective(implementation::training_obj_FITC, this);
       my_min.set_xtol_rel(1e-4);
       my_min.set_maxeval(max_iter);
-
-      my_min.set_lower_bounds(kernel-> get_lower_bounds());
-      my_min.set_upper_bounds(kernel-> get_upper_bounds());
+      vector<double> lb = kernel-> get_lower_bounds();
+      vector<double> ub = kernel-> get_upper_bounds();
+      lb.resize(lb.size() + M_size, -HUGE_VAL);
+      ub.resize(ub.size() + M_size, HUGE_VAL);
+      my_min.set_lower_bounds(lb);
+      my_min.set_upper_bounds(ub);
 
       double error; //final value of error function
       vector<double> x = kernel-> get_params();
@@ -192,7 +197,6 @@ namespace gplib {
       x.insert(x.end(), flatten_M.begin(), flatten_M.end());
 
       my_min.optimize(x, error);
-      size_t M_size = M.size() - M[0].size();
       vector<double> kernel_params(x.size() - M_size), M_params(M_size);
       split(x, kernel_params, M_params);
       kernel-> set_params(kernel_params);
@@ -222,7 +226,7 @@ namespace gplib {
 
   double gp_reg_multi::train(const int max_iter, const size_t type, void *param) {
     pimpl-> state = type;
-    if (type == FITC){
+    if (type == FITC) {
       size_t num_pi = *((size_t *) param);
       pimpl-> M = vector<mat> (pimpl-> X.size(),
                   zeros<mat>(num_pi, pimpl-> X[0].n_cols));
