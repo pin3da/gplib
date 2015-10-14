@@ -11,6 +11,7 @@ namespace gplib {
     vector<mat> X;
     vector<vec> y;
     vector<mat> M;
+    double sigma;
     size_t state;
 
     vec eval_mean(vector<mat> &data) {
@@ -56,7 +57,8 @@ namespace gplib {
     }
 
     mv_gauss predict_FITC(const vector<mat> &new_x) {
-      double sigma = 0.01;
+      // TODO: optimize sigma.
+      sigma = 0.01;
       mat Qn = comp_Q(X, X, M);
       mat lambda = diagmat(kernel-> eval(X, X) - Qn);
       mat tmp = (lambda + sigma * eye(lambda.n_rows, lambda.n_cols)).i();
@@ -116,6 +118,31 @@ namespace gplib {
       return marginal().log_density(flatten(y));
     }
 
+    double log_marginal_fitc() {
+      mat Qn = comp_Q(X, X, M);
+      mat Gamma = diagmat(kernel-> eval(X, X) - Qn) + sigma * eye<mat>(Qn.n_rows, Qn.n_cols);
+      Gamma     /= sigma;
+
+      size_t total_N = 0, total_M = 0;
+      for (size_t  i = 0; i < X.size(); ++i) {
+        total_N += X[i].n_rows;
+        total_M += M[i].n_rows;
+      }
+
+      mat Kmm =  kernel-> eval(M, M);
+      mat A  = sigma * Kmm + kernel-> eval(M, X) * (Gamma.i()) * kernel-> eval(X, M);
+      double L1 = log(det(A)) - log(det(Kmm)) + log(det(Gamma)) + (total_N - total_M) * log(sigma);
+
+      mat y_sub   = sqrt(Gamma).i() * flatten(y);
+      mat Kmn_sub = (sqrt(Gamma).i() * kernel-> eval(X, M)).t();
+
+      double ny  = norm(y_sub);
+      double tmp = norm(sqrt(A).i() * Kmn_sub * y_sub);
+      double L2  = (ny * ny - tmp * tmp) / sigma;
+
+      return L1 + L2 + total_N * log(2 * pi);
+    }
+
     static double training_obj(const vector<double> &theta, vector<double> &grad, void *fdata) {
       implementation *pimpl = (implementation*) fdata;
       pimpl-> kernel-> set_params(theta);
@@ -135,15 +162,19 @@ namespace gplib {
 
     static double training_obj_FITC(const vector<double> &theta, vector<double> &grad, void *fdata) {
       implementation *pimpl = (implementation*) fdata;
+
+      // TODO: implement set_params for gpreg_multi and move the
+      // following lines there. (We need to set sigma there too).
       size_t M_size = pimpl-> M.size() * pimpl-> M[0].size();
       vector<double> kernel_params(theta.size() - M_size), M_params(M_size);
       pimpl-> split(theta, kernel_params, M_params);
       pimpl-> kernel-> set_params(kernel_params);
       pimpl-> unflatten(M_params);
-      double ans = pimpl-> log_marginal();
 
-      vec mx = pimpl-> eval_mean(pimpl-> X);
-      mat K = pimpl-> kernel-> eval(pimpl-> X, pimpl-> X);
+      double ans = pimpl-> log_marginal_fitc();
+
+     /* vec mx = pimpl-> eval_mean(pimpl-> M);
+      mat K = pimpl-> kernel-> eval(pimpl-> M, pimpl-> M);
       mat Kinv = K.i();
       vec diff = pimpl-> flatten(pimpl-> y);
       mat dLLdK = -0.5 * Kinv + 0.5 * Kinv * diff * diff.t() * Kinv;
@@ -152,6 +183,7 @@ namespace gplib {
         //incompatible matrix dimensions
         grad[d] = trace(dLLdK * dKdT);
       }
+      */
       return ans;
     }
 
