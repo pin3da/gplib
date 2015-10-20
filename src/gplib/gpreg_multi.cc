@@ -120,8 +120,8 @@ namespace gplib {
 
     double log_marginal_fitc() {
       mat Qn = comp_Q(X, X, M);
-      mat Gamma = diagmat(kernel-> eval(X, X) - Qn) + sigma * eye<mat>(Qn.n_rows, Qn.n_cols);
-      Gamma     /= sigma;
+      mat gamma = diagmat(kernel-> eval(X, X) - Qn) + sigma * eye<mat>(Qn.n_rows, Qn.n_cols);
+      gamma     /= sigma;
 
       size_t total_N = 0, total_M = 0;
       for (size_t  i = 0; i < X.size(); ++i) {
@@ -130,11 +130,11 @@ namespace gplib {
       }
 
       mat Kmm =  kernel-> eval(M, M);
-      mat A  = sigma * Kmm + kernel-> eval(M, X) * (Gamma.i()) * kernel-> eval(X, M);
-      double L1 = log(det(A)) - log(det(Kmm)) + log(det(Gamma)) + (total_N - total_M) * log(sigma);
+      mat A  = sigma * Kmm + kernel-> eval(M, X) * (gamma.i()) * kernel-> eval(X, M);
+      double L1 = log(det(A)) - log(det(Kmm)) + log(det(gamma)) + (total_N - total_M) * log(sigma);
 
-      mat y_sub   = sqrt(Gamma).i() * flatten(y);
-      mat Kmn_sub = (sqrt(Gamma).i() * kernel-> eval(X, M)).t();
+      mat y_sub   = sqrt(gamma).i() * flatten(y);
+      mat Kmn_sub = (sqrt(gamma).i() * kernel-> eval(X, M)).t();
 
       double ny  = norm(y_sub);
       double tmp = norm(sqrt(A).i() * Kmn_sub * y_sub);
@@ -160,6 +160,41 @@ namespace gplib {
       return ans;
     }
 
+
+    double derivate_l1(const mat &A, const mat &A_dot, const mat &Kmm,
+        const mat &Km_dot, const mat &gamma_2sub_dot) {
+
+      mat s_A    = sqrt(A);
+      mat s_A_t  = s_A.t();
+      mat s_Km   = sqrt(Kmm);
+      mat s_Km_t = s_Km.t();
+
+      double ans = trace(s_A * A_dot * s_A_t) - trace(s_Km * Km_dot * s_Km_t) +
+                   trace(gamma_2sub_dot);
+      return ans * 0.5;
+
+    }
+
+    double derivate_l2(const double &sigma, const mat &y_sub,
+        const mat &gamma_2sub_dot, const mat &A, const mat &A_dot,
+        const mat &Kmn_sub, const mat &Kmn_sub_dot) {
+
+
+      mat y_sub_t = y_sub.t();
+      mat s_A     = sqrt(A);
+      mat s_A_t   = s_A.t();
+
+      mat tmp   = s_A * Kmn_sub * y_sub;
+      mat tmp_t = tmp.t();
+      double ans = 0.5 * y_sub_t * gamma_2sub_dot * y_sub +
+        tmp_t * (0.5 * s_A * A_dot * s_A_t) * tmp -
+        s_A * Kmn_sub_dot * y_sub +
+        s_A * Kmn_sub * gamma_2sub_dot * y_sub;
+
+      return ans / sigma;
+
+    }
+
     static double training_obj_FITC(const vector<double> &theta, vector<double> &grad, void *fdata) {
       implementation *pimpl = (implementation*) fdata;
 
@@ -173,17 +208,48 @@ namespace gplib {
 
       double ans = pimpl-> log_marginal_fitc();
 
-     /* vec mx = pimpl-> eval_mean(pimpl-> M);
-      mat K = pimpl-> kernel-> eval(pimpl-> M, pimpl-> M);
-      mat Kinv = K.i();
-      vec diff = pimpl-> flatten(pimpl-> y);
-      mat dLLdK = -0.5 * Kinv + 0.5 * Kinv * diff * diff.t() * Kinv;
+      mat Qn = pimpl-> comp_Q(pimpl-> X, pimpl-> X, pimpl-> M);
+      mat gamma = diagmat(pimpl-> kernel-> eval(pimpl-> X, pimpl-> X) - Qn) +
+                  pimpl-> sigma * eye<mat>(Qn.n_rows, Qn.n_cols);
+
+      gamma /= pimpl-> sigma;
+
+      mat sqrt_gamma = sqrt(gamma);
+      mat gamma_i = gamma.i();
+      mat Kmm   = pimpl-> kernel-> eval(pimpl-> M, pimpl-> M);
+      mat Kmm_i = Kmm.i();
+      mat Knm   = pimpl-> kernel-> eval(pimpl-> X, pimpl-> M);
+      mat Kmn   = Knm.i();
+      mat Knm_sub = sqrt_gamma * Knm;
+      mat Kmn_sub = sqrt_gamma * Kmn;
+      mat y_sub   = sqrt(gamma).i() * pimpl-> flatten(pimpl-> y);
+
+      double _s = pimpl-> sigma;
+      mat A = _s * Kmm + Kmn * gamma_i * Knm;
+
+
       for (size_t d = 0; d < grad.size(); d++) {
-        mat dKdT = pimpl-> kernel-> derivate(d, pimpl-> M, pimpl-> M);
-        //incompatible matrix dimensions
-        grad[d] = trace(dLLdK * dKdT);
+        mat dKmmdT = pimpl-> kernel-> derivate(d, pimpl-> M, pimpl-> M);
+        mat dKmndT = pimpl-> kernel-> derivate(d, pimpl-> M, pimpl-> X);
+        mat dKnmdT = pimpl-> kernel-> derivate(d, pimpl-> X, pimpl-> M);
+        mat dKnndT = pimpl-> kernel-> derivate(d, pimpl-> X, pimpl-> X);
+
+        mat Knm_sub_dot = sqrt_gamma * dKnmdT;
+        mat Kmn_sub_dot = sqrt_gamma * dKmndT;
+        mat Knn_sub_dot = sqrt_gamma * dKnndT;
+
+        mat gamma_2sub_dot = diagmat(Knn_sub_dot - 2 * Knm_sub_dot * Kmm_i * Kmn_sub +
+                             Knm_sub * Kmm_i * dKmmdT * Kmm_i * Kmn_sub);
+            gamma_2sub_dot /= _s;
+
+
+        mat A_dot = _s * dKmmdT + 2 * symmatl(Kmn_sub_dot * Knm_sub) -
+                    Kmn_sub * gamma_2sub_dot * Knm_sub;
+
+        grad[d] = pimpl-> derivate_l1(A, A_dot, Kmm, dKmmdT, gamma_2sub_dot)
+                  + pimpl->derivate_l2(_s, y_sub, gamma_2sub_dot, A, A_dot,
+                                       Kmn_sub, Kmn_sub_dot);
       }
-      */
       return ans;
     }
 
@@ -205,11 +271,6 @@ namespace gplib {
     }
 
     double train_FITC(int max_iter) {
-
-      /**
-       * In this case we need to optimize this:
-       * http://www.gatsby.ucl.ac.uk/~snelson/thesis.pdf#appendix.C
-       **/
       size_t M_size = M.size() * M[0].size();
       size_t n_params = kernel-> n_params() + M_size;
       nlopt::opt my_min(nlopt::LD_MMA, n_params);
