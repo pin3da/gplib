@@ -186,12 +186,16 @@ namespace gplib {
 
       mat tmp   = s_A * Kmn_sub * y_sub;
       mat tmp_t = tmp.t();
-      double ans = 0.5 * y_sub_t * gamma_2sub_dot * y_sub +
+      mat ans = 0.5 * (y_sub_t * gamma_2sub_dot * y_sub) +
         tmp_t * (0.5 * s_A * A_dot * s_A_t) * tmp -
         s_A * Kmn_sub_dot * y_sub +
         s_A * Kmn_sub * gamma_2sub_dot * y_sub;
 
-      return ans / sigma;
+      if (ans.size() != 1) {
+        // TODO: remove this exception after test
+        throw "Problem with derivate L2";
+      }
+      return ans(0, 0) / sigma;
 
     }
 
