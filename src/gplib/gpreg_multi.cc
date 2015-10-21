@@ -11,7 +11,7 @@ namespace gplib {
     vector<mat> X;
     vector<vec> y;
     vector<mat> M;
-    double sigma;
+    double sigma = 0.01;
     size_t state;
 
     vec eval_mean(vector<mat> &data) {
@@ -119,9 +119,11 @@ namespace gplib {
     }
 
     double log_marginal_fitc() {
+
       mat Qn = comp_Q(X, X, M);
       mat gamma = diagmat(kernel-> eval(X, X) - Qn) + sigma * eye<mat>(Qn.n_rows, Qn.n_cols);
       gamma     /= sigma;
+
 
       size_t total_N = 0, total_M = 0;
       for (size_t  i = 0; i < X.size(); ++i) {
@@ -129,17 +131,16 @@ namespace gplib {
         total_M += M[i].n_rows;
       }
 
+
       mat Kmm =  kernel-> eval(M, M);
       mat A  = sigma * Kmm + kernel-> eval(M, X) * (gamma.i()) * kernel-> eval(X, M);
       double L1 = log(det(A)) - log(det(Kmm)) + log(det(gamma)) + (total_N - total_M) * log(sigma);
-
       mat y_sub   = sqrt(gamma).i() * flatten(y);
       mat Kmn_sub = (sqrt(gamma).i() * kernel-> eval(X, M)).t();
 
       double ny  = norm(y_sub);
       double tmp = norm(sqrt(A).i() * Kmn_sub * y_sub);
       double L2  = (ny * ny - tmp * tmp) / sigma;
-
       return L1 + L2 + total_N * log(2 * pi);
     }
 
@@ -171,8 +172,7 @@ namespace gplib {
 
       double ans = trace(s_A * A_dot * s_A_t) - trace(s_Km * Km_dot * s_Km_t) +
                    trace(gamma_2sub_dot);
-      return ans * 0.5;
-
+      return ans;
     }
 
     double derivate_l2(const double &sigma, const mat &y_sub,
@@ -181,21 +181,21 @@ namespace gplib {
 
 
       mat y_sub_t = y_sub.t();
-      mat s_A     = sqrt(A);
+      mat s_A     = sqrt(A).i();
       mat s_A_t   = s_A.t();
 
       mat tmp   = s_A * Kmn_sub * y_sub;
       mat tmp_t = tmp.t();
       mat ans = 0.5 * (y_sub_t * gamma_2sub_dot * y_sub) +
-        tmp_t * (0.5 * s_A * A_dot * s_A_t) * tmp -
+        tmp_t * ((0.5 * s_A * A_dot * s_A_t) * tmp -
         s_A * Kmn_sub_dot * y_sub +
-        s_A * Kmn_sub * gamma_2sub_dot * y_sub;
+        s_A * Kmn_sub * gamma_2sub_dot * y_sub);
 
       if (ans.size() != 1) {
         // TODO: remove this exception after test
         throw "Problem with derivate L2";
       }
-      return ans(0, 0) / sigma;
+      return sigma;
 
     }
 
@@ -217,43 +217,44 @@ namespace gplib {
                   pimpl-> sigma * eye<mat>(Qn.n_rows, Qn.n_cols);
 
       gamma /= pimpl-> sigma;
-
-      mat sqrt_gamma = sqrt(gamma);
-      mat gamma_i = gamma.i();
-      mat Kmm   = pimpl-> kernel-> eval(pimpl-> M, pimpl-> M);
+      mat sqrt_gamma_i = sqrt(gamma).i();
+      mat gamma_i = gamma.i();      mat Kmm   = pimpl-> kernel-> eval(pimpl-> M, pimpl-> M);
       mat Kmm_i = Kmm.i();
       mat Knm   = pimpl-> kernel-> eval(pimpl-> X, pimpl-> M);
-      mat Kmn   = Knm.i();
-      mat Knm_sub = sqrt_gamma * Knm;
-      mat Kmn_sub = sqrt_gamma * Kmn;
-      mat y_sub   = sqrt(gamma).i() * pimpl-> flatten(pimpl-> y);
+      mat Kmn   = Knm.t();
+      mat Knm_sub = sqrt_gamma_i * Knm;
+      mat Kmn_sub = Knm_sub.t();
+      mat y_sub   = sqrt_gamma_i * pimpl-> flatten(pimpl-> y);
 
       double _s = pimpl-> sigma;
       mat A = _s * Kmm + Kmn * gamma_i * Knm;
 
-
       for (size_t d = 0; d < grad.size(); d++) {
+        cout << d << " out of " << grad.size() << endl;
         mat dKmmdT = pimpl-> kernel-> derivate(d, pimpl-> M, pimpl-> M);
         mat dKmndT = pimpl-> kernel-> derivate(d, pimpl-> M, pimpl-> X);
         mat dKnmdT = pimpl-> kernel-> derivate(d, pimpl-> X, pimpl-> M);
         mat dKnndT = pimpl-> kernel-> derivate(d, pimpl-> X, pimpl-> X);
 
-        mat Knm_sub_dot = sqrt_gamma * dKnmdT;
-        mat Kmn_sub_dot = sqrt_gamma * dKmndT;
-        mat Knn_sub_dot = sqrt_gamma * dKnndT;
+        mat Knm_sub_dot = sqrt_gamma_i * dKnmdT;
+        //TODO: Review this carefully!
+        mat Kmn_sub_dot = Knm_sub_dot.t();
+        mat Knn_sub_dot = sqrt_gamma_i * dKnndT;
+
 
         mat gamma_2sub_dot = diagmat(Knn_sub_dot - 2 * Knm_sub_dot * Kmm_i * Kmn_sub +
                              Knm_sub * Kmm_i * dKmmdT * Kmm_i * Kmn_sub);
-            gamma_2sub_dot /= _s;
+        gamma_2sub_dot /= _s;
 
 
         mat A_dot = _s * dKmmdT + 2 * symmatl(Kmn_sub_dot * Knm_sub) -
                     Kmn_sub * gamma_2sub_dot * Knm_sub;
 
         grad[d] = pimpl-> derivate_l1(A, A_dot, Kmm, dKmmdT, gamma_2sub_dot)
-                  + pimpl->derivate_l2(_s, y_sub, gamma_2sub_dot, A, A_dot,
+                  + pimpl-> derivate_l2(_s, y_sub, gamma_2sub_dot, A, A_dot,
                                        Kmn_sub, Kmn_sub_dot);
       }
+      cout << "at the end of training obj" << endl;
       return ans;
     }
 
@@ -294,6 +295,7 @@ namespace gplib {
       x.insert(x.end(), flatten_M.begin(), flatten_M.end());
 
       my_min.optimize(x, error);
+      cout << "after optimization" << endl;
       vector<double> kernel_params(x.size() - M_size), M_params(M_size);
       split(x, kernel_params, M_params);
       kernel-> set_params(kernel_params);

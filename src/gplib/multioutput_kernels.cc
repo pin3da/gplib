@@ -118,17 +118,18 @@ namespace gplib{
                 mat ans_ab = zeros<mat> (X[i].n_rows, Y[j].n_rows);
                 if (i == id_out_1 && j == id_out_1) {
                   ans_ab = A[q](id_out_1, id_out_2) *
-                            (kernels[q]-> eval(X[i], X[j]));
+                            (kernels[q]-> eval(X[i], Y[j]));
                 }
                 else if (j == id_out_1) {
                   ans_ab = A[q](i, id_out_2) * (kernels[q]-> eval(X[i], Y[j]));
                 } else if (i == id_out_1) {
                   ans_ab = A[q](j, id_out_2) * (kernels[q]-> eval(X[i], Y[j]));
                 }
-                if (i * X.size() + j == param_id)
+                if (i * X.size() + j == param_id){
                   ans.submat (first_row, first_col, first_row + X[i].n_rows - 1,
-                      first_col + X[j].n_rows - 1) = ans_ab;
-                first_col += X[j].n_rows;
+                      first_col + Y[j].n_rows - 1) = ans_ab;
+                }
+                first_col += Y[j].n_rows;
               }
               first_row += X[i].n_rows;
               first_col = 0;
@@ -148,9 +149,9 @@ namespace gplib{
                              kernels[q]-> derivate(param_id, X[i], Y[j]);
 
                 ans.submat (first_row, first_col, first_row + X[i].n_rows - 1,
-                    first_col + X[j].n_rows - 1) = ans_ab;
+                    first_col + Y[j].n_rows - 1) = ans_ab;
 
-                first_col += X[j].n_rows;
+                first_col += Y[j].n_rows;
               }
               first_row += X[i].n_rows;
               first_col = 0;
