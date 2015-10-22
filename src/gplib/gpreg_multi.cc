@@ -119,11 +119,9 @@ namespace gplib {
     }
 
     double log_marginal_fitc() {
-
       mat Qn = comp_Q(X, X, M);
       mat gamma = diagmat(kernel-> eval(X, X) - Qn) + sigma * eye<mat>(Qn.n_rows, Qn.n_cols);
       gamma     /= sigma;
-
 
       size_t total_N = 0, total_M = 0;
       for (size_t  i = 0; i < X.size(); ++i) {
@@ -131,9 +129,9 @@ namespace gplib {
         total_M += M[i].n_rows;
       }
 
-
       mat Kmm =  kernel-> eval(M, M);
       mat A  = sigma * Kmm + kernel-> eval(M, X) * (gamma.i()) * kernel-> eval(X, M);
+      //TODO: Fix THIS
       double L1 = log(det(A)) - log(det(Kmm)) + log(det(gamma)) + (total_N - total_M) * log(sigma);
       mat y_sub   = sqrt(gamma).i() * flatten(y);
       mat Kmn_sub = (sqrt(gamma).i() * kernel-> eval(X, M)).t();
@@ -165,14 +163,14 @@ namespace gplib {
     double derivate_l1(const mat &A, const mat &A_dot, const mat &Kmm,
         const mat &Km_dot, const mat &gamma_2sub_dot) {
 
-      mat s_A    = sqrt(A);
+      mat s_A    = sqrt(A).i();
       mat s_A_t  = s_A.t();
-      mat s_Km   = sqrt(Kmm);
+      mat s_Km   = sqrt(Kmm).i();
       mat s_Km_t = s_Km.t();
 
       double ans = trace(s_A * A_dot * s_A_t) - trace(s_Km * Km_dot * s_Km_t) +
                    trace(gamma_2sub_dot);
-      return ans;
+      return 0.5 * ans;
     }
 
     double derivate_l2(const double &sigma, const mat &y_sub,
@@ -195,13 +193,13 @@ namespace gplib {
         // TODO: remove this exception after test
         throw "Problem with derivate L2";
       }
-      return sigma;
+      return ans(0, 0) / sigma;
 
     }
 
     static double training_obj_FITC(const vector<double> &theta, vector<double> &grad, void *fdata) {
       implementation *pimpl = (implementation*) fdata;
-
+      cout << "start of training obj" << endl;
       // TODO: implement set_params for gpreg_multi and move the
       // following lines there. (We need to set sigma there too).
       size_t M_size = pimpl-> M.size() * pimpl-> M[0].size();
@@ -209,9 +207,9 @@ namespace gplib {
       pimpl-> split(theta, kernel_params, M_params);
       pimpl-> kernel-> set_params(kernel_params);
       pimpl-> unflatten(M_params);
-
+      cout << "training obj: after setting params" << endl;
       double ans = pimpl-> log_marginal_fitc();
-
+      cout << "training obj: after setting ans" << endl;
       mat Qn = pimpl-> comp_Q(pimpl-> X, pimpl-> X, pimpl-> M);
       mat gamma = diagmat(pimpl-> kernel-> eval(pimpl-> X, pimpl-> X) - Qn) +
                   pimpl-> sigma * eye<mat>(Qn.n_rows, Qn.n_cols);
@@ -223,22 +221,20 @@ namespace gplib {
       mat Knm   = pimpl-> kernel-> eval(pimpl-> X, pimpl-> M);
       mat Kmn   = Knm.t();
       mat Knm_sub = sqrt_gamma_i * Knm;
-      mat Kmn_sub = Knm_sub.t();
+      mat Kmn_sub = Kmn * sqrt_gamma_i;
       mat y_sub   = sqrt_gamma_i * pimpl-> flatten(pimpl-> y);
 
       double _s = pimpl-> sigma;
       mat A = _s * Kmm + Kmn * gamma_i * Knm;
 
       for (size_t d = 0; d < grad.size(); d++) {
-        cout << d << " out of " << grad.size() << endl;
         mat dKmmdT = pimpl-> kernel-> derivate(d, pimpl-> M, pimpl-> M);
         mat dKmndT = pimpl-> kernel-> derivate(d, pimpl-> M, pimpl-> X);
         mat dKnmdT = pimpl-> kernel-> derivate(d, pimpl-> X, pimpl-> M);
         mat dKnndT = pimpl-> kernel-> derivate(d, pimpl-> X, pimpl-> X);
 
         mat Knm_sub_dot = sqrt_gamma_i * dKnmdT;
-        //TODO: Review this carefully!
-        mat Kmn_sub_dot = Knm_sub_dot.t();
+        mat Kmn_sub_dot = dKmndT * sqrt_gamma_i;
         mat Knn_sub_dot = sqrt_gamma_i * dKnndT;
 
 
@@ -293,7 +289,7 @@ namespace gplib {
       vector<double> x = kernel-> get_params();
       vector<double> flatten_M = flatten(M);
       x.insert(x.end(), flatten_M.begin(), flatten_M.end());
-
+      cout << "before optimization" << endl;
       my_min.optimize(x, error);
       cout << "after optimization" << endl;
       vector<double> kernel_params(x.size() - M_size), M_params(M_size);

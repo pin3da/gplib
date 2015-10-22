@@ -147,7 +147,6 @@ namespace gplib{
               for (size_t j = 0; j < Y.size(); j++) {
                 mat ans_ab = B[q](i, j) *
                              kernels[q]-> derivate(param_id, X[i], Y[j]);
-
                 ans.submat (first_row, first_col, first_row + X[i].n_rows - 1,
                     first_col + Y[j].n_rows - 1) = ans_ab;
 
@@ -163,7 +162,6 @@ namespace gplib{
           }
           param_id -= kernels[q]-> n_params();
         }
-
         return derivate_wrt_data(param_id, X, Y);
       }
 
