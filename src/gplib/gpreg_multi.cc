@@ -57,8 +57,6 @@ namespace gplib {
     }
 
     mv_gauss predict_FITC(const vector<mat> &new_x) {
-      // TODO: optimize sigma.
-      sigma = 0.01;
       mat Qn = comp_Q(X, X, M);
       mat lambda = diagmat(kernel-> eval(X, X) - Qn);
       mat tmp = (lambda + sigma * eye(lambda.n_rows, lambda.n_cols)).i();
@@ -80,8 +78,8 @@ namespace gplib {
       return mv_gauss(mean, cov);
     }
 
-    vec flatten(vector<vec> &y) {
-      vec flat;
+    mat flatten(vector<vec> &y) {
+      mat flat;
       for (size_t i = 0; i < y.size(); i++) {
         flat = join_cols<mat> (flat, y[i]);
       }
@@ -89,7 +87,10 @@ namespace gplib {
     }
 
     vector<double> flatten(vector<mat> &M) {
-      size_t t_size = M.size() * M[0].size();
+      size_t t_size = 0;
+      for (size_t i = 0; i < M.size(); ++i)
+        t_size += M[i].size();
+
       vector<double> ans(t_size);
       size_t iter = 0;
       for (size_t q = 0; q < M.size(); ++q) {
@@ -131,15 +132,18 @@ namespace gplib {
 
       mat Kmm =  kernel-> eval(M, M);
       mat A  = sigma * Kmm + kernel-> eval(M, X) * (gamma.i()) * kernel-> eval(X, M);
-      //TODO: Fix THIS
-      double L1 = log(det(A)) - log(det(Kmm)) + log(det(gamma)) + (total_N - total_M) * log(sigma);
+      double log_det_gamma = 0;
+      for (size_t i = 0; i < gamma.n_cols; ++i)
+        log_det_gamma += log(gamma(i, i));
+
+      double L1 = log(det(A)) - log(det(Kmm)) + log_det_gamma + (total_N - total_M) * log(sigma);
       mat y_sub   = sqrt(gamma).i() * flatten(y);
       mat Kmn_sub = (sqrt(gamma).i() * kernel-> eval(X, M)).t();
 
       double ny  = norm(y_sub);
-      double tmp = norm(sqrt(A).i() * Kmn_sub * y_sub);
+      double tmp = norm(chol(A).i() * Kmn_sub * y_sub);
       double L2  = (ny * ny - tmp * tmp) / sigma;
-      return L1 + L2 + total_N * log(2 * pi);
+      return (L1 + L2) * 0.5 + total_N * log(2 * pi);
     }
 
     static double training_obj(const vector<double> &theta, vector<double> &grad, void *fdata) {
@@ -163,9 +167,9 @@ namespace gplib {
     double derivate_l1(const mat &A, const mat &A_dot, const mat &Kmm,
         const mat &Km_dot, const mat &gamma_2sub_dot) {
 
-      mat s_A    = sqrt(A).i();
+      mat s_A    = chol(A).i();
       mat s_A_t  = s_A.t();
-      mat s_Km   = sqrt(Kmm).i();
+      mat s_Km   = chol(Kmm).i();
       mat s_Km_t = s_Km.t();
 
       double ans = trace(s_A * A_dot * s_A_t) - trace(s_Km * Km_dot * s_Km_t) +
@@ -179,12 +183,12 @@ namespace gplib {
 
 
       mat y_sub_t = y_sub.t();
-      mat s_A     = sqrt(A).i();
+      mat s_A     = chol(A).i();
       mat s_A_t   = s_A.t();
 
       mat tmp   = s_A * Kmn_sub * y_sub;
       mat tmp_t = tmp.t();
-      mat ans = 0.5 * (y_sub_t * gamma_2sub_dot * y_sub) +
+      mat ans = -0.5 * (y_sub_t * gamma_2sub_dot * y_sub) +
         tmp_t * ((0.5 * s_A * A_dot * s_A_t) * tmp -
         s_A * Kmn_sub_dot * y_sub +
         s_A * Kmn_sub * gamma_2sub_dot * y_sub);
@@ -199,7 +203,6 @@ namespace gplib {
 
     static double training_obj_FITC(const vector<double> &theta, vector<double> &grad, void *fdata) {
       implementation *pimpl = (implementation*) fdata;
-      cout << "start of training obj" << endl;
       // TODO: implement set_params for gpreg_multi and move the
       // following lines there. (We need to set sigma there too).
       size_t M_size = pimpl-> M.size() * pimpl-> M[0].size();
@@ -207,21 +210,20 @@ namespace gplib {
       pimpl-> split(theta, kernel_params, M_params);
       pimpl-> kernel-> set_params(kernel_params);
       pimpl-> unflatten(M_params);
-      cout << "training obj: after setting params" << endl;
       double ans = pimpl-> log_marginal_fitc();
-      cout << "training obj: after setting ans" << endl;
       mat Qn = pimpl-> comp_Q(pimpl-> X, pimpl-> X, pimpl-> M);
       mat gamma = diagmat(pimpl-> kernel-> eval(pimpl-> X, pimpl-> X) - Qn) +
                   pimpl-> sigma * eye<mat>(Qn.n_rows, Qn.n_cols);
 
       gamma /= pimpl-> sigma;
       mat sqrt_gamma_i = sqrt(gamma).i();
-      mat gamma_i = gamma.i();      mat Kmm   = pimpl-> kernel-> eval(pimpl-> M, pimpl-> M);
+      mat gamma_i = gamma.i();
+      mat Kmm   = pimpl-> kernel-> eval(pimpl-> M, pimpl-> M);
       mat Kmm_i = Kmm.i();
       mat Knm   = pimpl-> kernel-> eval(pimpl-> X, pimpl-> M);
       mat Kmn   = Knm.t();
       mat Knm_sub = sqrt_gamma_i * Knm;
-      mat Kmn_sub = Kmn * sqrt_gamma_i;
+      mat Kmn_sub = Knm_sub.t();
       mat y_sub   = sqrt_gamma_i * pimpl-> flatten(pimpl-> y);
 
       double _s = pimpl-> sigma;
@@ -234,7 +236,7 @@ namespace gplib {
         mat dKnndT = pimpl-> kernel-> derivate(d, pimpl-> X, pimpl-> X);
 
         mat Knm_sub_dot = sqrt_gamma_i * dKnmdT;
-        mat Kmn_sub_dot = dKmndT * sqrt_gamma_i;
+        mat Kmn_sub_dot = Knm_sub_dot.t();
         mat Knn_sub_dot = sqrt_gamma_i * dKnndT;
 
 
@@ -250,7 +252,7 @@ namespace gplib {
                   + pimpl-> derivate_l2(_s, y_sub, gamma_2sub_dot, A, A_dot,
                                        Kmn_sub, Kmn_sub_dot);
       }
-      cout << "at the end of training obj" << endl;
+      cout << "ANS: " << ans << endl;
       return ans;
     }
 
@@ -275,13 +277,13 @@ namespace gplib {
       size_t M_size = M.size() * M[0].size();
       size_t n_params = kernel-> n_params() + M_size;
       nlopt::opt my_min(nlopt::LD_MMA, n_params);
-      my_min.set_max_objective(implementation::training_obj_FITC, this);
+      my_min.set_min_objective(implementation::training_obj_FITC, this);
       my_min.set_xtol_rel(1e-4);
       my_min.set_maxeval(max_iter);
       vector<double> lb = kernel-> get_lower_bounds();
       vector<double> ub = kernel-> get_upper_bounds();
-      lb.resize(lb.size() + M_size, -HUGE_VAL);
-      ub.resize(ub.size() + M_size, HUGE_VAL);
+      lb.resize(lb.size() + M_size, 0);
+      ub.resize(ub.size() + M_size, 10);
       my_min.set_lower_bounds(lb);
       my_min.set_upper_bounds(ub);
 
@@ -289,9 +291,7 @@ namespace gplib {
       vector<double> x = kernel-> get_params();
       vector<double> flatten_M = flatten(M);
       x.insert(x.end(), flatten_M.begin(), flatten_M.end());
-      cout << "before optimization" << endl;
       my_min.optimize(x, error);
-      cout << "after optimization" << endl;
       vector<double> kernel_params(x.size() - M_size), M_params(M_size);
       split(x, kernel_params, M_params);
       kernel-> set_params(kernel_params);
