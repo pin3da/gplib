@@ -147,13 +147,17 @@ namespace gplib {
       double L1 = log(det(A)) - log(det(Kmm)) + log_det_gamma +
                   (total_N - total_M) * log(sigma);
 
-      mat y_sub   = sqrt(gamma).i() * flatten(y);
-      mat Kmn_sub = (sqrt(gamma).i() * kernel-> eval(X, M)).t();
+      mat y_sub   = chol(gamma).i() * flatten(y);
+      mat Kmn_sub = (chol(gamma).i() * kernel-> eval(X, M)).t();
 
       double ny  = norm(y_sub);
       double tmp = norm(chol(A).i() * Kmn_sub * y_sub);
       double L2  = (ny * ny - tmp * tmp) / sigma;
-      return (L1 + L2) * 0.5 + total_N * log(2 * pi);
+
+      cout << "L1 " << L1 << endl;
+      cout << "L2 " << L2 << endl;
+      return (L1 + L2 + total_N * log(2 * pi)) * 0.5;
+      // return (L1 + total_N * log(2 * pi)) * 0.5;
     }
 
     static double training_obj(const vector<double> &theta,
@@ -231,7 +235,7 @@ namespace gplib {
                   pimpl-> sigma * eye<mat>(Qn.n_rows, Qn.n_cols);
 
       gamma /= pimpl-> sigma;
-      mat sqrt_gamma_i = sqrt(gamma).i();
+      mat sqrt_gamma_i = chol(gamma).i();
       mat gamma_i = gamma.i();
       mat Kmm   = pimpl-> kernel-> eval(pimpl-> M, pimpl-> M);
       mat Kmm_i = Kmm.i();
@@ -298,8 +302,8 @@ namespace gplib {
       my_min.set_maxeval(max_iter);
       vector<double> lb = kernel-> get_lower_bounds();
       vector<double> ub = kernel-> get_upper_bounds();
-      lb.resize(lb.size() + M_size, 0);
-      ub.resize(ub.size() + M_size, 10);
+      lb.resize(lb.size() + M_size, -1);
+      ub.resize(ub.size() + M_size, 1);
       my_min.set_lower_bounds(lb);
       my_min.set_upper_bounds(ub);
 
