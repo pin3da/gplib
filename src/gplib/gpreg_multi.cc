@@ -110,9 +110,13 @@ namespace gplib {
           }
     }
 
-    void split(const vector<double> &theta, vector<double> &kernel_params, vector<double> &M_params) {
-      copy(theta.begin(), theta.begin() + kernel_params.size(), kernel_params.begin());
-      copy(theta.begin() + kernel_params.size() + 1, theta.end(), M_params.begin());
+    void split(const vector<double> &theta, vector<double> &kernel_params,
+              vector<double> &M_params) {
+      copy(theta.begin(), theta.begin() + kernel_params.size(),
+          kernel_params.begin());
+
+      copy(theta.begin() + kernel_params.size() + 1, theta.end(),
+           M_params.begin());
     }
 
     double log_marginal() {
@@ -121,7 +125,9 @@ namespace gplib {
 
     double log_marginal_fitc() {
       mat Qn = comp_Q(X, X, M);
-      mat gamma = diagmat(kernel-> eval(X, X) - Qn) + sigma * eye<mat>(Qn.n_rows, Qn.n_cols);
+      mat gamma = diagmat(kernel-> eval(X, X) - Qn) + sigma *
+                  eye<mat>(Qn.n_rows, Qn.n_cols);
+
       gamma     /= sigma;
 
       size_t total_N = 0, total_M = 0;
@@ -131,12 +137,16 @@ namespace gplib {
       }
 
       mat Kmm =  kernel-> eval(M, M);
-      mat A  = sigma * Kmm + kernel-> eval(M, X) * (gamma.i()) * kernel-> eval(X, M);
+      mat A  = sigma * Kmm + kernel-> eval(M, X) * (gamma.i()) *
+               kernel-> eval(X, M);
+
       double log_det_gamma = 0;
       for (size_t i = 0; i < gamma.n_cols; ++i)
         log_det_gamma += log(gamma(i, i));
 
-      double L1 = log(det(A)) - log(det(Kmm)) + log_det_gamma + (total_N - total_M) * log(sigma);
+      double L1 = log(det(A)) - log(det(Kmm)) + log_det_gamma +
+                  (total_N - total_M) * log(sigma);
+
       mat y_sub   = sqrt(gamma).i() * flatten(y);
       mat Kmn_sub = (sqrt(gamma).i() * kernel-> eval(X, M)).t();
 
@@ -146,7 +156,9 @@ namespace gplib {
       return (L1 + L2) * 0.5 + total_N * log(2 * pi);
     }
 
-    static double training_obj(const vector<double> &theta, vector<double> &grad, void *fdata) {
+    static double training_obj(const vector<double> &theta,
+        vector<double> &grad, void *fdata) {
+
       implementation *pimpl = (implementation*) fdata;
       pimpl-> kernel-> set_params(theta);
       double ans = pimpl-> log_marginal();
@@ -160,6 +172,7 @@ namespace gplib {
         mat dKdT = pimpl-> kernel-> derivate(d, pimpl-> X, pimpl-> X);
         grad[d] = trace(dLLdK * dKdT);
       }
+      cout << "ANS: " << ans << endl;
       return ans;
     }
 
@@ -201,7 +214,9 @@ namespace gplib {
 
     }
 
-    static double training_obj_FITC(const vector<double> &theta, vector<double> &grad, void *fdata) {
+    static double training_obj_FITC(const vector<double> &theta,
+        vector<double> &grad, void *fdata) {
+
       implementation *pimpl = (implementation*) fdata;
       // TODO: implement set_params for gpreg_multi and move the
       // following lines there. (We need to set sigma there too).
@@ -240,8 +255,9 @@ namespace gplib {
         mat Knn_sub_dot = sqrt_gamma_i * dKnndT;
 
 
-        mat gamma_2sub_dot = diagmat(Knn_sub_dot - 2 * Knm_sub_dot * Kmm_i * Kmn_sub +
-                             Knm_sub * Kmm_i * dKmmdT * Kmm_i * Kmn_sub);
+        mat gamma_2sub_dot = diagmat(Knn_sub_dot - 2 * Knm_sub_dot * Kmm_i *
+            Kmn_sub + Knm_sub * Kmm_i * dKmmdT * Kmm_i * Kmn_sub);
+
         gamma_2sub_dot /= _s;
 
 
@@ -314,12 +330,16 @@ namespace gplib {
     pimpl-> kernel = k;
   }
 
-  void gp_reg_multi::set_training_set(const vector<mat> &X, const vector<vec> &y) {
+  void gp_reg_multi::set_training_set(const vector<mat> &X,
+      const vector<vec> &y) {
+
     pimpl-> X = X;
     pimpl-> y = y;
   }
 
-  double gp_reg_multi::train(const int max_iter, const size_t type, void *param) {
+  double gp_reg_multi::train(const int max_iter, const size_t type,
+      void *param) {
+
     pimpl-> state = type;
     if (type == FITC) {
       size_t num_pi = *((size_t *) param);
