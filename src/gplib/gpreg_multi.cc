@@ -51,12 +51,27 @@ namespace gplib {
       return gd.conditional(fill_y, observed);
     }
 
-    mat comp_Q(vector<mat> &a, vector<mat> &b, vector<mat> &u) {
+    mat comp_Q(const vector<mat> &a, const vector<mat> &b, vector<mat> &u) {
       mat kuu =  kernel-> eval(u, u).i();
       return kernel-> eval(a, u) * kuu * kernel-> eval(u, b);
     }
 
     mv_gauss predict_FITC(const vector<mat> &new_x) {
+      mat Qn = comp_Q(X, X, M);
+      mat Qm = comp_Q(new_x, new_x, M);
+      mat lambda = diagmat(kernel-> eval(X, X) - Qn);
+      lambda = (lambda + sigma * eye(lambda.n_rows, lambda.n_cols)).i();
+      mat E = (kernel-> eval(M, M) + kernel-> eval(M, X) * lambda *
+              kernel-> eval(X, M)).i();
+      mat Y = flatten(y);
+      mat mean = kernel-> eval(new_x, M) * E * kernel-> eval(M, X) *
+                 lambda * Y;
+      mat cov = kernel-> eval(new_x, new_x) - Qm + kernel-> eval(new_x, M)
+                * E * kernel-> eval(M, new_x);
+      return mv_gauss(mean, cov);
+    }
+
+/*    mv_gauss predict_FITC(const vector<mat> &new_x) {
       mat Qn = comp_Q(X, X, M);
       mat lambda = diagmat(kernel-> eval(X, X) - Qn);
       mat tmp = (lambda + sigma * eye(lambda.n_rows, lambda.n_cols)).i();
@@ -71,6 +86,18 @@ namespace gplib {
       return mv_gauss(mean, cov);
     }
 
+    mv_gauss predict_FITC(const vector<mat> &new_x) {
+      mat Qmn = comp_Q(new_x, X, M);
+      mat Qnm = comp_Q(X, new_x, M);
+      mat Kfic = diagmat(kernel-> eval(X, X) - Qn);
+      mat tmp = (Kfic + sigma * eye(lambda.n_rows, lambda.n_cols)).i();
+      mat Y = flatten(y);
+      mat mean = Qmn * tmp * y;
+      mat cov = kernel-> eval(new_x, new_x) - Qmn * tmp * Qnm + sigma;
+      XX = chol(cov);
+      cout << "cov " << XX(0, 0) << endl;
+      return mv_gauss(mean, cov);
+    } */
 
     mv_gauss marginal() {
       vec mean = eval_mean(X);
@@ -152,12 +179,14 @@ namespace gplib {
 
       double ny  = norm(y_sub);
       double tmp = norm(chol(A).i() * Kmn_sub * y_sub);
-      double L2  = (ny * ny - tmp * tmp) / sigma;
+      std::cout << "Ny " << ny << std::endl;
+      std::cout << "tmp " << tmp << std::endl;
+      double L2  = (ny - tmp) / sigma;
 
-      cout << "L1 " << L1 << endl;
-      cout << "L2 " << L2 << endl;
+      //cout << "L1 " << L1 << endl;
+      //cout << "L2 " << L2 << endl;
       return (L1 + L2 + total_N * log(2 * pi)) * 0.5;
-      // return (L1 + total_N * log(2 * pi)) * 0.5;
+      //return (L1 + total_N * log(2 * pi)) * 0.5;
     }
 
     static double training_obj(const vector<double> &theta,
@@ -348,7 +377,7 @@ namespace gplib {
     if (type == FITC) {
       size_t num_pi = *((size_t *) param);
       pimpl-> M = vector<mat> (pimpl-> X.size(),
-                  zeros<mat>(num_pi, pimpl-> X[0].n_cols));
+                  randi<mat>(num_pi, pimpl-> X[0].n_cols, distr_param(0, +1)));
 
       return pimpl-> train_FITC(max_iter);
     } else
