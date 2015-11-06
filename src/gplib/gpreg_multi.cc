@@ -114,6 +114,24 @@ namespace gplib {
       copy(theta.begin() + kernel_params.size() + 1, theta.end(), M_params.begin());
     }
 
+    void set_params(const vector<double> &params) {
+      size_t M_size = 0;
+      for(size_t i = 0; i < M.size(); ++i) {
+        M_size += M[i].size();
+      }
+      vector<double> kernel_params(params.size() - M_size), M_params(M_size);
+      split(params, kernel_params, M_params);
+      kernel-> set_params(kernel_params);
+      unflatten(M_params);
+    }
+
+    vector<double> get_params() {
+      vector<double> params = kernel-> get_params();
+      vector<double> flatten_M = flatten(M);
+      params.insert(params.end(), flatten_M.begin(), flatten_M.end());
+      return params;
+    }
+
     double log_marginal() {
       return marginal().log_density(flatten(y));
     }
@@ -202,11 +220,7 @@ namespace gplib {
       cout << "start of training obj" << endl;
       // TODO: implement set_params for gpreg_multi and move the
       // following lines there. (We need to set sigma there too).
-      size_t M_size = pimpl-> M.size() * pimpl-> M[0].size();
-      vector<double> kernel_params(theta.size() - M_size), M_params(M_size);
-      pimpl-> split(theta, kernel_params, M_params);
-      pimpl-> kernel-> set_params(kernel_params);
-      pimpl-> unflatten(M_params);
+      pimpl-> set_params(theta);
       cout << "training obj: after setting params" << endl;
       double ans = pimpl-> log_marginal_fitc();
       cout << "training obj: after setting ans" << endl;
@@ -216,7 +230,8 @@ namespace gplib {
 
       gamma /= pimpl-> sigma;
       mat sqrt_gamma_i = sqrt(gamma).i();
-      mat gamma_i = gamma.i();      mat Kmm   = pimpl-> kernel-> eval(pimpl-> M, pimpl-> M);
+      mat gamma_i = gamma.i();
+      mat Kmm   = pimpl-> kernel-> eval(pimpl-> M, pimpl-> M);
       mat Kmm_i = Kmm.i();
       mat Knm   = pimpl-> kernel-> eval(pimpl-> X, pimpl-> M);
       mat Kmn   = Knm.t();
@@ -286,17 +301,11 @@ namespace gplib {
       my_min.set_upper_bounds(ub);
 
       double error; //final value of error function
-      vector<double> x = kernel-> get_params();
-      vector<double> flatten_M = flatten(M);
-      x.insert(x.end(), flatten_M.begin(), flatten_M.end());
+      vector<double> x = get_params();
       cout << "before optimization" << endl;
       my_min.optimize(x, error);
       cout << "after optimization" << endl;
-      vector<double> kernel_params(x.size() - M_size), M_params(M_size);
-      split(x, kernel_params, M_params);
-      kernel-> set_params(kernel_params);
-      unflatten(M_params);
-
+      set_params(x);
       return error;
     }
 
