@@ -71,34 +71,6 @@ namespace gplib {
       return mv_gauss(mean, cov);
     }
 
-/*    mv_gauss predict_FITC(const vector<mat> &new_x) {
-      mat Qn = comp_Q(X, X, M);
-      mat lambda = diagmat(kernel-> eval(X, X) - Qn);
-      mat tmp = (lambda + sigma * eye(lambda.n_rows, lambda.n_cols)).i();
-      mat B = kernel-> eval(M, M) * kernel-> eval(M, X) * tmp *
-              kernel-> eval(X, M);
-      mat Y = flatten(y);
-      mat mean = kernel-> eval(new_x, M) * B.i() * kernel-> eval(M, X) *
-                 tmp * Y;
-      tmp     = kernel-> eval(M, M).i() - B.i();
-      mat cov = kernel-> eval(new_x, new_x) - kernel-> eval(new_x, M) *
-                tmp * kernel-> eval(M, new_x) + sigma;
-      return mv_gauss(mean, cov);
-    }
-
-    mv_gauss predict_FITC(const vector<mat> &new_x) {
-      mat Qmn = comp_Q(new_x, X, M);
-      mat Qnm = comp_Q(X, new_x, M);
-      mat Kfic = diagmat(kernel-> eval(X, X) - Qn);
-      mat tmp = (Kfic + sigma * eye(lambda.n_rows, lambda.n_cols)).i();
-      mat Y = flatten(y);
-      mat mean = Qmn * tmp * y;
-      mat cov = kernel-> eval(new_x, new_x) - Qmn * tmp * Qnm + sigma;
-      XX = chol(cov);
-      cout << "cov " << XX(0, 0) << endl;
-      return mv_gauss(mean, cov);
-    } */
-
     mv_gauss marginal() {
       vec mean = eval_mean(X);
       mat cov = kernel-> eval(X, X);
@@ -146,6 +118,24 @@ namespace gplib {
            M_params.begin());
     }
 
+    void set_params(const vector<double> &params) {
+      size_t M_size = 0;
+      for(size_t i = 0; i < M.size(); ++i) {
+        M_size += M[i].size();
+      }
+      vector<double> kernel_params(params.size() - M_size), M_params(M_size);
+      split(params, kernel_params, M_params);
+      kernel-> set_params(kernel_params);
+      unflatten(M_params);
+    }
+
+    vector<double> get_params() {
+      vector<double> params = kernel-> get_params();
+      vector<double> flatten_M = flatten(M);
+      params.insert(params.end(), flatten_M.begin(), flatten_M.end());
+      return params;
+    }
+
     double log_marginal() {
       return marginal().log_density(flatten(y));
     }
@@ -186,11 +176,8 @@ namespace gplib {
       implementation *pimpl = (implementation*) fdata;
       // TODO: implement set_params for gpreg_multi and move the
       // following lines there. (We need to set sigma there too).
-      size_t M_size = pimpl-> M.size() * pimpl-> M[0].size();
-      vector<double> kernel_params(theta.size() - M_size), M_params(M_size);
-      pimpl-> split(theta, kernel_params, M_params);
-      pimpl-> kernel-> set_params(kernel_params);
-      pimpl-> unflatten(M_params);
+      pimpl-> set_params(theta);
+
       double ans = pimpl-> log_marginal_fitc();
       mat flat_y = pimpl-> flatten (pimpl-> y);
       mat Qff = pimpl-> comp_Q (pimpl-> X, pimpl-> X, pimpl-> M);
@@ -202,6 +189,7 @@ namespace gplib {
       mat Kuui = (pimpl-> kernel-> eval (pimpl-> M, pimpl-> M)).i();
       mat KuuiKuf = Kuui * pimpl-> kernel-> eval(pimpl-> M, pimpl-> X);
       mat KfuKuui = pimpl-> kernel-> eval(pimpl-> X, pimpl-> M) * Kuui;
+
       for (size_t d = 0; d < grad.size(); d++) {
         mat dLLdKfu = pimpl-> kernel-> derivate (d, pimpl-> X, pimpl-> M);
         mat dLLdKuu = pimpl-> kernel-> derivate (d, pimpl-> M, pimpl-> M);
@@ -249,14 +237,11 @@ namespace gplib {
       my_min.set_upper_bounds(ub);
 
       double error; //final value of error function
-      vector<double> x = kernel-> get_params();
-      vector<double> flatten_M = flatten(M);
-      x.insert(x.end(), flatten_M.begin(), flatten_M.end());
+      vector<double> x = get_params();
+      cout << "before optimization" << endl;
       my_min.optimize(x, error);
-      vector<double> kernel_params(x.size() - M_size), M_params(M_size);
-      split(x, kernel_params, M_params);
-      kernel-> set_params(kernel_params);
-      unflatten(M_params);
+      cout << "after optimization" << endl;
+      set_params(x);
 
       return error;
     }
