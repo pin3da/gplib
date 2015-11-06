@@ -51,28 +51,25 @@ namespace gplib {
       return gd.conditional(fill_y, observed);
     }
 
-    mat comp_Q(vector<mat> &a, vector<mat> &b, vector<mat> &u) {
+    mat comp_Q(const vector<mat> &a, const vector<mat> &b, vector<mat> &u) {
       mat kuu =  kernel-> eval(u, u).i();
       return kernel-> eval(a, u) * kuu * kernel-> eval(u, b);
     }
 
     mv_gauss predict_FITC(const vector<mat> &new_x) {
-      // TODO: optimize sigma.
-      sigma = 0.01;
       mat Qn = comp_Q(X, X, M);
+      mat Qm = comp_Q(new_x, new_x, M);
       mat lambda = diagmat(kernel-> eval(X, X) - Qn);
-      mat tmp = (lambda + sigma * eye(lambda.n_rows, lambda.n_cols)).i();
-      mat B = kernel-> eval(M, M) * kernel-> eval(M, X) * tmp *
-              kernel-> eval(X, M);
+      lambda = (lambda + sigma * eye(lambda.n_rows, lambda.n_cols)).i();
+      mat E = (kernel-> eval(M, M) + kernel-> eval(M, X) * lambda *
+              kernel-> eval(X, M)).i();
       mat Y = flatten(y);
-      mat mean = kernel-> eval(new_x, M) * B.i() * kernel-> eval(M, X) *
-                 tmp * Y;
-      tmp     = kernel-> eval(M, M).i() - B.i();
-      mat cov = kernel-> eval(new_x, new_x) - kernel-> eval(new_x, M) *
-                tmp * kernel-> eval(M, new_x) + sigma;
+      mat mean = kernel-> eval(new_x, M) * E * kernel-> eval(M, X) *
+                 lambda * Y;
+      mat cov = kernel-> eval(new_x, new_x) - Qm + kernel-> eval(new_x, M)
+                * E * kernel-> eval(M, new_x);
       return mv_gauss(mean, cov);
     }
-
 
     mv_gauss marginal() {
       vec mean = eval_mean(X);
@@ -80,8 +77,8 @@ namespace gplib {
       return mv_gauss(mean, cov);
     }
 
-    vec flatten(vector<vec> &y) {
-      vec flat;
+    mat flatten(vector<vec> &y) {
+      mat flat;
       for (size_t i = 0; i < y.size(); i++) {
         flat = join_cols<mat> (flat, y[i]);
       }
@@ -89,7 +86,10 @@ namespace gplib {
     }
 
     vector<double> flatten(vector<mat> &M) {
-      size_t t_size = M.size() * M[0].size();
+      size_t t_size = 0;
+      for (size_t i = 0; i < M.size(); ++i)
+        t_size += M[i].size();
+
       vector<double> ans(t_size);
       size_t iter = 0;
       for (size_t q = 0; q < M.size(); ++q) {
@@ -109,9 +109,13 @@ namespace gplib {
           }
     }
 
-    void split(const vector<double> &theta, vector<double> &kernel_params, vector<double> &M_params) {
-      copy(theta.begin(), theta.begin() + kernel_params.size(), kernel_params.begin());
-      copy(theta.begin() + kernel_params.size() + 1, theta.end(), M_params.begin());
+    void split(const vector<double> &theta, vector<double> &kernel_params,
+              vector<double> &M_params) {
+      copy(theta.begin(), theta.begin() + kernel_params.size(),
+          kernel_params.begin());
+
+      copy(theta.begin() + kernel_params.size() + 1, theta.end(),
+           M_params.begin());
     }
 
     void set_params(const vector<double> &params) {
@@ -138,7 +142,9 @@ namespace gplib {
 
     double log_marginal_fitc() {
       mat Qn = comp_Q(X, X, M);
-      mat gamma = diagmat(kernel-> eval(X, X) - Qn) + sigma * eye<mat>(Qn.n_rows, Qn.n_cols);
+      mat gamma = diagmat(kernel-> eval(X, X) - Qn) + sigma *
+                  eye<mat>(Qn.n_rows, Qn.n_cols);
+
       gamma     /= sigma;
 
       size_t total_N = 0, total_M = 0;
@@ -148,19 +154,34 @@ namespace gplib {
       }
 
       mat Kmm =  kernel-> eval(M, M);
-      mat A  = sigma * Kmm + kernel-> eval(M, X) * (gamma.i()) * kernel-> eval(X, M);
-      //TODO: Fix THIS
-      double L1 = log(det(A)) - log(det(Kmm)) + log(det(gamma)) + (total_N - total_M) * log(sigma);
-      mat y_sub   = sqrt(gamma).i() * flatten(y);
-      mat Kmn_sub = (sqrt(gamma).i() * kernel-> eval(X, M)).t();
+      mat A  = sigma * Kmm + kernel-> eval(M, X) * (gamma.i()) *
+               kernel-> eval(X, M);
+
+      double log_det_gamma = 0;
+      for (size_t i = 0; i < gamma.n_cols; ++i)
+        log_det_gamma += log(gamma(i, i));
+
+      double L1 = log(det(A)) - log(det(Kmm)) + log_det_gamma +
+                  (total_N - total_M) * log(sigma);
+
+      mat y_sub   = chol(gamma).i() * flatten(y);
+      mat Kmn_sub = (chol(gamma).i() * kernel-> eval(X, M)).t();
 
       double ny  = norm(y_sub);
-      double tmp = norm(sqrt(A).i() * Kmn_sub * y_sub);
-      double L2  = (ny * ny - tmp * tmp) / sigma;
-      return L1 + L2 + total_N * log(2 * pi);
+      double tmp = norm(chol(A).i() * Kmn_sub * y_sub);
+      std::cout << "Ny " << ny << std::endl;
+      std::cout << "tmp " << tmp << std::endl;
+      double L2  = (ny - tmp) / sigma;
+
+      //cout << "L1 " << L1 << endl;
+      //cout << "L2 " << L2 << endl;
+      return (L1 + L2 + total_N * log(2 * pi)) * 0.5;
+      //return (L1 + total_N * log(2 * pi)) * 0.5;
     }
 
-    static double training_obj(const vector<double> &theta, vector<double> &grad, void *fdata) {
+    static double training_obj(const vector<double> &theta,
+        vector<double> &grad, void *fdata) {
+
       implementation *pimpl = (implementation*) fdata;
       pimpl-> kernel-> set_params(theta);
       double ans = pimpl-> log_marginal();
@@ -174,6 +195,7 @@ namespace gplib {
         mat dKdT = pimpl-> kernel-> derivate(d, pimpl-> X, pimpl-> X);
         grad[d] = trace(dLLdK * dKdT);
       }
+      cout << "ANS: " << ans << endl;
       return ans;
     }
 
@@ -181,9 +203,9 @@ namespace gplib {
     double derivate_l1(const mat &A, const mat &A_dot, const mat &Kmm,
         const mat &Km_dot, const mat &gamma_2sub_dot) {
 
-      mat s_A    = sqrt(A).i();
+      mat s_A    = chol(A).i();
       mat s_A_t  = s_A.t();
-      mat s_Km   = sqrt(Kmm).i();
+      mat s_Km   = chol(Kmm).i();
       mat s_Km_t = s_Km.t();
 
       double ans = trace(s_A * A_dot * s_A_t) - trace(s_Km * Km_dot * s_Km_t) +
@@ -197,12 +219,12 @@ namespace gplib {
 
 
       mat y_sub_t = y_sub.t();
-      mat s_A     = sqrt(A).i();
+      mat s_A     = chol(A).i();
       mat s_A_t   = s_A.t();
 
       mat tmp   = s_A * Kmn_sub * y_sub;
       mat tmp_t = tmp.t();
-      mat ans = 0.5 * (y_sub_t * gamma_2sub_dot * y_sub) +
+      mat ans = -0.5 * (y_sub_t * gamma_2sub_dot * y_sub) +
         tmp_t * ((0.5 * s_A * A_dot * s_A_t) * tmp -
         s_A * Kmn_sub_dot * y_sub +
         s_A * Kmn_sub * gamma_2sub_dot * y_sub);
@@ -215,28 +237,29 @@ namespace gplib {
 
     }
 
-    static double training_obj_FITC(const vector<double> &theta, vector<double> &grad, void *fdata) {
+    static double training_obj_FITC(const vector<double> &theta,
+        vector<double> &grad, void *fdata) {
+
       implementation *pimpl = (implementation*) fdata;
-      cout << "start of training obj" << endl;
       // TODO: implement set_params for gpreg_multi and move the
       // following lines there. (We need to set sigma there too).
       pimpl-> set_params(theta);
-      cout << "training obj: after setting params" << endl;
+
       double ans = pimpl-> log_marginal_fitc();
-      cout << "training obj: after setting ans" << endl;
       mat Qn = pimpl-> comp_Q(pimpl-> X, pimpl-> X, pimpl-> M);
       mat gamma = diagmat(pimpl-> kernel-> eval(pimpl-> X, pimpl-> X) - Qn) +
                   pimpl-> sigma * eye<mat>(Qn.n_rows, Qn.n_cols);
 
       gamma /= pimpl-> sigma;
-      mat sqrt_gamma_i = sqrt(gamma).i();
+
+      mat sqrt_gamma_i = chol(gamma).i();
       mat gamma_i = gamma.i();
       mat Kmm   = pimpl-> kernel-> eval(pimpl-> M, pimpl-> M);
       mat Kmm_i = Kmm.i();
       mat Knm   = pimpl-> kernel-> eval(pimpl-> X, pimpl-> M);
       mat Kmn   = Knm.t();
       mat Knm_sub = sqrt_gamma_i * Knm;
-      mat Kmn_sub = Kmn * sqrt_gamma_i;
+      mat Kmn_sub = Knm_sub.t();
       mat y_sub   = sqrt_gamma_i * pimpl-> flatten(pimpl-> y);
 
       double _s = pimpl-> sigma;
@@ -249,12 +272,13 @@ namespace gplib {
         mat dKnndT = pimpl-> kernel-> derivate(d, pimpl-> X, pimpl-> X);
 
         mat Knm_sub_dot = sqrt_gamma_i * dKnmdT;
-        mat Kmn_sub_dot = dKmndT * sqrt_gamma_i;
+        mat Kmn_sub_dot = Knm_sub_dot.t();
         mat Knn_sub_dot = sqrt_gamma_i * dKnndT;
 
 
-        mat gamma_2sub_dot = diagmat(Knn_sub_dot - 2 * Knm_sub_dot * Kmm_i * Kmn_sub +
-                             Knm_sub * Kmm_i * dKmmdT * Kmm_i * Kmn_sub);
+        mat gamma_2sub_dot = diagmat(Knn_sub_dot - 2 * Knm_sub_dot * Kmm_i *
+            Kmn_sub + Knm_sub * Kmm_i * dKmmdT * Kmm_i * Kmn_sub);
+
         gamma_2sub_dot /= _s;
 
 
@@ -265,7 +289,7 @@ namespace gplib {
                   + pimpl-> derivate_l2(_s, y_sub, gamma_2sub_dot, A, A_dot,
                                        Kmn_sub, Kmn_sub_dot);
       }
-      cout << "at the end of training obj" << endl;
+      cout << "ANS: " << ans << endl;
       return ans;
     }
 
@@ -290,13 +314,13 @@ namespace gplib {
       size_t M_size = M.size() * M[0].size();
       size_t n_params = kernel-> n_params() + M_size;
       nlopt::opt my_min(nlopt::LD_MMA, n_params);
-      my_min.set_max_objective(implementation::training_obj_FITC, this);
+      my_min.set_min_objective(implementation::training_obj_FITC, this);
       my_min.set_xtol_rel(1e-4);
       my_min.set_maxeval(max_iter);
       vector<double> lb = kernel-> get_lower_bounds();
       vector<double> ub = kernel-> get_upper_bounds();
-      lb.resize(lb.size() + M_size, -HUGE_VAL);
-      ub.resize(ub.size() + M_size, HUGE_VAL);
+      lb.resize(lb.size() + M_size, -1);
+      ub.resize(ub.size() + M_size, 1);
       my_min.set_lower_bounds(lb);
       my_min.set_upper_bounds(ub);
 
@@ -306,6 +330,7 @@ namespace gplib {
       my_min.optimize(x, error);
       cout << "after optimization" << endl;
       set_params(x);
+
       return error;
     }
 
@@ -323,17 +348,21 @@ namespace gplib {
     pimpl-> kernel = k;
   }
 
-  void gp_reg_multi::set_training_set(const vector<mat> &X, const vector<vec> &y) {
+  void gp_reg_multi::set_training_set(const vector<mat> &X,
+      const vector<vec> &y) {
+
     pimpl-> X = X;
     pimpl-> y = y;
   }
 
-  double gp_reg_multi::train(const int max_iter, const size_t type, void *param) {
+  double gp_reg_multi::train(const int max_iter, const size_t type,
+      void *param) {
+
     pimpl-> state = type;
     if (type == FITC) {
       size_t num_pi = *((size_t *) param);
       pimpl-> M = vector<mat> (pimpl-> X.size(),
-                  zeros<mat>(num_pi, pimpl-> X[0].n_cols));
+                  randi<mat>(num_pi, pimpl-> X[0].n_cols, distr_param(0, +1)));
 
       return pimpl-> train_FITC(max_iter);
     } else

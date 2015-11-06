@@ -218,7 +218,7 @@ namespace gplib{
               ++iter;
             }
           }
-          B[q] = A[q] * A[q].t();
+          B[q] = A[q] * A[q].t();          
         }
         for (size_t k = 0; k < kernels.size(); ++k) {
           vector<double> subparams(params.begin() + iter,
