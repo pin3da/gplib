@@ -45,6 +45,11 @@ namespace gplib {
         return 0;
       }
 
+      mat derivate_wrt_inputs (size_t param_id, const arma::mat& X,
+                               const arma::mat& Y){
+        return zeros<mat> (X.n_rows, Y.n_rows);
+      }
+
       mat derivative(size_t param_id, const arma::mat& X, const arma::mat& Y) {
 
         if (param_id < 2) {
@@ -56,8 +61,11 @@ namespace gplib {
           }
           return ans;
         }
-
-        return 2.0 * params[2] * eye(X.n_rows, Y.n_rows);
+        if (param_id == 2)
+          return 2.0 * params[2] * eye(X.n_rows, Y.n_rows);
+        //Substract previous params
+        mat ans = derivate_wrt_inputs (param_id, X, Y);
+        return ans;
 
       }
     }; // End of implementation.

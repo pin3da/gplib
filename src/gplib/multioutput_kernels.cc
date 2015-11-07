@@ -55,6 +55,64 @@ namespace gplib{
         return cov;
       }
 
+      mat derivate_wrt_data_an (size_t param_id, const vector<mat> &X, const
+                                vector<mat> &Y){
+        //Substract previous parameters from param_id
+        param_id -= B.size() * B[1].size();
+        for (size_t i = 0; i < kernels.size(); ++i){
+          param_id -= kernels[i]-> n_params();
+        }
+        //Set which matrix vector contains de pseudo-inputs
+        vector<mat> U = X;
+        size_t u = 0;
+        if (X[0].size() > Y[0].size()){
+          U = Y;
+          u = 1;
+        }
+
+        //Find which matrix contains the pseudo-inputs of those in the vector
+        size_t which_u;
+        for (which_u = 0; which_u < U.size(); ++which_u){
+          if (param_id < U[which_u].size())
+            break;
+          param_id -= U[which_u].size();
+        }
+
+        //Calculate total size of ans
+        size_t total_rows = 0, total_cols = 0;
+        for (size_t i = 0; i < X.size(); ++i) {
+          total_rows += X[i].n_rows;
+        }
+        for (size_t i = 0; i < Y.size(); ++i) {
+          total_cols += Y[i].n_rows;
+        }
+
+        //Compute cov mat
+        mat cov(total_rows, total_cols);
+        size_t first_row = 0, first_col = 0;
+        for (size_t i = 0; i < X.size(); i++) {
+          for (size_t j = 0; j < Y.size(); j++) {
+            //Only compute the entries which aren't 0
+            if ((u == 0 && i == which_u) || (u == 1 && j == which_u)){
+              mat cov_ab = zeros<mat> (X[i].n_rows, Y[j].n_rows);
+              for (size_t k = 0; k < B.size(); k++) {
+                cov_ab += B[k](i, j) * (kernels[k]-> derivate (param_id + 2,
+                          X[i], Y[j]));
+              }
+
+              cov.submat (first_row, first_col, first_row + X[i].n_rows - 1,
+                  first_col + Y[j].n_rows - 1) = cov_ab;
+            }
+            first_col += Y[j].n_rows;
+          }
+          first_row += X[i].n_rows;
+          first_col = 0;
+        }
+        return cov;
+
+
+      }
+
       mat derivate_wrt_data(size_t param_id, const vector<mat> &X,
                             const vector<mat> &Y) {
 
@@ -218,7 +276,7 @@ namespace gplib{
               ++iter;
             }
           }
-          B[q] = A[q] * A[q].t();          
+          B[q] = A[q] * A[q].t();
         }
         for (size_t k = 0; k < kernels.size(); ++k) {
           vector<double> subparams(params.begin() + iter,
