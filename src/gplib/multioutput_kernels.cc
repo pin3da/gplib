@@ -57,34 +57,42 @@ namespace gplib{
 
       mat derivate_wrt_data_an (size_t param_id, const vector<mat> &X, const
                                 vector<mat> &Y){
+
+        //Calculate total size of ans
+        size_t total_rows = 0, total_cols = 0;
+        vector<size_t> x_sizes (X.size());
+        vector<size_t> y_sizes (Y.size());
+        for (size_t i = 0; i < X.size(); ++i) {
+          total_rows += X[i].n_rows;
+          x_sizes[i] = X[i].size();
+        }
+        for (size_t i = 0; i < Y.size(); ++i) {
+          total_cols += Y[i].n_rows;
+          y_sizes[i] = Y[i].size();
+        }
+
+        //Return zeros if its K(U, U)
+        if (X[0].size() == Y[0].size())
+          return zeros<mat> (total_rows, total_cols);
+
         //Substract previous parameters from param_id
         param_id -= B.size() * B[1].size();
         for (size_t i = 0; i < kernels.size(); ++i){
           param_id -= kernels[i]-> n_params();
         }
-        //Set which matrix vector contains de pseudo-inputs
-        vector<mat> U = X;
-        size_t u = 0;
-        if (X[0].size() > Y[0].size()){
-          U = Y;
-          u = 1;
+        //Set which size should be used to locate the pseudo-input
+        vector<size_t> U = x_sizes;
+        bool u = X[0].size() < Y[0].size();
+        if (!u){
+          U = y_sizes;
         }
 
-        //Find which matrix contains the pseudo-inputs of those in the vector
+        //Find which matrix contains the pseudo-input of those in the vector
         size_t which_u;
         for (which_u = 0; which_u < U.size(); ++which_u){
-          if (param_id < U[which_u].size())
+          if (param_id < U[which_u])
             break;
-          param_id -= U[which_u].size();
-        }
-
-        //Calculate total size of ans
-        size_t total_rows = 0, total_cols = 0;
-        for (size_t i = 0; i < X.size(); ++i) {
-          total_rows += X[i].n_rows;
-        }
-        for (size_t i = 0; i < Y.size(); ++i) {
-          total_cols += Y[i].n_rows;
+          param_id -= U[which_u];
         }
 
         //Compute cov mat
@@ -93,7 +101,7 @@ namespace gplib{
         for (size_t i = 0; i < X.size(); i++) {
           for (size_t j = 0; j < Y.size(); j++) {
             //Only compute the entries which aren't 0
-            if ((u == 0 && i == which_u) || (u == 1 && j == which_u)){
+            if ((u && i == which_u) || (!u && j == which_u)){
               mat cov_ab = zeros<mat> (X[i].n_rows, Y[j].n_rows);
               for (size_t k = 0; k < B.size(); k++) {
                 cov_ab += B[k](i, j) * (kernels[k]-> derivate (param_id + 2,

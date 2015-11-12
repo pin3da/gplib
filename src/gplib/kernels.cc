@@ -9,6 +9,7 @@ namespace gplib {
       vector<double> params;
       vector<double> lower_bounds;
       vector<double> upper_bounds;
+
       double kernel(const vec &X, const vec &Y) {
         double sigma  = params[0];
         double lambda = params[1];
@@ -39,7 +40,8 @@ namespace gplib {
         }
 
         if (param_id == 1) { // lenght scale
-          mat tmp =  (kernel(X, Y) * (diff.t() * diff)) / (lambda * lambda * lambda);
+          mat tmp = (kernel(X, Y) * (diff.t() * diff)) /
+                    (lambda * lambda * lambda);
           return tmp(0, 0);
         }
         return 0;
@@ -47,7 +49,37 @@ namespace gplib {
 
       mat derivate_wrt_inputs (size_t param_id, const arma::mat& X,
                                const arma::mat& Y){
-        return zeros<mat> (X.n_rows, Y.n_rows);
+        mat ans = zeros<mat> (X.n_rows, Y.n_rows);
+        size_t row, col;
+        bool u = X.size() < Y.size();
+        if (u){
+          row = param_id / X.n_rows;
+          col = param_id % X.n_rows;
+        } else{
+          row = param_id / Y.n_rows;
+          col = param_id % Y.n_rows;
+        }
+
+        for (size_t i = 0; i < X.n_rows; ++i) {
+          for (size_t j = 0; j < Y.n_rows; ++j) {
+            //Compute only the entries that are not 0
+            if ((u && i == row) || (!u && j == row)){
+              vec dXdT = zeros<vec> (X.n_cols);
+              vec dYdT = zeros<vec> (Y.n_cols);
+              if (u)
+                dXdT(col) = 1;
+              else
+                dYdT(col) = 1;
+              mat long_term = -0.5 * params[1] * (dXdT * X.row(i) - dXdT *
+                              Y.row(j) - dYdT * X.row(i) + dYdT * Y.row(j) +
+                              X.row(i) * dXdT - X.row(i) * dYdT - Y.row(j) *
+                              dXdT + Y.row(j) * dYdT);
+              cout << long_term.size();
+              ans(i, j) = kernel(X.row(i).t(), Y.row(j).t()) * long_term(0, 0);
+            }
+          }
+        }
+        return ans;
       }
 
       mat derivative(size_t param_id, const arma::mat& X, const arma::mat& Y) {
@@ -56,7 +88,8 @@ namespace gplib {
           mat ans(X.n_rows, Y.n_rows);
           for (size_t i = 0; i < ans.n_rows; ++i) {
             for (size_t j = 0; j < ans.n_cols; ++j) {
-              ans(i, j) = derivative_entry(param_id, X.row(i).t(), Y.row(j).t());
+              ans(i, j) = derivative_entry(param_id, X.row(i).t(),
+                          Y.row(j).t());
             }
           }
           return ans;
@@ -64,7 +97,7 @@ namespace gplib {
         if (param_id == 2)
           return 2.0 * params[2] * eye(X.n_rows, Y.n_rows);
         //Substract previous params
-        mat ans = derivate_wrt_inputs (param_id, X, Y);
+        mat ans = derivate_wrt_inputs (param_id - 2, X, Y);
         return ans;
 
       }
