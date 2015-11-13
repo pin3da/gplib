@@ -70,8 +70,8 @@ namespace gplib {
                 dXdT(col) = 1;
               else
                 dYdT(col) = 1;
-              mat long_term = -0.5 * params[1] * (dXdT * X.row(i) - dXdT *
-                              Y.row(j) - dYdT * X.row(i) + dYdT * Y.row(j) +
+              mat long_term = -0.5 * params[1] * (X.row(i) * dXdT - Y.row(j) *
+                              dXdT - X.row(i) * dYdT + Y.row(j) * dYdT +
                               X.row(i) * dXdT - X.row(i) * dYdT - Y.row(j) *
                               dXdT + Y.row(j) * dYdT);
               cout << long_term.size();
