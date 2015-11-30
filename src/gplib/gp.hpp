@@ -5,6 +5,7 @@
 #include <armadillo>
 #include <vector>
 #include <memory>
+#include <cassert>
 
 #include "mvgauss.hpp"
 

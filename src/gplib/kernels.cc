@@ -47,17 +47,17 @@ namespace gplib {
         return 0;
       }
 
-      mat derivate_wrt_inputs (size_t param_id, const arma::mat& X,
-                               const arma::mat& Y){
+      mat derivate_wrt_inputs(size_t param_id, const arma::mat& X,
+                               const arma::mat& Y) {
         mat ans = zeros<mat> (X.n_rows, Y.n_rows);
         size_t row, col;
         bool u = X.size() < Y.size();
-        if (u){
-          row = param_id / X.n_rows;
-          col = param_id % X.n_rows;
-        } else{
-          row = param_id / Y.n_rows;
-          col = param_id % Y.n_rows;
+        if (u) {
+          row = param_id / X.n_cols;
+          col = param_id % X.n_cols;
+        } else {
+          row = param_id / Y.n_cols;
+          col = param_id % Y.n_cols;
         }
 
         for (size_t i = 0; i < X.n_rows; ++i) {
@@ -70,12 +70,13 @@ namespace gplib {
                 dXdT(col) = 1;
               else
                 dYdT(col) = 1;
-              mat long_term = -0.5 * params[1] * (X.row(i) * dXdT - Y.row(j) *
-                              dXdT - X.row(i) * dYdT + Y.row(j) * dYdT +
-                              X.row(i) * dXdT - X.row(i) * dYdT - Y.row(j) *
-                              dXdT + Y.row(j) * dYdT);
-              cout << long_term.size();
+
+              mat long_term = ((params[0] * params[0]) / params[1]) * (Y.row(j) * dXdT  + X.row(i) * dXdT -  Y.row(j) * dYdT - X.row(i) * dXdT);
+              // cout << long_term.size() << endl;
+              assert(long_term.size() == 1);
+              // cout << i << " " << j << endl;
               ans(i, j) = kernel(X.row(i).t(), Y.row(j).t()) * long_term(0, 0);
+              // cout << " si llega aqui esta de buenas " << endl;
             }
           }
         }
@@ -94,10 +95,12 @@ namespace gplib {
           }
           return ans;
         }
+
         if (param_id == 2)
           return 2.0 * params[2] * eye(X.n_rows, Y.n_rows);
+
         //Substract previous params
-        mat ans = derivate_wrt_inputs (param_id - 2, X, Y);
+        mat ans = derivate_wrt_inputs (param_id - 3, X, Y);
         return ans;
 
       }
