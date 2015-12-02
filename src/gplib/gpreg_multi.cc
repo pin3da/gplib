@@ -119,6 +119,7 @@ namespace gplib {
     }
 
     void set_params(const vector<double> &params) {
+      // TODO: set sigma.
       size_t M_size = 0;
       for(size_t i = 0; i < M.size(); ++i) {
         M_size += M[i].size();
@@ -130,6 +131,7 @@ namespace gplib {
     }
 
     vector<double> get_params() {
+      // TODO: get sigma.
       vector<double> params = kernel-> get_params();
       vector<double> flatten_M = flatten(M);
       params.insert(params.end(), flatten_M.begin(), flatten_M.end());
@@ -203,7 +205,7 @@ namespace gplib {
         mat ans = ytRi * dLLdR * Riy -0.5 * trace (Ri * dLLdR);
         grad[d] = -0.5 * ans(0,0);
       }
-      std::cout << "ANs" << ans << std::endl;
+      std::cout << "ANS: " << ans << std::endl;
       return ans;
     }
 
@@ -233,8 +235,8 @@ namespace gplib {
       my_min.set_maxeval(max_iter);
       vector<double> lb = kernel-> get_lower_bounds();
       vector<double> ub = kernel-> get_upper_bounds();
-      lb.resize(lb.size() + M_size, 0);
-      ub.resize(ub.size() + M_size, 50);
+      lb.resize(lb.size() + M_size, -500);
+      ub.resize(ub.size() + M_size, 500);
       my_min.set_lower_bounds(lb);
       my_min.set_upper_bounds(ub);
 

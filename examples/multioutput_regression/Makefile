@@ -1,5 +1,5 @@
 CXX := clang++
-FLAGS := -lgplib -larmadillo -std=c++11
+FLAGS := -lgplib -larmadillo -std=c++11 -O3
 
 all: mo_full mo_fitc
 

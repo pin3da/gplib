@@ -75,20 +75,13 @@ namespace gplib{
         if (X[0].size() == Y[0].size())
           return zeros<mat> (total_rows, total_cols);
 
-        //Substract previous parameters from param_id
-        // param_id -= B.size() * B[1].size();
-        // for (size_t i = 0; i < kernels.size(); ++i){
-        //  param_id -= kernels[i]-> n_params();
-        // }
-
         //Set which size should be used to locate the pseudo-input
-        vector<size_t> U = (X[0].size() < Y[0].size()) ? x_sizes : y_sizes;
+        vector<size_t> &U = (X[0].size() < Y[0].size()) ? x_sizes : y_sizes;
         bool u = X[0].size() < Y[0].size();
 
-        // cout << "Param id : " <<  param_id << endl;
         //Find which matrix contains the pseudo-input of those in the vector
         size_t which_u;
-        for (which_u = 0; which_u < U.size(); ++which_u){
+        for (which_u = 0; which_u < U.size(); ++which_u) {
           if (param_id < U[which_u])
             break;
           param_id -= U[which_u];
@@ -105,7 +98,8 @@ namespace gplib{
             if ((u && i == which_u) || (!u && j == which_u)) {
               mat cov_ab = zeros<mat> (X[i].n_rows, Y[j].n_rows);
               for (size_t k = 0; k < B.size(); k++) {
-                cov_ab += B[k](i, j) * (kernels[k]-> derivate(param_id + kernels[k]-> n_params(), X[i], Y[j]));
+                cov_ab += B[k](i, j) * (kernels[k]-> derivate(param_id +
+                                        kernels[k]-> n_params(), X[i], Y[j]));
               }
 
               cov.submat (first_row, first_col, first_row + X[i].n_rows - 1,
@@ -221,7 +215,8 @@ namespace gplib{
           }
           param_id -= kernels[q]-> n_params();
         }
-        return derivate_wrt_data(param_id, X, Y);
+
+        return derivate_wrt_data_an(param_id, X, Y);
       }
 
       vector<double> get_params() {

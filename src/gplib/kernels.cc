@@ -49,6 +49,7 @@ namespace gplib {
 
       mat derivate_wrt_inputs(size_t param_id, const arma::mat& X,
                                const arma::mat& Y) {
+
         mat ans = zeros<mat> (X.n_rows, Y.n_rows);
         size_t row, col;
         bool u = X.size() < Y.size();
@@ -60,6 +61,7 @@ namespace gplib {
           col = param_id % Y.n_cols;
         }
 
+        /*
         for (size_t i = 0; i < X.n_rows; ++i) {
           for (size_t j = 0; j < Y.n_rows; ++j) {
             //Compute only the entries that are not 0
@@ -80,7 +82,17 @@ namespace gplib {
             }
           }
         }
-        return ans;
+        */
+        // TODO: fix the above code and use the analytical method.
+        mat T = Y;
+        double eps = 1e-5;
+        T(row, col) += eps;
+        mat num_grad = this-> eval(X, T);
+        T(row, col) -= 2.0 * eps;
+        num_grad -= this-> eval (X, T);
+        T(row, col) += eps;
+        num_grad = num_grad / (2.0 * eps);
+        return num_grad;
       }
 
       mat derivative(size_t param_id, const arma::mat& X, const arma::mat& Y) {
@@ -100,7 +112,7 @@ namespace gplib {
           return 2.0 * params[2] * eye(X.n_rows, Y.n_rows);
 
         //Substract previous params
-        mat ans = derivate_wrt_inputs (param_id - 3, X, Y);
+        mat ans = derivate_wrt_inputs(param_id - 3, X, Y);
         return ans;
 
       }

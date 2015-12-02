@@ -1,10 +1,15 @@
 #include <boost/test/unit_test.hpp>
 #include <armadillo>
 #include <vector>
+#include <ctime>
+#include <ratio>
+#include <chrono>
 
 #include "gplib/gplib.hpp"
 
 const double eps = 1e-5;
+
+using namespace std;
 
 BOOST_AUTO_TEST_SUITE( mo_kernels )
 
@@ -13,37 +18,59 @@ BOOST_AUTO_TEST_CASE( mo_eval_lmc_kernel ) {
    * The evaluation of kernel must be a positive, semidefinite matrix.
    * If it is not correct, cholesky decomposition will arise an error.
    * */
-  std::vector<arma::mat> X;
+
+  chrono::high_resolution_clock::time_point t1 =
+    chrono::high_resolution_clock::now();
+
+  vector<arma::mat> X;
   const int noutputs = 4;
   for (int i = 0; i < noutputs; ++i)
     X.push_back(arma::randn(100, 3));
 
-  std::vector<std::shared_ptr<gplib::kernel_class>> latent_functions;
-  std::vector<double> ker_par({0.9, 1.2, 0.1});
+  vector<shared_ptr<gplib::kernel_class>> latent_functions;
+  vector<double> ker_par({0.9, 1.2, 0.1});
   for (int i = 0; i < noutputs - 1; ++i) {
-    auto kernel = std::make_shared<gplib::kernels::squared_exponential>(ker_par);
+    auto kernel = make_shared<gplib::kernels::squared_exponential>(ker_par);
     latent_functions.push_back(kernel);
   }
-  std::vector<arma::mat> params(latent_functions.size(), arma::eye<arma::mat>(noutputs, noutputs));
+  vector<arma::mat> params(latent_functions.size(),
+                           arma::eye<arma::mat>(noutputs, noutputs));
+
   gplib::multioutput_kernels::lmc_kernel K(latent_functions, params);
   arma::mat ans = K.eval(X, X);
   arma::mat tmp = arma::chol(ans);
-  std::cout << "\033[32m\t eval multioutput lmc_kernel passed ... \033[0m\n";
+
+
+  chrono::high_resolution_clock::time_point t2 =
+    chrono::high_resolution_clock::now();
+
+  chrono::duration<double> time_span =
+    chrono::duration_cast<chrono::duration<double>>(t2 - t1);
+
+  cout << "\033[32m\t eval multioutput lmc_kernel passed in "
+       << time_span.count() << " seconds. \033[0m\n";
 }
 
 BOOST_AUTO_TEST_CASE( mo_lmc_gradient ) {
-  std::vector<arma::mat> X;
-  const int noutputs = 4;
-  for (int i = 0; i < noutputs; ++i)
-    X.push_back(arma::randn(100, 3));
 
-  std::vector<std::shared_ptr<gplib::kernel_class>> latent_functions;
-  std::vector<double> k_params({0.9, 1.2, 0.1});
+  chrono::high_resolution_clock::time_point t1 =
+    chrono::high_resolution_clock::now();
+
+  vector<arma::mat> X;
+  const int noutputs = 4;
+  const int n_points = 33;
+  for (int i = 0; i < noutputs; ++i)
+    X.push_back(arma::randn(n_points, 3));
+
+  vector<shared_ptr<gplib::kernel_class>> latent_functions;
+  vector<double> k_params({0.9, 1.2, 0.1});
   for (int i = 0; i < noutputs - 1; ++i) {
-    auto kernel = std::make_shared<gplib::kernels::squared_exponential>(k_params);
+    auto kernel = make_shared<gplib::kernels::squared_exponential>(k_params);
     latent_functions.push_back(kernel);
   }
-  std::vector<arma::mat> params(latent_functions.size(), arma::eye<arma::mat>(noutputs, noutputs));
+  vector<arma::mat> params(latent_functions.size(),
+                           arma::eye<arma::mat>(noutputs, noutputs));
+
   gplib::multioutput_kernels::lmc_kernel K(latent_functions, params);
   int param_id = 0;
   arma::mat analitical;
@@ -70,7 +97,7 @@ BOOST_AUTO_TEST_CASE( mo_lmc_gradient ) {
     }
   }
   size_t offset = (latent_functions.size() * noutputs * noutputs);
-  std::vector<double> lil_params;
+  vector<double> lil_params;
   for (size_t i = 0; i < latent_functions.size(); ++i) {
     for (size_t j = 0; j < latent_functions[i] -> n_params(); ++j) {
       param_id = offset + i * latent_functions[i] -> n_params() + j;
@@ -88,7 +115,78 @@ BOOST_AUTO_TEST_CASE( mo_lmc_gradient ) {
       }
     }
   }
-  std::cout << "\033[32m\t gradient multioutput lmc_kernel passed ... \033[0m\n";
+
+
+  chrono::high_resolution_clock::time_point t2 =
+    chrono::high_resolution_clock::now();
+
+  chrono::duration<double> time_span =
+    chrono::duration_cast<chrono::duration<double>>(t2 - t1);
+
+  cout << "\033[32m\t gradient multioutput lmc_kernel passed in "
+       << time_span.count() << " seconds. \033[0m\n";
+
+}
+
+BOOST_AUTO_TEST_CASE( mo_lmc_gradient_wrt_data ) {
+  chrono::high_resolution_clock::time_point t1 =
+    chrono::high_resolution_clock::now();
+
+  srand(time(0));
+  vector<arma::mat> X, Y;
+
+  // const size_t noutputs = random() % 5 + 2;
+  const size_t noutputs = 2;
+
+  for (size_t i = 0; i < noutputs; ++i) {
+    X.push_back(arma::randn(3, 3));
+    Y.push_back(arma::randn(2, 3));
+  }
+
+  vector<shared_ptr<gplib::kernel_class>> latent_functions;
+  vector<double> k_params({0.9, 1.2, 0.1});
+  for (size_t i = 0; i < noutputs - 1; ++i) {
+    auto kernel = make_shared<gplib::kernels::squared_exponential>(k_params);
+    latent_functions.push_back(kernel);
+  }
+
+  vector<arma::mat> params(latent_functions.size(),
+                           arma::eye<arma::mat>(noutputs, noutputs));
+
+  gplib::multioutput_kernels::lmc_kernel K(latent_functions, params);
+
+  int param_id = latent_functions.size() * noutputs * noutputs +
+                 k_params.size() * (noutputs - 1);
+
+  arma::mat analitical;
+  arma::mat numeric;
+
+
+  bool ok = true;
+  for (size_t k = 0; k < noutputs && ok; ++k) {
+    for (size_t i = 0; i < Y[k].n_rows && ok; ++i) {
+      for (size_t j = 0; j < Y[k].n_cols && ok; ++j) {
+        analitical = K.derivate(param_id, X, Y);
+        Y[k](i, j) += eps;
+        numeric = K.eval(X, Y);
+        Y[k](i, j) -= 2.0 * eps;
+        numeric -= K.eval(X, Y);
+        numeric = numeric / (2.0 * eps);
+        Y[k](i, j) += eps;
+
+        for (size_t l = 0; l < numeric.n_rows; ++l) {
+          for (size_t n = 0; n < numeric.n_cols; ++n) {
+            BOOST_CHECK_CLOSE(numeric (l, n), analitical (l, n), eps);
+          }
+        }
+        param_id++;
+      }
+    }
+  }
+
+  chrono::high_resolution_clock::time_point t2 = chrono::high_resolution_clock::now();
+  chrono::duration<double> time_span = chrono::duration_cast<chrono::duration<double>>(t2 - t1);
+  cout << "\033[32m\t gradient wrt data [multioutput lmc_kernel] passed in " << time_span.count() << " seconds. \033[0m\n";
 }
 
 BOOST_AUTO_TEST_SUITE_END()
