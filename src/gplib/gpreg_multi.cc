@@ -143,14 +143,18 @@ namespace gplib {
     }
 
     double log_marginal_fitc() {
+      size_t N = 0;
+      for (int i = 0; i < X.size(); ++i)
+        N += X[i].n_rows;
+
       mat Qff = comp_Q (X, X, M);
       mat gamma = diagmat( kernel-> eval (X, X) - Qff) +
                   sigma * eye<mat> (Qff.n_rows, Qff.n_cols);
       double ans = -0.5 * log (det (Qff + gamma));
       mat flat_y = flatten (y);
-      mat tmp = (flat_y.t() * comp_Q (X, X, M) * flat_y);
+      mat tmp = (flat_y.t() * (Qff + gamma).i() * flat_y);
       ans -= 0.5 * tmp(0,0);
-      ans -= 0.5 * X.size() * log (2 * pi);
+      ans -= 0.5 * N * log (2.0 * pi);
       return ans;
     }
 
