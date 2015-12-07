@@ -144,7 +144,7 @@ namespace gplib {
 
     double log_marginal_fitc() {
       size_t N = 0;
-      for (int i = 0; i < X.size(); ++i)
+      for (size_t i = 0; i < X.size(); ++i)
         N += X[i].n_rows;
 
       mat Qff = comp_Q (X, X, M);
@@ -198,16 +198,16 @@ namespace gplib {
       mat KuuiKuf = Kuui * pimpl-> kernel-> eval(pimpl-> M, pimpl-> X);
       mat KfuKuui = pimpl-> kernel-> eval(pimpl-> X, pimpl-> M) * Kuui;
 
+      // TODO: write special case for T = sigma
       for (size_t d = 0; d < grad.size(); d++) {
-        mat dLLdKfu = pimpl-> kernel-> derivate (d, pimpl-> X, pimpl-> M);
-        mat dLLdKuu = pimpl-> kernel-> derivate (d, pimpl-> M, pimpl-> M);
-        mat dLLdKuf = pimpl-> kernel-> derivate (d, pimpl-> M, pimpl-> X);
-        mat dLLdKff = pimpl-> kernel-> derivate (d, pimpl-> X, pimpl-> X);
-        mat dLLdQ = dLLdKfu * KuuiKuf - KfuKuui * dLLdKuu * KuuiKuf +
-                    KfuKuui * dLLdKuf;
-        mat dLLdR = dLLdQ + diagmat (dLLdKff - dLLdQ);
-        mat ans = ytRi * dLLdR * Riy -0.5 * trace (Ri * dLLdR);
-        grad[d] = -0.5 * ans(0,0);
+        mat dKfudT = pimpl-> kernel-> derivate (d, pimpl-> X, pimpl-> M);
+        mat dKuudT = pimpl-> kernel-> derivate (d, pimpl-> M, pimpl-> M);
+        mat dKufdT = pimpl-> kernel-> derivate (d, pimpl-> M, pimpl-> X);
+        mat dKffdT = pimpl-> kernel-> derivate (d, pimpl-> X, pimpl-> X);
+        mat dQffdT = KfuKuui * (dKufdT - dKuudT * KuuiKuf) + dKfudT * KuuiKuf;
+        mat dRdT = dQffdT - diagmat(dKffdT) + diagmat(dQffdT);
+        mat ans  = ytRi * dRdT * Riy + trace(Ri * dRdT);
+        grad[d]  = -0.5 * ans(0,0);
       }
       std::cout << "ANS: " << ans << std::endl;
       return ans;
