@@ -362,6 +362,14 @@ namespace gplib{
         upper_bounds = upper_bound;
       }
 
+      size_t in_kernel_np() {
+        size_t ans = 0;
+        for (size_t k = 0; k < kernels.size(); ++k) {
+          ans += kernels[k]-> n_params();
+        }
+        return ans;
+      }
+
       void set_lower_bounds(const double &l_bound) {
         vector<double> lower_bound(n_params(), l_bound);
         size_t iter = 0;

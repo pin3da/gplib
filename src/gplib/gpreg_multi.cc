@@ -68,6 +68,8 @@ namespace gplib {
                  lambda * Y;
       mat cov = kernel-> eval(new_x, new_x) - Qm + kernel-> eval(new_x, M)
                 * E * kernel-> eval(M, new_x);
+
+      cout << "antes de" << endl;
       return mv_gauss(mean, cov);
     }
 
@@ -144,15 +146,19 @@ namespace gplib {
 
     double log_marginal_fitc() {
       size_t N = 0;
-      for (int i = 0; i < X.size(); ++i)
+      for (size_t i = 0; i < X.size(); ++i)
         N += X[i].n_rows;
 
       mat Qff = comp_Q (X, X, M);
-      mat gamma = diagmat( kernel-> eval (X, X) - Qff) +
+      mat lambda = diagmat( kernel-> eval (X, X) - Qff) +
                   sigma * eye<mat> (Qff.n_rows, Qff.n_cols);
-      double ans = -0.5 * log (det (Qff + gamma));
+      mat B = chol(Qff + lambda);
+      double log_det = 0;
+      for (size_t i = 0; i < Qff.n_rows; ++i)
+        log_det += log(B(i, i));
+      double ans = -log_det;
       mat flat_y = flatten (y);
-      mat tmp = (flat_y.t() * (Qff + gamma).i() * flat_y);
+      mat tmp = (flat_y.t() * (Qff + lambda).i() * flat_y);
       ans -= 0.5 * tmp(0,0);
       ans -= 0.5 * N * log (2.0 * pi);
       return ans;
@@ -187,11 +193,11 @@ namespace gplib {
       pimpl-> set_params(theta);
 
       double ans = pimpl-> log_marginal_fitc();
-      mat flat_y = pimpl-> flatten (pimpl-> y);
+      /*mat flat_y = pimpl-> flatten (pimpl-> y);
       mat Qff = pimpl-> comp_Q (pimpl-> X, pimpl-> X, pimpl-> M);
-      mat gamma = diagmat (pimpl-> kernel-> eval (pimpl-> X, pimpl-> X) -
+      mat lambda = diagmat (pimpl-> kernel-> eval (pimpl-> X, pimpl-> X) -
                   Qff) + pimpl-> sigma * eye<mat> (Qff.n_rows, Qff.n_cols);
-      mat Ri = (Qff + gamma).i();
+      mat Ri = (Qff + lambda).i();
       mat ytRi = flat_y.t() * Ri;
       mat Riy = Ri * flat_y;
       mat Kuui = (pimpl-> kernel-> eval (pimpl-> M, pimpl-> M)).i();
@@ -208,6 +214,26 @@ namespace gplib {
         mat dLLdR = dLLdQ + diagmat (dLLdKff - dLLdQ);
         mat ans = ytRi * dLLdR * Riy -0.5 * trace (Ri * dLLdR);
         grad[d] = -0.5 * ans(0,0);
+      }*/
+      vector<double> params = theta;
+      vector<double> lb = pimpl-> kernel-> get_lower_bounds();
+      vector<double> ub = pimpl-> kernel-> get_upper_bounds();
+      double eps = 1e-6;
+      for (size_t d = 0; d < grad.size(); d++) {
+        if ((d < lb.size() && ub[d] > lb[d]) || d >= lb.size()) {
+          params[d] += eps;
+          pimpl-> set_params(params);
+          double cur = pimpl-> log_marginal_fitc();
+          params[d] -= 2 * eps;
+          pimpl-> set_params(params);
+          cur -= pimpl-> log_marginal_fitc();
+          params[d] += eps;
+          pimpl-> set_params(params);
+          cur /= 2.0 * eps;
+          grad[d] = cur;
+        } else {
+          grad[d] = 0;
+        }
       }
       std::cout << "ANS: " << ans << std::endl;
       return ans;
@@ -215,17 +241,17 @@ namespace gplib {
 
 
     double train(int max_iter) {
-      nlopt::opt my_min(nlopt::LD_MMA, kernel-> n_params());
-      my_min.set_max_objective(implementation::training_obj, this);
-      my_min.set_xtol_rel(1e-4);
-      my_min.set_maxeval(max_iter);
+      nlopt::opt best(nlopt::LD_MMA, kernel-> n_params());
+      best.set_max_objective(implementation::training_obj, this);
+      best.set_xtol_rel(1e-4);
+      best.set_maxeval(max_iter);
 
-      my_min.set_lower_bounds(kernel-> get_lower_bounds());
-      my_min.set_upper_bounds(kernel-> get_upper_bounds());
+      best.set_lower_bounds(kernel-> get_lower_bounds());
+      best.set_upper_bounds(kernel-> get_upper_bounds());
 
       double error; //final value of error function
       vector<double> x = kernel-> get_params();
-      my_min.optimize(x, error);
+      best.optimize(x, error);
       kernel-> set_params(x);
       return error;
     }
@@ -233,21 +259,24 @@ namespace gplib {
     double train_FITC(int max_iter) {
       size_t M_size = M.size() * M[0].size();
       size_t n_params = kernel-> n_params() + M_size;
-      nlopt::opt my_min(nlopt::LD_MMA, n_params);
-      my_min.set_min_objective(implementation::training_obj_FITC, this);
-      my_min.set_xtol_rel(1e-4);
-      my_min.set_maxeval(max_iter);
+      nlopt::opt best(nlopt::LD_MMA, n_params);
+      best.set_max_objective(implementation::training_obj_FITC, this);
+      best.set_xtol_rel(1e-4);
+      best.set_maxeval(max_iter);
       vector<double> lb = kernel-> get_lower_bounds();
       vector<double> ub = kernel-> get_upper_bounds();
-      lb.resize(lb.size() + M_size, -500);
-      ub.resize(ub.size() + M_size, 500);
-      my_min.set_lower_bounds(lb);
-      my_min.set_upper_bounds(ub);
+      lb.resize(lb.size() + M_size, -HUGE_VAL);
+      ub.resize(ub.size() + M_size, HUGE_VAL);
+      // assert(lb.size() == n_params);
+      best.set_lower_bounds(lb);
+      best.set_upper_bounds(ub);
+
+
 
       double error; //final value of error function
       vector<double> x = get_params();
       cout << "before optimization" << endl;
-      my_min.optimize(x, error);
+      best.optimize(x, error);
       cout << "after optimization" << endl;
       set_params(x);
 
