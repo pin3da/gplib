@@ -193,7 +193,9 @@ namespace gplib {
       pimpl-> set_params(theta);
 
       double ans = pimpl-> log_marginal_fitc();
-      /*mat flat_y = pimpl-> flatten (pimpl-> y);
+
+#if 0
+      mat flat_y = pimpl-> flatten (pimpl-> y);
       mat Qff = pimpl-> comp_Q (pimpl-> X, pimpl-> X, pimpl-> M);
       mat lambda = diagmat (pimpl-> kernel-> eval (pimpl-> X, pimpl-> X) -
                   Qff) + pimpl-> sigma * eye<mat> (Qff.n_rows, Qff.n_cols);
@@ -214,7 +216,8 @@ namespace gplib {
         mat dRdT = dQffdT - diagmat(dKffdT) + diagmat(dQffdT);
         mat ans  = ytRi * dRdT * Riy + trace(Ri * dRdT);
         grad[d]  = -0.5 * ans(0,0);
-      }*/
+      }
+#else
       vector<double> params = theta;
       vector<double> lb = pimpl-> kernel-> get_lower_bounds();
       vector<double> ub = pimpl-> kernel-> get_upper_bounds();
@@ -235,6 +238,7 @@ namespace gplib {
           grad[d] = 0;
         }
       }
+#endif
       std::cout << "ANS: " << ans << std::endl;
       return ans;
     }
