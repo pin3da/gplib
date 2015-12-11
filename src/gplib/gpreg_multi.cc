@@ -70,7 +70,7 @@ namespace gplib {
                 * E * kernel-> eval(M, new_x);
 
       cout << "antes de" << endl;
-      return mv_gauss(mean, cov);
+      return mv_gauss(mean, cov + 1e-9 * eye<mat>(cov.n_rows, cov.n_cols));
     }
 
     mv_gauss marginal() {
@@ -203,8 +203,10 @@ namespace gplib {
       mat ytRi = flat_y.t() * Ri;
       mat Riy = Ri * flat_y;
       mat Kuui = (pimpl-> kernel-> eval (pimpl-> M, pimpl-> M)).i();
-      mat KuuiKuf = Kuui * pimpl-> kernel-> eval(pimpl-> M, pimpl-> X);
-      mat KfuKuui = pimpl-> kernel-> eval(pimpl-> X, pimpl-> M) * Kuui;
+      mat Kuf = pimpl-> kernel-> eval(pimpl-> M, pimpl-> X);
+      mat KuuiKuf = Kuui * Kuf;
+      mat Kfu = pimpl-> kernel-> eval(pimpl-> X, pimpl-> M);
+      mat KfuKuui = Kfu * Kuui;
 
       // TODO: write special case for T = sigma
       for (size_t d = 0; d < grad.size(); d++) {
@@ -212,12 +214,16 @@ namespace gplib {
         mat dKuudT = pimpl-> kernel-> derivate (d, pimpl-> M, pimpl-> M);
         mat dKufdT = pimpl-> kernel-> derivate (d, pimpl-> M, pimpl-> X);
         mat dKffdT = pimpl-> kernel-> derivate (d, pimpl-> X, pimpl-> X);
-        mat dQffdT = KfuKuui * (dKufdT - dKuudT * KuuiKuf) + dKfudT * KuuiKuf;
-        mat dRdT = dQffdT - diagmat(dKffdT) + diagmat(dQffdT);
+        // mat dQffdT = KfuKuui * (dKufdT - dKuudT * KuuiKuf) + dKfudT * KuuiKuf;
+        mat dQffdT = Kfu * (Kuui * dKufdT  - (Kuui * dKuudT * Kuui) * Kuf) +
+          dKfudT * Kuui * Kuf;
+        mat dRdT = dQffdT + diagmat(dKffdT) - diagmat(dQffdT);
         mat ans  = ytRi * dRdT * Riy + trace(Ri * dRdT);
         grad[d]  = -0.5 * ans(0,0);
       }
+
 #else
+      vector<double> grad2(grad.size());
       vector<double> params = theta;
       vector<double> lb = pimpl-> kernel-> get_lower_bounds();
       vector<double> ub = pimpl-> kernel-> get_upper_bounds();
@@ -233,10 +239,16 @@ namespace gplib {
           params[d] += eps;
           pimpl-> set_params(params);
           cur /= 2.0 * eps;
-          grad[d] = cur;
+          grad2[d] = cur;
         } else {
-          grad[d] = 0;
+          grad2[d] = 0;
         }
+
+        /*if (fabs(grad2[d] - grad[d]) > 1e-5) {
+          cout << "Difference found at : " << d << endl;
+          cout << "\t" << grad[d] << " : " << grad2[d] << endl;
+        }*/
+        grad[d] = grad2[d];
       }
 #endif
       std::cout << "ANS: " << ans << std::endl;
