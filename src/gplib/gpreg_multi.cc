@@ -218,8 +218,8 @@ namespace gplib {
         mat dQffdT = Kfu * (Kuui * dKufdT  - (Kuui * dKuudT * Kuui) * Kuf) +
           dKfudT * Kuui * Kuf;
         mat dRdT = dQffdT + diagmat(dKffdT) - diagmat(dQffdT);
-        mat ans  = ytRi * dRdT * Riy + trace(Ri * dRdT);
-        grad[d]  = -0.5 * ans(0,0);
+        mat ans  = -trace(Ri * dRdT) + ytRi * dRdT * Riy;
+        grad[d]  = 0.5 * ans(0,0);
       }
 
 #else
