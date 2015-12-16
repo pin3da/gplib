@@ -84,15 +84,27 @@ namespace gplib {
         }
         */
         // TODO: fix the above code and use the analytical method.
-        mat T = Y;
-        double eps = 1e-5;
-        T(row, col) += eps;
-        mat num_grad = this-> eval(X, T);
-        T(row, col) -= 2.0 * eps;
-        num_grad -= this-> eval (X, T);
-        T(row, col) += eps;
-        num_grad = num_grad / (2.0 * eps);
-        return num_grad;
+        if (u) {
+          mat T = X;
+          double eps = 1e-5;
+          T(row, col) += eps;
+          mat num_grad = this-> eval(T, Y);
+          T(row, col) -= 2.0 * eps;
+          num_grad -= this-> eval (T, Y);
+          T(row, col) += eps;
+          num_grad = num_grad / (2.0 * eps);
+          return num_grad;
+        } else {
+          mat T = Y;
+          double eps = 1e-5;
+          T(row, col) += eps;
+          mat num_grad = this-> eval(X, T);
+          T(row, col) -= 2.0 * eps;
+          num_grad -= this-> eval (X, T);
+          T(row, col) += eps;
+          num_grad = num_grad / (2.0 * eps);
+          return num_grad;
+        }
       }
 
       mat derivative(size_t param_id, const arma::mat& X, const arma::mat& Y) {

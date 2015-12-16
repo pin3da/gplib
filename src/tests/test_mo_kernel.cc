@@ -179,6 +179,21 @@ BOOST_AUTO_TEST_CASE( mo_lmc_gradient_wrt_data ) {
             BOOST_CHECK_CLOSE(numeric (l, n), analitical (l, n), eps);
           }
         }
+
+        analitical = K.derivate(param_id, Y, X);
+        Y[k](i, j) += eps;
+        numeric = K.eval(Y, X);
+        Y[k](i, j) -= 2.0 * eps;
+        numeric -= K.eval(Y, X);
+        numeric = numeric / (2.0 * eps);
+        Y[k](i, j) += eps;
+
+        for (size_t l = 0; l < numeric.n_rows; ++l) {
+          for (size_t n = 0; n < numeric.n_cols; ++n) {
+            BOOST_CHECK_CLOSE(numeric (l, n), analitical (l, n), eps);
+          }
+        }
+
         param_id++;
       }
     }
