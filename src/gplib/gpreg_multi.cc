@@ -101,6 +101,7 @@ namespace gplib {
       return ans;
     }
 
+    // TODO: don't set values in this function. It must return the matrix.
     void unflatten(vector<double> &M_params) {
       size_t iter = 0;
       for(size_t q = 0; q < M.size(); ++q)
@@ -151,6 +152,7 @@ namespace gplib {
 
       mat Qff = comp_Q (X, X, M);
       mat lambda = diagmat( kernel-> eval (X, X) - Qff) +
+        // TODO: don't set values in this function. It must return the matrix.
                   sigma * eye<mat> (Qff.n_rows, Qff.n_cols);
       mat B = chol(Qff + lambda);
       double log_det = 0;
@@ -188,8 +190,7 @@ namespace gplib {
         vector<double> &grad, void *fdata) {
 
       implementation *pimpl = (implementation*) fdata;
-      // TODO: implement set_params for gpreg_multi and move the
-      // following lines there. (We need to set sigma there too).
+      // TODO: (We need to set sigma there too).
       pimpl-> set_params(theta);
 
       double ans = pimpl-> log_marginal_fitc();
@@ -273,7 +274,8 @@ namespace gplib {
     }
 
     double train_FITC(int max_iter) {
-      size_t M_size = M.size() * M[0].size();
+      // TODO: receive tol as parameter.
+      size_t M_size = M.size() * M[0].size(); // TODO: Compute M_size using all the matrices in M
       size_t n_params = kernel-> n_params() + M_size;
       nlopt::opt best(nlopt::LD_MMA, n_params);
       best.set_max_objective(implementation::training_obj_FITC, this);
@@ -323,6 +325,7 @@ namespace gplib {
   double gp_reg_multi::train(const int max_iter, const size_t type,
       void *param) {
 
+    // TODO: add option to set different num_pi for each output.
     pimpl-> state = type;
     if (type == FITC) {
       size_t num_pi = *((size_t *) param);

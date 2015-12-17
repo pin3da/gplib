@@ -4,7 +4,7 @@ using namespace arma;
 using namespace std;
 
 namespace gplib {
-
+  // TODO: move utilities here.
   mat upper_triangular_inverse(const mat& upper_t) {
     size_t d = upper_t.n_rows;
     //myassert(d == upper_t.n_cols);
