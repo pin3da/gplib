@@ -136,11 +136,11 @@ BOOST_AUTO_TEST_CASE( mo_lmc_gradient_wrt_data ) {
   vector<arma::mat> X, Y;
 
   // const size_t noutputs = random() % 5 + 2;
-  const size_t noutputs = 2;
+  const size_t noutputs = 4;
 
   for (size_t i = 0; i < noutputs; ++i) {
-    X.push_back(arma::randn(3, 3));
-    Y.push_back(arma::randn(2, 3));
+    X.push_back(arma::randn(30, 3));
+    Y.push_back(arma::randn(20, 3));
   }
 
   vector<shared_ptr<gplib::kernel_class>> latent_functions;
