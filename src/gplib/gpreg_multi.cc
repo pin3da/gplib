@@ -52,8 +52,8 @@ namespace gplib {
     }
 
     mat comp_Q(const vector<mat> &a, const vector<mat> &b, vector<mat> &u) {
-      mat kuu =  kernel-> eval(u, u).i();
-      return kernel-> eval(a, u) * kuu * kernel-> eval(u, b);
+      mat kuui =  kernel-> eval(u, u).i();
+      return kernel-> eval(a, u) * kuui * kernel-> eval(u, b);
     }
 
     mv_gauss predict_FITC(const vector<mat> &new_x) {
@@ -195,7 +195,7 @@ namespace gplib {
 
       double ans = pimpl-> log_marginal_fitc();
 
-#if 0
+// #if 0
       mat flat_y = pimpl-> flatten (pimpl-> y);
       mat Qff = pimpl-> comp_Q (pimpl-> X, pimpl-> X, pimpl-> M);
       mat lambda = diagmat (pimpl-> kernel-> eval (pimpl-> X, pimpl-> X) -
@@ -223,7 +223,7 @@ namespace gplib {
         grad[d]  = 0.5 * ans(0,0);
       }
 
-#else
+// #else
       vector<double> grad2(grad.size());
       vector<double> params = theta;
       vector<double> lb = pimpl-> kernel-> get_lower_bounds();
@@ -233,14 +233,41 @@ namespace gplib {
         if ((d < lb.size() && ub[d] > lb[d]) || d >= lb.size()) {
           params[d] += eps;
           pimpl-> set_params(params);
+          // s1
           double cur = pimpl-> log_marginal_fitc();
+          mat _dQff = pimpl-> comp_Q (pimpl-> X, pimpl-> X, pimpl-> M);
+          // es1
           params[d] -= 2 * eps;
           pimpl-> set_params(params);
+          // s2
           cur -= pimpl-> log_marginal_fitc();
+          _dQff -= pimpl-> comp_Q (pimpl-> X, pimpl-> X, pimpl-> M);
+          // es2
           params[d] += eps;
           pimpl-> set_params(params);
+          // s3
           cur /= 2.0 * eps;
+          _dQff /= 2.0 * eps;
+          // es3
+
           grad2[d] = cur;
+
+          // Extra test for inner derivatives.
+          mat dKfudT = pimpl-> kernel-> derivate (d, pimpl-> X, pimpl-> M);
+          mat dKuudT = pimpl-> kernel-> derivate (d, pimpl-> M, pimpl-> M);
+          mat dKufdT = pimpl-> kernel-> derivate (d, pimpl-> M, pimpl-> X);
+          mat dKffdT = pimpl-> kernel-> derivate (d, pimpl-> X, pimpl-> X);
+          mat dQffdT = KfuKuui * (dKufdT - dKuudT * KuuiKuf) + dKfudT * KuuiKuf;
+
+          for (size_t i = 0; i < _dQff.n_rows; ++i) {
+            for (size_t j = 0; j <  _dQff.n_cols; ++j) {
+              if (fabs(_dQff(i, j) - dQffdT(i, j)) > eps) {
+                cout << "Difference found at " << d << "\n\t";
+                cout << _dQff(i, j) << " != " << dQffdT(i, j) << endl;
+                exit(1);
+              }
+            }
+          }
         } else {
           grad2[d] = 0;
         }
@@ -251,7 +278,7 @@ namespace gplib {
         }*/
         grad[d] = grad2[d];
       }
-#endif
+// #endif
       std::cout << "ANS: " << ans << std::endl;
       return ans;
     }
