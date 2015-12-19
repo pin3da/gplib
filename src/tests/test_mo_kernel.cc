@@ -13,6 +13,53 @@ using namespace std;
 
 BOOST_AUTO_TEST_SUITE( mo_kernels )
 
+
+BOOST_AUTO_TEST_CASE( mo_kernel_get_set ) {
+
+  chrono::high_resolution_clock::time_point t1 =
+    chrono::high_resolution_clock::now();
+
+  vector<arma::mat> X;
+  const int noutputs = 4;
+  for (int i = 0; i < noutputs; ++i)
+    X.push_back(arma::randn(100, 3));
+
+  vector<shared_ptr<gplib::kernel_class>> latent_functions;
+  vector<double> ker_par({0.9, 1.2, 0.1});
+  for (int i = 0; i < noutputs - 1; ++i) {
+    auto kernel = make_shared<gplib::kernels::squared_exponential>(ker_par);
+    latent_functions.push_back(kernel);
+  }
+  vector<arma::mat> params(latent_functions.size(),
+                           arma::eye<arma::mat>(noutputs, noutputs));
+
+  gplib::multioutput_kernels::lmc_kernel K(latent_functions, params);
+
+
+  vector<double> p = K.get_params();
+  size_t num_p = latent_functions.size() *
+                 (noutputs * noutputs + ker_par.size());
+  BOOST_CHECK_EQUAL(p.size(), num_p);
+
+  p[0] += 9.12341234;
+  K.set_params(p);
+
+  vector<double> tmp = K.get_params();
+  for (size_t i = 0; i < p.size(); ++i)
+    BOOST_CHECK_EQUAL(p[i], tmp[i]);
+
+
+
+  chrono::high_resolution_clock::time_point t2 =
+    chrono::high_resolution_clock::now();
+
+  chrono::duration<double> time_span =
+    chrono::duration_cast<chrono::duration<double>>(t2 - t1);
+
+  cout << "\033[32m\t get_set [multioutput lmc_kernel] passed in "
+       << time_span.count() << " seconds. \033[0m\n";
+}
+
 BOOST_AUTO_TEST_CASE( mo_eval_lmc_kernel ) {
   /**
    * The evaluation of kernel must be a positive, semidefinite matrix.
