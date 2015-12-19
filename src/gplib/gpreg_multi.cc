@@ -117,7 +117,7 @@ namespace gplib {
       copy(theta.begin(), theta.begin() + kernel_params.size(),
           kernel_params.begin());
 
-      copy(theta.begin() + kernel_params.size() + 1, theta.end(),
+      copy(theta.begin() + kernel_params.size(), theta.end(),
            M_params.begin());
     }
 
