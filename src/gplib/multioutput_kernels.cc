@@ -279,7 +279,7 @@ namespace gplib{
               params.begin() + iter + kernels[k]-> n_params());
 
           kernels[k]->set_params(subparams);
-          iter += (kernels[k]-> n_params() + 1);
+          iter += (kernels[k]-> n_params());
         }
       }
 
