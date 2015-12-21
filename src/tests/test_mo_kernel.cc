@@ -19,10 +19,7 @@ BOOST_AUTO_TEST_CASE( mo_kernel_get_set ) {
   chrono::high_resolution_clock::time_point t1 =
     chrono::high_resolution_clock::now();
 
-  vector<arma::mat> X;
   const int noutputs = 4;
-  for (int i = 0; i < noutputs; ++i)
-    X.push_back(arma::randn(100, 3));
 
   vector<shared_ptr<gplib::kernel_class>> latent_functions;
   vector<double> ker_par({0.9, 1.2, 0.1});
@@ -35,19 +32,31 @@ BOOST_AUTO_TEST_CASE( mo_kernel_get_set ) {
 
   gplib::multioutput_kernels::lmc_kernel K(latent_functions, params);
 
+  vector<size_t> movable;
+  size_t cur = 0;
+  for (size_t k = 0; k < latent_functions.size(); ++k) {
+    for (size_t i = 0; i < noutputs; ++i) {
+      for (size_t j = 0; j < noutputs; ++j) {
+        if (j <= i) movable.push_back(cur);
+        cur++;
+      }
+    }
+  }
 
   vector<double> p = K.get_params();
   size_t num_p = latent_functions.size() *
                  (noutputs * noutputs + ker_par.size());
   BOOST_CHECK_EQUAL(p.size(), num_p);
 
-  p[0] += 9.12341234;
+  for (size_t i = 0; i < movable.size(); ++i)
+    p[movable[i]] = 10.0 / (random() % 10 + 1);
+
   K.set_params(p);
 
   vector<double> tmp = K.get_params();
-  for (size_t i = 0; i < p.size(); ++i)
+  for (size_t i = 0; i < p.size(); ++i) {
     BOOST_CHECK_EQUAL(p[i], tmp[i]);
-
+  }
 
 
   chrono::high_resolution_clock::time_point t2 =
