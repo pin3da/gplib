@@ -43,6 +43,10 @@ BOOST_AUTO_TEST_CASE( mo_kernel_get_set ) {
     }
   }
 
+  for (size_t k = 0; k < latent_functions.size(); ++k)
+    for (size_t i = 0; i < latent_functions[k]-> n_params(); ++i)
+      movable.push_back(cur++);
+
   vector<double> p = K.get_params();
   size_t num_p = latent_functions.size() *
                  (noutputs * noutputs + ker_par.size());
@@ -103,7 +107,7 @@ BOOST_AUTO_TEST_CASE( mo_eval_lmc_kernel ) {
   chrono::duration<double> time_span =
     chrono::duration_cast<chrono::duration<double>>(t2 - t1);
 
-  cout << "\033[32m\t eval multioutput lmc_kernel passed in "
+  cout << "\033[32m\t eval [multioutput lmc_kernel] passed in "
        << time_span.count() << " seconds. \033[0m\n";
 }
 
@@ -179,7 +183,7 @@ BOOST_AUTO_TEST_CASE( mo_lmc_gradient ) {
   chrono::duration<double> time_span =
     chrono::duration_cast<chrono::duration<double>>(t2 - t1);
 
-  cout << "\033[32m\t gradient multioutput lmc_kernel passed in "
+  cout << "\033[32m\t gradient [multioutput lmc_kernel] passed in "
        << time_span.count() << " seconds. \033[0m\n";
 
 }
