@@ -151,10 +151,14 @@ namespace gplib {
         N += X[i].n_rows;
 
       mat Qff = comp_Q (X, X, M);
+      Qff = force_symmetric(Qff);
+
       mat lambda = diagmat( kernel-> eval (X, X) - Qff) +
         // TODO: don't set values in this function. It must return the matrix.
                   sigma * eye<mat> (Qff.n_rows, Qff.n_cols);
-      mat B = chol(Qff + lambda);
+      cout << "before chol" << endl;
+      mat B = chol(Qff + lambda + 1e-6 * eye<mat>(Qff.n_rows, Qff.n_cols));
+      cout << "after chol" << endl;
       double log_det = 0;
       for (size_t i = 0; i < Qff.n_rows; ++i)
         log_det += log(B(i, i));
@@ -194,14 +198,9 @@ namespace gplib {
       pimpl-> set_params(theta);
       double ans = pimpl-> log_marginal_fitc();
 
-// #if 0
       mat flat_y = pimpl-> flatten (pimpl-> y);
       mat Qff = pimpl-> comp_Q (pimpl-> X, pimpl-> X, pimpl-> M);
-      if (!check_symmetric(Qff))
-        cout << "Matrix Qff is not symmetric" << endl;
       Qff = force_symmetric(Qff);
-      if (check_symmetric(Qff))
-        cout << "Matrix Qff is now symmetric :)" << endl;
       mat lambda = diagmat (pimpl-> kernel-> eval (pimpl-> X, pimpl-> X) -
                   Qff) + pimpl-> sigma * eye<mat> (Qff.n_rows, Qff.n_cols);
       mat Ri = (Qff + lambda).i();
@@ -226,8 +225,6 @@ namespace gplib {
         mat ans  = -trace(Ri * dRdT) + ytRi * dRdT * Riy;
         grad[d]  = 0.5 * ans(0,0);
       }
-
-// #else
       vector<double> grad2(grad.size());
       vector<double> params = theta;
       vector<double> lb = pimpl-> kernel-> get_lower_bounds();
@@ -264,7 +261,7 @@ namespace gplib {
           mat dKffdT = pimpl-> kernel-> derivate (d, pimpl-> X, pimpl-> X);
           mat dQffdT = KfuKuui * (dKufdT - dKuudT * KuuiKuf) + dKfudT * KuuiKuf;
 
-          for (size_t i = 0; i < _dQff.n_rows; ++i) {
+          /*for (size_t i = 0; i < _dQff.n_rows; ++i) {
             for (size_t j = 0; j <  _dQff.n_cols; ++j) {
               if (fabs(_dQff(i, j) - dQffdT(i, j)) > eps) {
                 cout << "Difference found at " << d << " i " << i << " j " << j << endl;
@@ -272,7 +269,7 @@ namespace gplib {
                 dif_found++;
               }
             }
-          }
+          }*/
         } else {
           grad2[d] = 0;
         }
@@ -281,14 +278,13 @@ namespace gplib {
           cout << "Difference found at : " << d << endl;
           cout << "\t" << grad[d] << " : " << grad2[d] << endl;
         }*/
+        //To change between analytical an numerical comment or uncomment this line
         grad[d] = grad2[d];
       }
       if (dif_found > 0){
         cout << dif_found << " Diferences found out of " << grad.size() * Qff.size() << endl;
-        exit(1);
+        //exit(1);
       }
-
-// #endif
       std::cout << "ANS: " << ans << std::endl;
       return ans;
     }

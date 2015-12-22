@@ -12,7 +12,7 @@ const size_t MN = 100,
              noutputs = 1,
              l_functions = 1,
              num_pi = ceil(MN * 0.7),
-             num_iter = 20;
+             num_iter = 100;
 
 
 const double m_pi = acos(-1);

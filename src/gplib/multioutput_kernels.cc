@@ -228,7 +228,7 @@ namespace gplib{
             }
             return ans;
 
-            //  ans must be equals to
+            //  ans must be equal to
             //  kron(B[q], kernels[q]-> derivate(param_id, X, Y));
           }
           param_id -= kernels[q]-> n_params();
