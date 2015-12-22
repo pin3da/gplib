@@ -192,12 +192,16 @@ namespace gplib {
       implementation *pimpl = (implementation*) fdata;
       // TODO: (We need to set sigma there too).
       pimpl-> set_params(theta);
-
       double ans = pimpl-> log_marginal_fitc();
 
 // #if 0
       mat flat_y = pimpl-> flatten (pimpl-> y);
       mat Qff = pimpl-> comp_Q (pimpl-> X, pimpl-> X, pimpl-> M);
+      if (!check_symmetric(Qff))
+        cout << "Matrix Qff is not symmetric" << endl;
+      Qff = force_symmetric(Qff);
+      if (check_symmetric(Qff))
+        cout << "Matrix Qff is now symmetric :)" << endl;
       mat lambda = diagmat (pimpl-> kernel-> eval (pimpl-> X, pimpl-> X) -
                   Qff) + pimpl-> sigma * eye<mat> (Qff.n_rows, Qff.n_cols);
       mat Ri = (Qff + lambda).i();
@@ -229,6 +233,7 @@ namespace gplib {
       vector<double> lb = pimpl-> kernel-> get_lower_bounds();
       vector<double> ub = pimpl-> kernel-> get_upper_bounds();
       double eps = 1e-6;
+      size_t dif_found = 0;
       for (size_t d = 0; d < grad.size(); d++) {
         if ((d < lb.size() && ub[d] > lb[d]) || d >= lb.size()) {
           params[d] += eps;
@@ -262,9 +267,9 @@ namespace gplib {
           for (size_t i = 0; i < _dQff.n_rows; ++i) {
             for (size_t j = 0; j <  _dQff.n_cols; ++j) {
               if (fabs(_dQff(i, j) - dQffdT(i, j)) > eps) {
-                cout << "Difference found at " << d << "\n\t";
+                cout << "Difference found at " << d << " i " << i << " j " << j << endl;
                 cout << _dQff(i, j) << " != " << dQffdT(i, j) << endl;
-                exit(1);
+                dif_found++;
               }
             }
           }
@@ -278,6 +283,11 @@ namespace gplib {
         }*/
         grad[d] = grad2[d];
       }
+      if (dif_found > 0){
+        cout << dif_found << " Diferences found out of " << grad.size() * Qff.size() << endl;
+        exit(1);
+      }
+
 // #endif
       std::cout << "ANS: " << ans << std::endl;
       return ans;

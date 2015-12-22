@@ -25,6 +25,10 @@ namespace gplib {
 
   /* Return true if all the values in the boolean vector are true. */
   bool all_true(const std::vector<bool>& vec);
+
+  bool check_symmetric(const arma::mat &A);
+
+  arma::mat force_symmetric(const arma::mat &A);
 };
 
 #endif
