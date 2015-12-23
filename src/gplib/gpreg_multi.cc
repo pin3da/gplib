@@ -70,7 +70,7 @@ namespace gplib {
                 * E * kernel-> eval(M, new_x);
 
       cout << "antes de" << endl;
-      return mv_gauss(mean, cov + 1e-9 * eye<mat>(cov.n_rows, cov.n_cols));
+      return mv_gauss(mean, cov);
     }
 
     mv_gauss marginal() {
@@ -154,9 +154,12 @@ namespace gplib {
         N += X[i].n_rows;
 
       mat Qff = comp_Q (X, X, M);
+      Qff = force_symmetric(Qff);
+
       mat lambda = diagmat( kernel-> eval (X, X) - Qff) +
                   sigma * eye<mat> (Qff.n_rows, Qff.n_cols);
-      mat B = chol(Qff + lambda);
+      mat B = force_diag(Qff + lambda);
+      B = chol(B);
       double log_det = 0;
       for (size_t i = 0; i < Qff.n_rows; ++i)
         log_det += log(B(i, i));
@@ -192,13 +195,12 @@ namespace gplib {
         vector<double> &grad, void *fdata) {
       implementation *pimpl = (implementation*) fdata;
       pimpl-> set_params(theta);
-
       double ans = pimpl-> log_marginal_fitc();
 
-// #if 0
       mat flat_y = pimpl-> flatten (pimpl-> y);
       mat Qff = pimpl-> comp_Q (pimpl-> X, pimpl-> X, pimpl-> M);
       mat I = eye<mat> (Qff.n_rows, Qff.n_cols);
+      Qff = force_symmetric(Qff);
       mat lambda = diagmat (pimpl-> kernel-> eval (pimpl-> X, pimpl-> X) -
                   Qff) + pimpl-> sigma * I;
       mat Ri = (Qff + lambda).i();
@@ -227,26 +229,26 @@ namespace gplib {
         mat ans  = -trace(Ri * dRdT) + ytRi * dRdT * Riy;
         grad[d]  = 0.5 * ans(0,0);
       }
-
-// #else
       vector<double> grad2(grad.size());
       vector<double> params = theta;
       vector<double> lb = pimpl-> kernel-> get_lower_bounds();
       vector<double> ub = pimpl-> kernel-> get_upper_bounds();
       double eps = 1e-6;
+      size_t dif_found = 0;
       for (size_t d = 0; d < grad.size(); d++) {
         if ((d < lb.size() && ub[d] > lb[d]) || d >= lb.size()) {
           params[d] += eps;
           pimpl-> set_params(params);
           // s1
           double cur = pimpl-> log_marginal_fitc();
-          mat _dQff = pimpl-> comp_Q (pimpl-> X, pimpl-> X, pimpl-> M);
+          mat _dQff = force_symmetric(pimpl-> comp_Q (pimpl-> X, pimpl-> X, pimpl-> M));
+
           // es1
           params[d] -= 2 * eps;
           pimpl-> set_params(params);
           // s2
           cur -= pimpl-> log_marginal_fitc();
-          _dQff -= pimpl-> comp_Q (pimpl-> X, pimpl-> X, pimpl-> M);
+          _dQff -= force_symmetric(pimpl-> comp_Q (pimpl-> X, pimpl-> X, pimpl-> M));
           // es2
           params[d] += eps;
           pimpl-> set_params(params);
@@ -267,9 +269,9 @@ namespace gplib {
             for (size_t i = 0; i < _dQff.n_rows; ++i) {
               for (size_t j = 0; j <  _dQff.n_cols; ++j) {
                 if (fabs(_dQff(i, j) - dQffdT(i, j)) > eps) {
-                  cout << "Difference found at " << d << "\n\t";
+                  cout << "Difference found at " << d << " i " << i << " j " << j << endl;
                   cout << _dQff(i, j) << " != " << dQffdT(i, j) << endl;
-                  exit(1);
+                  dif_found++;
                 }
               }
             }
@@ -281,10 +283,15 @@ namespace gplib {
         /*if (fabs(grad2[d] - grad[d]) > 1e-5) {
           cout << "Difference found at : " << d << endl;
           cout << "\t" << grad[d] << " : " << grad2[d] << endl;
-        }*/
-        grad[d] = grad2[d];
+          dif_found++;
+          }*/
+        //To change between analytical an numerical comment or uncomment this line
+        // grad[d] = grad2[d];
       }
-// #endif
+      if (dif_found > 0){
+        cout << dif_found << " Diferences found out of " << grad.size() * Qff.size() << endl;
+        exit(1);
+      }
       std::cout << "ANS: " << ans << std::endl;
       return ans;
     }

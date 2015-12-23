@@ -115,37 +115,55 @@ namespace gplib{
 
       }
 
-      mat derivate_wrt_data(size_t param_id, const vector<mat> &X,
+      mat derivate_wrt_data_num(size_t param_id, const vector<mat> &X,
                             const vector<mat> &Y) {
 
-        size_t tot_rows = 0, tot_cols = 0;
-        for (size_t i = 0; i < X.size(); ++i)
-          tot_rows += X[i].n_rows;
+        size_t total_rows = 0, total_cols = 0;
+        vector<size_t> x_sizes (X.size());
+        vector<size_t> y_sizes (Y.size());
+        for (size_t i = 0; i < X.size(); ++i) {
+          total_rows += X[i].n_rows;
+          x_sizes[i] = X[i].size();
+        }
+        for (size_t i = 0; i < Y.size(); ++i) {
+          total_cols += Y[i].n_rows;
+          y_sizes[i] = Y[i].size();
+        }
 
-        for (size_t i = 0; i < Y.size(); ++i)
-          tot_cols += Y[i].n_rows;
+        //Set which size should be used to locate the pseudo-input
+        vector<size_t> &U = (X[0].size() < Y[0].size()) ? x_sizes : y_sizes;
+        bool u = X[0].size() < Y[0].size();
 
-        mat ans = zeros(tot_rows, tot_cols);
+        //Find which matrix contains the pseudo-input of those in the vector
+        size_t which_u;
+        for (which_u = 0; which_u < U.size(); ++which_u) {
+          if (param_id < U[which_u])
+            break;
+          param_id -= U[which_u];
+        }
 
-        for (size_t k = 0; k < X.size(); ++k) {
-          if (param_id < X[k].size()) {
-            vector<mat> Xp = X, Yp = Y;
-            for (size_t i = 0; i < X[k].n_rows; ++i) {
-              for (size_t j = 0; j < X[k].n_cols; ++j) {
-                if (param_id == 0) {
-                  Xp[k](i, j) += datum::eps;
-                  Yp[k](i, j) += datum::eps;
-                  ans = eval(Xp, Yp);
-                  Xp[k](i, j) -= 2.0 * datum::eps;
-                  Yp[k](i, j) -= 2.0 * datum::eps;
-                  ans = ans - eval(Xp, Yp);
-                  ans /=  2.0 * datum::eps;
-                  return ans;
-                }
-              }
-            }
-          }
-          param_id -= X[k].size();
+        size_t row, col;
+        mat ans(total_rows, total_cols);
+        vector<mat> tmp;
+        double eps = 1e-5;
+        if (u){
+          tmp = X;
+          row = param_id / tmp[which_u].n_cols;
+          col = param_id % tmp[which_u].n_cols;
+          tmp[which_u](row, col) += eps;
+          ans = eval(tmp, Y);
+          tmp[which_u](row, col) -= 2 * eps;
+          ans -= eval(tmp, Y);
+          ans = ans / (2 * eps);
+        } else{
+          tmp = Y;
+          row = param_id / tmp[which_u].n_cols;
+          col = param_id % tmp[which_u].n_cols;
+          tmp[which_u](row, col) += eps;
+          ans = eval(X, tmp);
+          tmp[which_u](row, col) -= 2 * eps;
+          ans -= eval(X, tmp);
+          ans = ans / (2 * eps);
         }
         return ans;
       }
@@ -210,7 +228,7 @@ namespace gplib{
             }
             return ans;
 
-            //  ans must be equals to
+            //  ans must be equal to
             //  kron(B[q], kernels[q]-> derivate(param_id, X, Y));
           }
           param_id -= kernels[q]-> n_params();
@@ -231,9 +249,12 @@ namespace gplib{
         vector<double> ans(t_size);
         size_t iter = 0;
         for (size_t q = 0; q < A.size(); ++q) {
-          copy (A[q].begin(), A[q].end(), ans.begin() + iter);
-          iter += A[q].size();
-
+          for (size_t i = 0; i < A[q].n_rows; ++i) {
+            for (size_t j = 0; j < A[q].n_cols; ++j) {
+              ans[iter] = A[q](i, j);
+              iter++;
+            }
+          }
         }
 
         vector<double> tmp;
@@ -256,24 +277,27 @@ namespace gplib{
         for (size_t k = 0; k < kernels.size(); ++k)
           t_size += kernels[k]-> n_params();
 
-        if(t_size != params.size()){
+        if (t_size != params.size()) {
           throw length_error("Wrong parameter vector size");
         }
         size_t iter = 0;
         for (size_t q = 0; q < A.size(); ++q) {
           if (A[q].size() <= 0)
             A[q] = mat(n_outputs, n_outputs, fill::zeros);
-          for (size_t i = 0; i < A[0].n_rows; ++i) {
-            for (size_t j = 0; j < A[0].n_cols; ++j) {
+          for (size_t i = 0; i < A[q].n_rows; ++i) {
+            for (size_t j = 0; j < A[q].n_cols; ++j) {
+              A[q](i, j) = params[iter];
               if (j > i && fabs(params[iter]) > datum::eps) {
                 throw logic_error("Params matrix must be lower triangular");
               }
-              A[q](i, j) = params[iter];
               ++iter;
             }
           }
           B[q] = A[q] * A[q].t();
+          if (!check_symmetric(B[q]))
+            cout << "Matrix B is not symmetric :(" << endl;
         }
+
         for (size_t k = 0; k < kernels.size(); ++k) {
           vector<double> subparams(params.begin() + iter,
               params.begin() + iter + kernels[k]-> n_params());

@@ -83,7 +83,7 @@ int main(int argc, char **argv) {
 
   //Set training set as the generated Data (with noise)
   test_reg.set_training_set(X_set, y);
-  size_t num_pi = 21;
+  size_t num_pi = 23;
   test_reg.train(150, 1e-4, gp_reg_multi::FITC, (void *) &num_pi);
 
   //Take the posterior distribution for the new data
