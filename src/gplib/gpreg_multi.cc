@@ -102,14 +102,18 @@ namespace gplib {
     }
 
     // TODO: don't set values in this function. It must return the matrix.
-    void unflatten(vector<double> &M_params) {
+    vector<mat> unflatten(vector<double> &M_params) {
       size_t iter = 0;
-      for(size_t q = 0; q < M.size(); ++q)
+      vector<mat> out(M.size());
+      for(size_t q = 0; q < out.size(); ++q) {
+        out[q].resize(M[q].n_rows, M[q].n_cols);
         for(size_t i = 0; i < M[q].n_rows; ++i)
           for(size_t j = 0; j < M[q].n_cols; ++j) {
-            M[q](i, j) = M_params[iter];
+            out[q](i, j) = M_params[iter];
             ++iter;
           }
+      }
+      return out;
     }
 
     void split(const vector<double> &theta, vector<double> &kernel_params,
@@ -130,7 +134,7 @@ namespace gplib {
       vector<double> kernel_params(params.size() - M_size), M_params(M_size);
       split(params, kernel_params, M_params);
       kernel-> set_params(kernel_params);
-      unflatten(M_params);
+      M = unflatten(M_params);
     }
 
     vector<double> get_params() {
