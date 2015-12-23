@@ -117,7 +117,7 @@ namespace gplib{
 
       mat derivate_wrt_data_num(size_t param_id, const vector<mat> &X,
                             const vector<mat> &Y) {
-        //TODO: Fix this
+
         size_t total_rows = 0, total_cols = 0;
         vector<size_t> x_sizes (X.size());
         vector<size_t> y_sizes (Y.size());

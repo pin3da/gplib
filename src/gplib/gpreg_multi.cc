@@ -235,13 +235,14 @@ namespace gplib {
           pimpl-> set_params(params);
           // s1
           double cur = pimpl-> log_marginal_fitc();
-          mat _dQff = pimpl-> comp_Q (pimpl-> X, pimpl-> X, pimpl-> M);
+          mat _dQff = force_symmetric(pimpl-> comp_Q (pimpl-> X, pimpl-> X, pimpl-> M));
+
           // es1
           params[d] -= 2 * eps;
           pimpl-> set_params(params);
           // s2
           cur -= pimpl-> log_marginal_fitc();
-          _dQff -= pimpl-> comp_Q (pimpl-> X, pimpl-> X, pimpl-> M);
+          _dQff -= force_symmetric(pimpl-> comp_Q (pimpl-> X, pimpl-> X, pimpl-> M));
           // es2
           params[d] += eps;
           pimpl-> set_params(params);
@@ -259,7 +260,7 @@ namespace gplib {
           mat dKffdT = pimpl-> kernel-> derivate (d, pimpl-> X, pimpl-> X);
           mat dQffdT = KfuKuui * (dKufdT - dKuudT * KuuiKuf) + dKfudT * KuuiKuf;
 
-          /*
+
           for (size_t i = 0; i < _dQff.n_rows; ++i) {
             for (size_t j = 0; j <  _dQff.n_cols; ++j) {
               if (fabs(_dQff(i, j) - dQffdT(i, j)) > eps) {
@@ -268,7 +269,7 @@ namespace gplib {
                 dif_found++;
               }
             }
-          }*/
+          }
         } else {
           grad2[d] = 0;
         }
@@ -276,13 +277,14 @@ namespace gplib {
         /*if (fabs(grad2[d] - grad[d]) > 1e-5) {
           cout << "Difference found at : " << d << endl;
           cout << "\t" << grad[d] << " : " << grad2[d] << endl;
+          dif_found++;
         }*/
         //To change between analytical an numerical comment or uncomment this line
         // grad[d] = grad2[d];
       }
       if (dif_found > 0){
         cout << dif_found << " Diferences found out of " << grad.size() * Qff.size() << endl;
-        //exit(1);
+        exit(1);
       }
       std::cout << "ANS: " << ans << std::endl;
       return ans;
