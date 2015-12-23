@@ -284,10 +284,10 @@ namespace gplib {
     }
 
 
-    double train(int max_iter) {
+    double train(int max_iter, double tol) {
       nlopt::opt best(nlopt::LD_MMA, kernel-> n_params());
       best.set_max_objective(implementation::training_obj, this);
-      best.set_xtol_rel(1e-4);
+      best.set_xtol_rel(tol);
       best.set_maxeval(max_iter);
 
       best.set_lower_bounds(kernel-> get_lower_bounds());
@@ -300,13 +300,13 @@ namespace gplib {
       return error;
     }
 
-    double train_FITC(int max_iter) {
+    double train_FITC(int max_iter, double tol) {
       // TODO: receive tol as parameter.
       size_t M_size = M.size() * M[0].size(); // TODO: Compute M_size using all the matrices in M
       size_t n_params = kernel-> n_params() + M_size;
       nlopt::opt best(nlopt::LD_MMA, n_params);
       best.set_max_objective(implementation::training_obj_FITC, this);
-      best.set_xtol_rel(1e-4);
+      best.set_xtol_rel(tol);
       best.set_maxeval(max_iter);
       vector<double> lb = kernel-> get_lower_bounds();
       vector<double> ub = kernel-> get_upper_bounds();
@@ -349,8 +349,8 @@ namespace gplib {
     pimpl-> y = y;
   }
 
-  double gp_reg_multi::train(const int max_iter, const size_t type,
-      void *param) {
+  double gp_reg_multi::train(const int max_iter, const double tol,
+      const size_t type, void *param) {
 
     // TODO: add option to set different num_pi for each output.
     pimpl-> state = type;
@@ -359,9 +359,9 @@ namespace gplib {
       pimpl-> M = vector<mat> (pimpl-> X.size(),
                   randi<mat>(num_pi, pimpl-> X[0].n_cols, distr_param(0, +50)));
 
-      return pimpl-> train_FITC(max_iter);
+      return pimpl-> train_FITC(max_iter, tol);
     } else
-      return pimpl-> train(max_iter);
+      return pimpl-> train(max_iter, tol);
   }
 
   mv_gauss gp_reg_multi::full_predict(const vector<mat> &new_data) {

@@ -83,7 +83,7 @@ int main(int argc, char **argv) {
 
   //Set training set as the generated Data (with noise)
   test_reg.set_training_set(X_set, y);
-  test_reg.train(1000);
+  test_reg.train(1000, 1e-4);
 
   //Take the posterior distribution for the new data
   mv_gauss posterior = test_reg.full_predict(new_X_set);

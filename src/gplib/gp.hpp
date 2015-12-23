@@ -44,7 +44,7 @@ namespace gplib {
       void set_kernel(const std::shared_ptr<kernel_class> &k);
       std::shared_ptr<kernel_class> get_kernel() const;
       void set_training_set(const arma::mat &X, const arma::vec &y);
-      double train(int max_iter);
+      double train(int max_iter, double tol);
       mv_gauss full_predict(const arma::mat &new_data) const;
       arma::vec predict(const arma::mat &new_data) const;
     };
@@ -86,7 +86,7 @@ namespace gplib {
       ~gp_reg_multi();
       void set_kernel(const std::shared_ptr<multioutput_kernel_class> &k);
       void set_training_set(const std::vector<arma::mat> &X, const std::vector<arma::vec> &y);
-      double train(int max_iter, size_t type = 0, void *param = NULL);
+      double train(int max_iter, double tol, size_t type = 0, void *param = NULL);
       mv_gauss full_predict(const std::vector<arma::mat> &new_data);
       arma::vec predict(const std::vector<arma::mat> &new_data) const;
       enum {FULL, FITC};
