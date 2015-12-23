@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
 
   gp_reg_multi gp;
   K-> set_upper_bounds(1.0);
-  K-> set_lower_bounds(-1.0);
+  K-> set_lower_bounds(0.01);
   gp.set_kernel(K);
 
   //Set training set as the generated Data (with noise)
