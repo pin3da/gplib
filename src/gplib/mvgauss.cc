@@ -65,8 +65,8 @@ namespace gplib {
 
   mv_gauss::mv_gauss(const vec& mean, const mat& cov) : mv_gauss() {
     pimpl->mean = mean;
-    pimpl->cov = cov;
-    pimpl->cov_chol = chol(cov + 1e-6 * eye<mat>(cov.n_rows, cov.n_cols));
+    pimpl->cov = force_diag(cov);
+    pimpl->cov_chol = chol(pimpl-> cov);
   }
 
   mv_gauss::mv_gauss(const mv_gauss& other) : mv_gauss() {
@@ -84,7 +84,7 @@ namespace gplib {
   }
 
   void mv_gauss::set_cov(const mat& cov) {
-    pimpl->cov = cov;
+    pimpl->cov = force_diag(cov);
     pimpl->cov_chol = chol(cov);
   }
 

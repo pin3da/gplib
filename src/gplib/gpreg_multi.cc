@@ -70,7 +70,7 @@ namespace gplib {
                 * E * kernel-> eval(M, new_x);
 
       cout << "antes de" << endl;
-      return mv_gauss(mean, cov + 1e-9 * eye<mat>(cov.n_rows, cov.n_cols));
+      return mv_gauss(mean, cov);
     }
 
     mv_gauss marginal() {
@@ -154,11 +154,9 @@ namespace gplib {
       Qff = force_symmetric(Qff);
 
       mat lambda = diagmat( kernel-> eval (X, X) - Qff) +
-        // TODO: don't set values in this function. It must return the matrix.
                   sigma * eye<mat> (Qff.n_rows, Qff.n_cols);
-      cout << "before chol" << endl;
-      mat B = chol(Qff + lambda + 1e-6 * eye<mat>(Qff.n_rows, Qff.n_cols));
-      cout << "after chol" << endl;
+      mat B = force_diag(Qff + lambda);
+      B = chol(B);
       double log_det = 0;
       for (size_t i = 0; i < Qff.n_rows; ++i)
         log_det += log(B(i, i));
@@ -261,7 +259,8 @@ namespace gplib {
           mat dKffdT = pimpl-> kernel-> derivate (d, pimpl-> X, pimpl-> X);
           mat dQffdT = KfuKuui * (dKufdT - dKuudT * KuuiKuf) + dKfudT * KuuiKuf;
 
-          /*for (size_t i = 0; i < _dQff.n_rows; ++i) {
+          /*
+          for (size_t i = 0; i < _dQff.n_rows; ++i) {
             for (size_t j = 0; j <  _dQff.n_cols; ++j) {
               if (fabs(_dQff(i, j) - dQffdT(i, j)) > eps) {
                 cout << "Difference found at " << d << " i " << i << " j " << j << endl;
@@ -279,7 +278,7 @@ namespace gplib {
           cout << "\t" << grad[d] << " : " << grad2[d] << endl;
         }*/
         //To change between analytical an numerical comment or uncomment this line
-        grad[d] = grad2[d];
+        // grad[d] = grad2[d];
       }
       if (dif_found > 0){
         cout << dif_found << " Diferences found out of " << grad.size() * Qff.size() << endl;

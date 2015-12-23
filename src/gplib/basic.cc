@@ -49,7 +49,7 @@ namespace gplib {
     return true;
   }
 
-  bool check_symmetric (const mat &A){
+  bool check_symmetric(const mat &A) {
     mat aux = A.t();
     for (size_t i = 0; i < A.n_rows; ++i)
       for (size_t j = 0; j < A.n_cols; ++j)
@@ -59,8 +59,17 @@ namespace gplib {
 
   }
 
-  mat force_symmetric (const mat &A){
+  mat force_symmetric(const mat &A) {
     return (A + A.t()) / 2;
+  }
+
+  mat force_diag(const mat &A) {
+    mat ans = A;
+    double eps = 1e-6;
+    for (size_t i = 0; i < A.n_rows;++i)
+      if (fabs(ans(i, i)) < eps)
+        ans(i, i) = eps;
+    return ans;
   }
 
 };

@@ -29,6 +29,7 @@ namespace gplib {
   bool check_symmetric(const arma::mat &A);
 
   arma::mat force_symmetric(const arma::mat &A);
+  arma::mat force_diag(const arma::mat &A);
 };
 
 #endif
