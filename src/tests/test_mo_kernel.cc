@@ -254,6 +254,20 @@ BOOST_AUTO_TEST_CASE( mo_lmc_gradient_wrt_data ) {
           }
         }
 
+        // derivative of Kuu -> Both are inducing points
+        analitical = K.derivate(param_id, Y, Y);
+        Y[k](i, j) += eps;
+        numeric = K.eval(Y, Y);
+        Y[k](i, j) -= 2.0 * eps;
+        numeric -= K.eval(Y, Y);
+        numeric = numeric / (2.0 * eps);
+        Y[k](i, j) += eps;
+
+        for (size_t l = 0; l < numeric.n_rows; ++l) {
+          for (size_t n = 0; n < numeric.n_cols; ++n) {
+            BOOST_CHECK_CLOSE(numeric (l, n), analitical (l, n), eps);
+          }
+        }
         param_id++;
       }
     }
