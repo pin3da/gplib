@@ -194,6 +194,7 @@ BOOST_AUTO_TEST_CASE( mo_lmc_gradient_wrt_data ) {
 
   srand(time(0));
   vector<arma::mat> X, Y;
+  const double eps_close = 1e-4;
 
   // const size_t noutputs = random() % 5 + 2;
   const size_t noutputs = 4;
@@ -221,11 +222,9 @@ BOOST_AUTO_TEST_CASE( mo_lmc_gradient_wrt_data ) {
   arma::mat analitical;
   arma::mat numeric;
 
-
-  bool ok = true;
-  for (size_t k = 0; k < noutputs && ok; ++k) {
-    for (size_t i = 0; i < Y[k].n_rows && ok; ++i) {
-      for (size_t j = 0; j < Y[k].n_cols && ok; ++j) {
+  for (size_t k = 0; k < noutputs; ++k) {
+    for (size_t i = 0; i < Y[k].n_rows; ++i) {
+      for (size_t j = 0; j < Y[k].n_cols; ++j) {
         analitical = K.derivate(param_id, X, Y);
         Y[k](i, j) += eps;
         numeric = K.eval(X, Y);
@@ -236,7 +235,7 @@ BOOST_AUTO_TEST_CASE( mo_lmc_gradient_wrt_data ) {
 
         for (size_t l = 0; l < numeric.n_rows; ++l) {
           for (size_t n = 0; n < numeric.n_cols; ++n) {
-            BOOST_CHECK_CLOSE(numeric (l, n), analitical (l, n), eps);
+            BOOST_CHECK_CLOSE(numeric (l, n), analitical (l, n), eps_close);
           }
         }
 
@@ -250,7 +249,7 @@ BOOST_AUTO_TEST_CASE( mo_lmc_gradient_wrt_data ) {
 
         for (size_t l = 0; l < numeric.n_rows; ++l) {
           for (size_t n = 0; n < numeric.n_cols; ++n) {
-            BOOST_CHECK_CLOSE(numeric (l, n), analitical (l, n), eps);
+            BOOST_CHECK_CLOSE(numeric (l, n), analitical (l, n), eps_close);
           }
         }
 
@@ -265,9 +264,10 @@ BOOST_AUTO_TEST_CASE( mo_lmc_gradient_wrt_data ) {
 
         for (size_t l = 0; l < numeric.n_rows; ++l) {
           for (size_t n = 0; n < numeric.n_cols; ++n) {
-            BOOST_CHECK_CLOSE(numeric (l, n), analitical (l, n), eps);
+            BOOST_CHECK_CLOSE(numeric (l, n), analitical (l, n), eps_close);
           }
         }
+
         param_id++;
       }
     }

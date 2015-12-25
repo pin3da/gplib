@@ -71,10 +71,6 @@ namespace gplib{
           y_sizes[i] = Y[i].size();
         }
 
-        // Return zeros if its K(U, U)
-        if (X[0].size() == Y[0].size())
-          return zeros<mat> (total_rows, total_cols);
-
         //Set which size should be used to locate the pseudo-input
         vector<size_t> &U = (X[0].size() < Y[0].size()) ? x_sizes : y_sizes;
         bool u = X[0].size() < Y[0].size();
@@ -86,8 +82,6 @@ namespace gplib{
             break;
           param_id -= U[which_u];
         }
-
-        // cout << "Wichshdf : " << which_u << endl;
 
         //Compute cov mat
         mat cov = zeros<mat> (total_rows, total_cols);
@@ -102,6 +96,8 @@ namespace gplib{
                                         kernels[k]-> n_params(), X[i], Y[j]));
               }
 
+              if (X[0].size() == Y[0].size())
+                cov_ab += cov_ab.t();
               cov.submat (first_row, first_col, first_row + X[i].n_rows - 1,
                   first_col + Y[j].n_rows - 1) = cov_ab;
             }
@@ -110,6 +106,7 @@ namespace gplib{
           first_row += X[i].n_rows;
           first_col = 0;
         }
+
         return cov;
 
 
@@ -165,6 +162,7 @@ namespace gplib{
           ans -= eval(X, tmp);
           ans = ans / (2 * eps);
         }
+        if (X[0].size() == Y[0].size()) return ans + ans.t();
         return ans;
       }
 
