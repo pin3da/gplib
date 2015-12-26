@@ -96,8 +96,6 @@ namespace gplib{
                                         kernels[k]-> n_params(), X[i], Y[j]));
               }
 
-              if (X[0].size() == Y[0].size())
-                cov_ab += cov_ab.t();
               cov.submat (first_row, first_col, first_row + X[i].n_rows - 1,
                   first_col + Y[j].n_rows - 1) = cov_ab;
             }

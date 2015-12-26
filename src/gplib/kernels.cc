@@ -84,6 +84,21 @@ namespace gplib {
         }
         */
         // TODO: fix the above code and use the analytical method.
+        if (Y.size() == X.size()){
+          mat nX = X;
+          mat nY = Y;
+          double eps = 1e-5;
+          nX(row, col) += eps;
+          nY(row, col) += eps;
+          mat num_grad = this-> eval(nX, nY);
+          nX(row, col) -= 2 * eps;
+          nY(row, col) -= 2 * eps;
+          num_grad -= this-> eval(nX, nY);
+          num_grad = num_grad / (2 * eps);
+          nX(row, col) += eps;
+          nY(row, col) += eps;
+          return num_grad;
+        }
         if (u) {
           mat T = X;
           double eps = 1e-5;

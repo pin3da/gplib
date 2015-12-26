@@ -264,8 +264,8 @@ namespace gplib {
           for (size_t i = 0; i < _dQff.n_rows; ++i) {
             for (size_t j = 0; j <  _dQff.n_cols; ++j) {
               if (fabs(_dQff(i, j) - dQffdT(i, j)) > eps) {
-                cout << "Difference found at " << d << " i " << i << " j " << j << endl;
-                cout << _dQff(i, j) << " != " << dQffdT(i, j) << endl;
+                //cout << "Difference found at " << d << " i " << i << " j " << j << endl;
+                //cout << _dQff(i, j) << " != " << dQffdT(i, j) << endl;
                 dif_found++;
               }
             }

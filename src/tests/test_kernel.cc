@@ -139,6 +139,20 @@ BOOST_AUTO_TEST_CASE( gradiend_wrt_dta ) {
         }
       }
 
+      an_grad = test.derivate(param_id, Y, Y);
+      Y(i, j) += eps;
+      num_grad = test.eval(Y, Y);
+      Y(i, j) -= 2.0 * eps;
+      num_grad -= test.eval (Y, Y);
+      Y(i, j) += eps;
+      num_grad = num_grad / (2.0 * eps);
+
+      for (size_t l = 0; l < num_grad.n_rows; ++l) {
+        for (size_t n = 0; n < num_grad.n_cols; ++n) {
+          BOOST_CHECK_CLOSE (num_grad (l, n), an_grad (l, n), eps);
+        }
+      }
+
       param_id++;
     }
   }
