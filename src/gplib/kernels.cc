@@ -82,7 +82,7 @@ namespace gplib {
               }
               mat long_term = X.row(i) * dXdT - Y.row(j) * dXdT -
                               X.row(i) * dYdT + Y.row(j) * dYdT;
-              assert(long_term.size() == 1);
+
               ans(i, j) = (kernel(X.row(i).t(), Y.row(j).t()) * long_term(0, 0))
                           / (-1.0 * params[1] * params[1]);
             }
