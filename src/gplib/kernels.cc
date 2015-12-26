@@ -95,8 +95,8 @@ namespace gplib {
           nY(row, col) -= 2 * eps;
           num_grad -= this-> eval(nX, nY);
           num_grad = num_grad / (2 * eps);
-          //num_grad.print();
-          //cout << "_______________________________" << endl << endl;
+          nX(row, col) += eps;
+          nY(row, col) += eps;
           return num_grad;
         }
         if (u) {
