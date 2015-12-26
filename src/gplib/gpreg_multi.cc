@@ -212,7 +212,14 @@ namespace gplib {
       mat Kfu = pimpl-> kernel-> eval(pimpl-> X, pimpl-> M);
       mat KfuKuui = Kfu * Kuui;
 
+      const vector<double> &lb = pimpl-> kernel-> get_lower_bounds();
+      const vector<double> &ub = pimpl-> kernel-> get_upper_bounds();
+
       for (size_t d = 0; d < grad.size(); d++) {
+        if (d < lb.size() && ub[d] <= lb[d]) {
+           grad[d] = 0;
+           continue;
+        }
         mat dRdT;
         if(d + 1 < grad.size()) {
           mat dKfudT = pimpl-> kernel-> derivate (d, pimpl-> X, pimpl-> M);
