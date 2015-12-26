@@ -47,7 +47,7 @@ namespace gplib {
         return 0;
       }
 
-      mat derivate_wrt_inputs(size_t param_id, const arma::mat& X,
+      mat derivate_wrt_inputs_an(size_t param_id, const arma::mat& X,
                                const arma::mat& Y) {
 
         mat ans = zeros<mat> (X.n_rows, Y.n_rows);
@@ -61,29 +61,50 @@ namespace gplib {
           col = param_id % Y.n_cols;
         }
 
-        /*
         for (size_t i = 0; i < X.n_rows; ++i) {
           for (size_t j = 0; j < Y.n_rows; ++j) {
             //Compute only the entries that are not 0
-            if ((u && i == row) || (!u && j == row)){
+            bool ev_cond1 = (u && i == row) || (!u && j == row);
+            bool ev_cond2 = (X.size() == Y.size()) && (i == row || j == row);
+            if (ev_cond1 || ev_cond2){
               vec dXdT = zeros<vec> (X.n_cols);
               vec dYdT = zeros<vec> (Y.n_cols);
-              if (u)
-                dXdT(col) = 1;
-              else
-                dYdT(col) = 1;
-
-              mat long_term = ((params[0] * params[0]) / params[1]) * (Y.row(j) * dXdT  + X.row(i) * dXdT -  Y.row(j) * dYdT - X.row(i) * dXdT);
-              // cout << long_term.size() << endl;
+              if (ev_cond1){
+                if (u)
+                  dXdT(col) = 1;
+                else
+                  dYdT(col) = 1;
+              } else {
+                if (i == row)
+                  dXdT(col) = 1;
+                if (j == row)
+                  dYdT(col) = 1;
+              }
+              mat long_term = X.row(i) * dXdT - Y.row(j) * dXdT -
+                              X.row(i) * dYdT + Y.row(j) * dYdT;
               assert(long_term.size() == 1);
-              // cout << i << " " << j << endl;
-              ans(i, j) = kernel(X.row(i).t(), Y.row(j).t()) * long_term(0, 0);
-              // cout << " si llega aqui esta de buenas " << endl;
+              ans(i, j) = (kernel(X.row(i).t(), Y.row(j).t()) * long_term(0, 0))
+                          / (-1.0 * params[1] * params[1]);
             }
           }
         }
-        */
-        // TODO: fix the above code and use the analytical method.
+        return ans;
+      }
+
+      mat derivate_wrt_inputs_num(size_t param_id, const arma::mat& X,
+                               const arma::mat& Y) {
+
+        mat ans = zeros<mat> (X.n_rows, Y.n_rows);
+        size_t row, col;
+        bool u = X.size() < Y.size();
+        if (u) {
+          row = param_id / X.n_cols;
+          col = param_id % X.n_cols;
+        } else {
+          row = param_id / Y.n_cols;
+          col = param_id % Y.n_cols;
+        }
+
         if (Y.size() == X.size()){
           mat nX = X;
           mat nY = Y;
@@ -139,7 +160,7 @@ namespace gplib {
           return 2.0 * params[2] * eye(X.n_rows, Y.n_rows);
 
         //Substract previous params
-        mat ans = derivate_wrt_inputs(param_id - 3, X, Y);
+        mat ans = derivate_wrt_inputs_an(param_id - 3, X, Y);
         return ans;
 
       }
