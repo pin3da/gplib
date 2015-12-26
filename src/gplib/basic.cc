@@ -4,7 +4,7 @@ using namespace arma;
 using namespace std;
 
 namespace gplib {
-
+  // TODO: move utilities here.
   mat upper_triangular_inverse(const mat& upper_t) {
     size_t d = upper_t.n_rows;
     //myassert(d == upper_t.n_cols);
@@ -47,6 +47,29 @@ namespace gplib {
       if(!vec[i])
         return false;
     return true;
+  }
+
+  bool check_symmetric(const mat &A) {
+    mat aux = A.t();
+    for (size_t i = 0; i < A.n_rows; ++i)
+      for (size_t j = 0; j < A.n_cols; ++j)
+        if (A(i, j) != aux(i, j))
+          return false;
+    return true;
+
+  }
+
+  mat force_symmetric(const mat &A) {
+    return (A + A.t()) / 2;
+  }
+
+  mat force_diag(const mat &A) {
+    mat ans = A;
+    double eps = 1e-6;
+    for (size_t i = 0; i < A.n_rows;++i)
+      if (fabs(ans(i, i)) < eps)
+        ans(i, i) = eps;
+    return ans;
   }
 
 };

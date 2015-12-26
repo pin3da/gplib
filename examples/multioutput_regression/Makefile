@@ -1,13 +1,16 @@
 CXX := clang++
-FLAGS := -lgplib -larmadillo -std=c++11
+FLAGS := -lgplib -larmadillo -std=c++11 -O3
 
-all: multioutput
+all: mo_full mo_fitc so_fitc
 
-multioutput: multioutput.cc
-	$(CXX) $(FLAGS) multioutput.cc -o multioutput.mio
+mo_full: mo_full.cc
+	$(CXX) $(FLAGS) mo_full.cc -o mo_full.mio
 
-mo_gen:  mo_generator.cc
-	$(CXX) $(FLAGS) mo_generator.cc -o mo_gen.mio
+mo_fitc: mo_fitc.cc
+	$(CXX) $(FLAGS) mo_fitc.cc -o mo_fitc.mio
+
+so_fitc: so_fitc.cc
+	$(CXX) $(FLAGS) so_fitc.cc -o so_fitc.mio
 
 clean:
 	rm -rf *.mio
