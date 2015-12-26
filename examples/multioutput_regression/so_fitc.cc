@@ -8,7 +8,7 @@ using namespace std;
 using namespace arma;
 using namespace gplib;
 
-const size_t MN = 100,
+const size_t MN = 50,
              noutputs = 1,
              l_functions = 1,
              num_pi = ceil(MN * 0.7),
