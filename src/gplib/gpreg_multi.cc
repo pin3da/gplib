@@ -69,7 +69,6 @@ namespace gplib {
       mat cov = kernel-> eval(new_x, new_x) - Qm + kernel-> eval(new_x, M)
                 * E * kernel-> eval(M, new_x);
 
-      cout << "antes de" << endl;
       return mv_gauss(mean, cov);
     }
 
@@ -101,15 +100,18 @@ namespace gplib {
       return ans;
     }
 
-    // TODO: don't set values in this function. It must return the matrix.
-    void unflatten(vector<double> &M_params) {
+    vector<mat> unflatten(vector<double> &M_params) {
       size_t iter = 0;
-      for(size_t q = 0; q < M.size(); ++q)
+      vector<mat> out(M.size());
+      for(size_t q = 0; q < out.size(); ++q) {
+        out[q].resize(M[q].n_rows, M[q].n_cols);
         for(size_t i = 0; i < M[q].n_rows; ++i)
           for(size_t j = 0; j < M[q].n_cols; ++j) {
-            M[q](i, j) = M_params[iter];
+            out[q](i, j) = M_params[iter];
             ++iter;
           }
+      }
+      return out;
     }
 
     void split(const vector<double> &theta, vector<double> &kernel_params,
@@ -117,27 +119,27 @@ namespace gplib {
       copy(theta.begin(), theta.begin() + kernel_params.size(),
           kernel_params.begin());
 
-      copy(theta.begin() + kernel_params.size(), theta.end(),
+      copy(theta.begin() + kernel_params.size(), theta.end() - 1,
            M_params.begin());
     }
 
     void set_params(const vector<double> &params) {
-      // TODO: set sigma.
       size_t M_size = 0;
+      sigma = params.back();
       for(size_t i = 0; i < M.size(); ++i) {
         M_size += M[i].size();
       }
-      vector<double> kernel_params(params.size() - M_size), M_params(M_size);
+      vector<double> kernel_params(params.size() - M_size - 1), M_params(M_size);
       split(params, kernel_params, M_params);
       kernel-> set_params(kernel_params);
-      unflatten(M_params);
+      M = unflatten(M_params);
     }
 
     vector<double> get_params() {
-      // TODO: get sigma.
       vector<double> params = kernel-> get_params();
       vector<double> flatten_M = flatten(M);
       params.insert(params.end(), flatten_M.begin(), flatten_M.end());
+      params.push_back(sigma);
       return params;
     }
 
@@ -190,17 +192,17 @@ namespace gplib {
 
     static double training_obj_FITC(const vector<double> &theta,
         vector<double> &grad, void *fdata) {
-
       implementation *pimpl = (implementation*) fdata;
-      // TODO: (We need to set sigma there too).
       pimpl-> set_params(theta);
       double ans = pimpl-> log_marginal_fitc();
 
       mat flat_y = pimpl-> flatten (pimpl-> y);
-      mat Qff = pimpl-> comp_Q (pimpl-> X, pimpl-> X, pimpl-> M);
-      Qff = force_symmetric(Qff);
+      mat Qff = force_symmetric(
+                  pimpl-> comp_Q (pimpl-> X, pimpl-> X, pimpl-> M));
+
+      mat I = eye<mat> (Qff.n_rows, Qff.n_cols);
       mat lambda = diagmat (pimpl-> kernel-> eval (pimpl-> X, pimpl-> X) -
-                  Qff) + pimpl-> sigma * eye<mat> (Qff.n_rows, Qff.n_cols);
+                     Qff) + pimpl-> sigma * I;
       mat Ri = (Qff + lambda).i();
       mat ytRi = flat_y.t() * Ri;
       mat Riy = Ri * flat_y;
@@ -210,21 +212,28 @@ namespace gplib {
       mat Kfu = pimpl-> kernel-> eval(pimpl-> X, pimpl-> M);
       mat KfuKuui = Kfu * Kuui;
 
-      // TODO: write special case for T = sigma
       for (size_t d = 0; d < grad.size(); d++) {
-        mat dKfudT = pimpl-> kernel-> derivate (d, pimpl-> X, pimpl-> M);
-        mat dKuudT = pimpl-> kernel-> derivate (d, pimpl-> M, pimpl-> M);
-        mat dKufdT = pimpl-> kernel-> derivate (d, pimpl-> M, pimpl-> X);
-        mat dKffdT = pimpl-> kernel-> derivate (d, pimpl-> X, pimpl-> X);
-        mat dQffdT = KfuKuui * (dKufdT - dKuudT * KuuiKuf) + dKfudT * KuuiKuf;
-        mat dRdT = dQffdT + diagmat(dKffdT) - diagmat(dQffdT);
+        mat dRdT;
+        if(d + 1 < grad.size()) {
+          mat dKfudT = pimpl-> kernel-> derivate (d, pimpl-> X, pimpl-> M);
+          mat dKuudT = pimpl-> kernel-> derivate (d, pimpl-> M, pimpl-> M);
+          mat dKufdT = pimpl-> kernel-> derivate (d, pimpl-> M, pimpl-> X);
+          mat dKffdT = pimpl-> kernel-> derivate (d, pimpl-> X, pimpl-> X);
+          mat dQffdT = KfuKuui * (dKufdT - dKuudT * KuuiKuf) + dKfudT * KuuiKuf;
+          dRdT = dQffdT + diagmat(dKffdT) - diagmat(dQffdT);
+        } else { // Special case for sigma.
+          dRdT = 2 * sqrt(pimpl-> sigma) * I;
+        }
         mat ans  = -trace(Ri * dRdT) + ytRi * dRdT * Riy;
         grad[d]  = 0.5 * ans(0,0);
+
         if (d < pimpl-> kernel-> get_kernels().size () * pimpl-> X.size() * pimpl-> X.size()) {
+          // TODO: check this.
           grad[d] *= 2;
         }
-
       }
+
+      /*
       vector<double> grad2(grad.size());
       vector<double> params = theta;
       vector<double> lb = pimpl-> kernel-> get_lower_bounds();
@@ -255,23 +264,26 @@ namespace gplib {
 
           grad2[d] = cur;
 
-          // Extra test for inner derivatives.
-          mat dKfudT = pimpl-> kernel-> derivate (d, pimpl-> X, pimpl-> M);
-          mat dKuudT = pimpl-> kernel-> derivate (d, pimpl-> M, pimpl-> M);
-          mat dKufdT = pimpl-> kernel-> derivate (d, pimpl-> M, pimpl-> X);
-          mat dKffdT = pimpl-> kernel-> derivate (d, pimpl-> X, pimpl-> X);
-          mat dQffdT = KfuKuui * (dKufdT - dKuudT * KuuiKuf) + dKfudT * KuuiKuf;
+
+          if(d + 1 < grad.size()) {
+            // Extra test for inner derivatives.
+            mat dKfudT = pimpl-> kernel-> derivate (d, pimpl-> X, pimpl-> M);
+            mat dKuudT = pimpl-> kernel-> derivate (d, pimpl-> M, pimpl-> M);
+            mat dKufdT = pimpl-> kernel-> derivate (d, pimpl-> M, pimpl-> X);
+            mat dKffdT = pimpl-> kernel-> derivate (d, pimpl-> X, pimpl-> X);
+            mat dQffdT = KfuKuui * (dKufdT - dKuudT * KuuiKuf) + dKfudT * KuuiKuf;
 
 
-          /*for (size_t i = 0; i < _dQff.n_rows; ++i) {
-            for (size_t j = 0; j <  _dQff.n_cols; ++j) {
-              if (fabs(_dQff(i, j) - dQffdT(i, j)) > eps) {
-                //cout << "Difference found at " << d << " i " << i << " j " << j << endl;
-                //cout << _dQff(i, j) << " != " << dQffdT(i, j) << endl;
-                // dif_found++;
+            for (size_t i = 0; i < _dqff.n_rows; ++i) {
+              for (size_t j = 0; j <  _dqff.n_cols; ++j) {
+                if (fabs(_dqff(i, j) - dqffdt(i, j)) > eps) {
+                  cout << "difference found at " << d << " i " << i << " j " << j << endl;
+                  cout << _dqff(i, j) << " != " << dqffdt(i, j) << endl;
+                  dif_found++;
+                }
               }
             }
-          }*/
+          }
 
         } else {
           grad2[d] = 0;
@@ -283,21 +295,25 @@ namespace gplib {
           dif_found++;
         }
         //To change between analytical an numerical comment or uncomment this line
-        // grad[d] = grad2[d];
+        grad[d] = grad2[d];
       }
+
+
       if (dif_found > 0){
         cout << dif_found << " Diferences found out of " << grad.size() * Qff.size() << endl;
         // exit(1);
       }
+      */
+
       std::cout << "ANS: " << ans << std::endl;
       return ans;
     }
 
 
-    double train(int max_iter) {
+    double train(int max_iter, double tol) {
       nlopt::opt best(nlopt::LD_MMA, kernel-> n_params());
       best.set_max_objective(implementation::training_obj, this);
-      best.set_xtol_rel(1e-4);
+      best.set_xtol_rel(tol);
       best.set_maxeval(max_iter);
 
       best.set_lower_bounds(kernel-> get_lower_bounds());
@@ -310,18 +326,19 @@ namespace gplib {
       return error;
     }
 
-    double train_FITC(int max_iter) {
-      // TODO: receive tol as parameter.
+    double train_FITC(int max_iter, double tol) {
       size_t M_size = M.size() * M[0].size(); // TODO: Compute M_size using all the matrices in M
-      size_t n_params = kernel-> n_params() + M_size;
+      size_t n_params = kernel-> n_params() + M_size + 1; // added sigma
       nlopt::opt best(nlopt::LD_MMA, n_params);
       best.set_max_objective(implementation::training_obj_FITC, this);
-      best.set_xtol_rel(1e-4);
+      best.set_xtol_rel(tol);
       best.set_maxeval(max_iter);
       vector<double> lb = kernel-> get_lower_bounds();
       vector<double> ub = kernel-> get_upper_bounds();
       lb.resize(lb.size() + M_size, -HUGE_VAL);
       ub.resize(ub.size() + M_size, HUGE_VAL);
+      lb.push_back(0.0);
+      ub.push_back(HUGE_VAL);
       // assert(lb.size() == n_params);
       best.set_lower_bounds(lb);
       best.set_upper_bounds(ub);
@@ -330,9 +347,9 @@ namespace gplib {
 
       double error; //final value of error function
       vector<double> x = get_params();
-      cout << "before optimization" << endl;
+      // cout << "before optimization" << endl;
       best.optimize(x, error);
-      cout << "after optimization" << endl;
+      // cout << "after optimization" << endl;
       set_params(x);
 
       return error;
@@ -359,8 +376,8 @@ namespace gplib {
     pimpl-> y = y;
   }
 
-  double gp_reg_multi::train(const int max_iter, const size_t type,
-      void *param) {
+  double gp_reg_multi::train(const int max_iter, const double tol,
+      const size_t type, void *param) {
 
     // TODO: add option to set different num_pi for each output.
     pimpl-> state = type;
@@ -369,9 +386,9 @@ namespace gplib {
       pimpl-> M = vector<mat> (pimpl-> X.size(),
                   randi<mat>(num_pi, pimpl-> X[0].n_cols, distr_param(0, +50)));
 
-      return pimpl-> train_FITC(max_iter);
+      return pimpl-> train_FITC(max_iter, tol);
     } else
-      return pimpl-> train(max_iter);
+      return pimpl-> train(max_iter, tol);
   }
 
   mv_gauss gp_reg_multi::full_predict(const vector<mat> &new_data) {
@@ -388,5 +405,13 @@ namespace gplib {
     else
       g = pimpl-> predict(new_data);
     return g.get_mean();
+  }
+
+  vector<double> gp_reg_multi::get_params() const {
+    return pimpl-> get_params();
+  }
+
+  void gp_reg_multi::set_params(const vector<double> &params) {
+    pimpl-> set_params(params);
   }
 };

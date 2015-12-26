@@ -10,13 +10,7 @@ using namespace std;
 using namespace arma;
 using namespace gplib;
 
-const int MN = 100;
-const double m_pi = acos(-1);
-#define __d { db(__LINE__); }
-
-inline void db(int line){
-  cout<<line<<endl;
-}
+const size_t MN = 100;
 
 int main(int argc, char **argv) {
   size_t noutputs = 3, l_functions = 2;
@@ -44,8 +38,8 @@ int main(int argc, char **argv) {
     y[0](i) = sin(j) + noise;
     new_y[0](i) = sin(new_j) + noise;
 
-    y[1](i) = sin(j + m_pi * 0.25) + noise;
-    new_y[1](i) = sin(new_j + m_pi * 0.25) + noise;
+    y[1](i) = sin(j + pi * 0.25) + noise;
+    new_y[1](i) = sin(new_j + pi * 0.25) + noise;
 
     y[2](i) = 0.3 * sin(j) + noise;
     new_y[2](i) = 0.3 * sin(new_j) + noise;
@@ -84,7 +78,7 @@ int main(int argc, char **argv) {
   //Set training set as the generated Data (with noise)
   test_reg.set_training_set(X_set, y);
   size_t num_pi = 23;
-  test_reg.train(150, gp_reg_multi::FITC, (void *) &num_pi);
+  test_reg.train(50, 1e-2, gp_reg_multi::FITC, (void *) &num_pi);
 
   //Take the posterior distribution for the new data
   mv_gauss posterior = test_reg.full_predict(new_X_set);
