@@ -91,7 +91,7 @@ namespace gplib{
                 mat cov_ab = zeros<mat> (X[i].n_rows, Y[j].n_rows);
                 for (size_t k = 0; k < B.size(); k++) {
                   cov_ab += B[k](i, j) * (kernels[k]-> derivate(param_id +
-                            kernels[k]-> n_params(), X[i], Y[j]));
+                            kernels[k]-> n_params(), X[i], Y[j], diag));
                 }
                 cov.submat (first_row, first_col, first_row + X[i].n_rows - 1,
                   first_col + Y[j].n_rows - 1) = cov_ab;
@@ -201,7 +201,7 @@ namespace gplib{
           for (size_t j = 0; j < Y.size(); j++) {
             if ((diag && i == j) || !diag){
               mat ans_ab = B[q](i, j) *
-                           kernels[q]-> derivate(param_id, X[i], Y[j]);
+                           kernels[q]-> derivate(param_id, X[i], Y[j], diag);
               ans.submat (first_row, first_col, first_row + X[i].n_rows - 1,
                   first_col + Y[j].n_rows - 1) = ans_ab;
             }
