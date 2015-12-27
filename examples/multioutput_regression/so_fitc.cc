@@ -11,7 +11,7 @@ using namespace gplib;
 const size_t MN = 100,
              noutputs = 1,
              l_functions = 1,
-             num_pi = ceil(MN * 0.3),
+             num_pi = ceil(MN * 0.35),
              num_iter = 100;
 
 

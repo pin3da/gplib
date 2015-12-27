@@ -31,15 +31,20 @@ namespace gplib{
 
         ~lmc_kernel();
 
-        arma::mat eval(const std::vector<arma::mat> &X, const std::vector<arma::mat> &Y) const ;
+        arma::mat eval(const std::vector<arma::mat> &X,
+          const std::vector<arma::mat> &Y) const;
         arma::mat derivate(size_t param_id, const std::vector<arma::mat> &X,
+          const std::vector<arma::mat> &Y) const;
+        arma::mat diag_deriv(size_t parram_id, const std::vector<arma::mat> &X,
           const std::vector<arma::mat> &Y) const;
         size_t n_params() const;
         void set_params_k(const std::vector<arma::mat> &params);
-        void set_params(const std::vector<double> &params, size_t n_outputs = -1);
+        void set_params(const std::vector<double> &params,
+          size_t n_outputs = -1);
         void set_param(size_t q, size_t a, size_t b, const double param);
         void set_param(size_t q, size_t param_id, const double param);
-        void set_kernels(const std::vector<std::shared_ptr<kernel_class>> &kernels);
+        void set_kernels(const std::vector<std::shared_ptr<kernel_class>>
+          &kernels);
         std::vector<arma::mat> get_params_k() const;
         std::vector<double> get_params() const;
         std::vector<std::shared_ptr<kernel_class>> get_kernels() const;
