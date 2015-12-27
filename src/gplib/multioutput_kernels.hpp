@@ -34,7 +34,7 @@ namespace gplib{
         arma::mat eval(const std::vector<arma::mat> &X,
           const std::vector<arma::mat> &Y) const;
         arma::mat derivate(size_t param_id, const std::vector<arma::mat> &X,
-          const std::vector<arma::mat> &Y) const;
+          const std::vector<arma::mat> &Y, bool diag = false) const;
         arma::mat diag_deriv(size_t parram_id, const std::vector<arma::mat> &X,
           const std::vector<arma::mat> &Y) const;
         size_t n_params() const;
