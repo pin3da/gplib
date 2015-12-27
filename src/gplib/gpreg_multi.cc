@@ -225,8 +225,13 @@ namespace gplib {
           mat dKfudT = pimpl-> kernel-> derivate (d, pimpl-> X, pimpl-> M);
           mat dKuudT = pimpl-> kernel-> derivate (d, pimpl-> M, pimpl-> M);
           mat dKufdT = pimpl-> kernel-> derivate (d, pimpl-> M, pimpl-> X);
-          mat dKffdT = pimpl-> kernel-> derivate (d, pimpl-> X, pimpl-> X);
           mat dQffdT = KfuKuui * (dKufdT - dKuudT * KuuiKuf) + dKfudT * KuuiKuf;
+          mat dKffdT;
+          //If it is one of the pseudo-inputs dKff should be 0
+          if (d > pimpl-> kernel-> n_params())
+            dKffdT = zeros<mat>(Qff.n_rows, Qff.n_cols);
+          else
+            dKffdT = pimpl-> kernel-> derivate (d, pimpl-> X, pimpl-> X);
           dRdT = dQffdT + diagmat(dKffdT) - diagmat(dQffdT);
         } else { // Special case for sigma.
           dRdT = 2 * sqrt(pimpl-> sigma) * I;
