@@ -28,6 +28,14 @@ namespace gplib {
         return ans + params[2] * params[2] * eye(X.n_rows, Y.n_rows);
       }
 
+      mat eval_diag(const mat &X, const mat &Y) {
+        mat ans = zeros<mat>(X.n_rows, Y.n_rows);
+        for (size_t i = 0; i < X.n_rows; ++i) {
+          ans(i, i) = kernel(X.row(i).t(), Y.row(i).t());
+        }
+        return ans + params[2] * params[2] * eye(X.n_rows, Y.n_rows);
+      }
+
       double derivative_entry(size_t param_id, const vec &X, const vec &Y) {
 
         double sigma  = params[0];
@@ -174,7 +182,7 @@ namespace gplib {
 
     squared_exponential::squared_exponential(const vector<double> &params)
       : squared_exponential() {
-      pimpl->params = params;
+      pimpl-> params = params;
     }
 
     squared_exponential::~squared_exponential() {
@@ -182,25 +190,29 @@ namespace gplib {
     }
 
     mat squared_exponential::eval(const arma::mat& X, const arma::mat& Y) const {
-      return pimpl->eval(X, Y);
+      return pimpl-> eval(X, Y);
+    }
+
+    mat squared_exponential::eval_diag(const arma::mat& X, const arma::mat& Y) const {
+      return pimpl-> eval_diag(X, Y);
     }
 
     mat squared_exponential::derivate(size_t param_id, const arma::mat& X,
         const arma::mat& Y, bool diag) const {
 
-      return pimpl->derivative(param_id, X, Y, diag);
+      return pimpl-> derivative(param_id, X, Y, diag);
     }
 
     size_t squared_exponential::n_params() const {
-      return pimpl->params.size();
+      return pimpl-> params.size();
     }
 
     void squared_exponential::set_params(const vector<double> &params) {
-      pimpl->params = params;
+      pimpl-> params = params;
     }
 
     vector<double> squared_exponential::get_params() const {
-      return pimpl->params;
+      return pimpl-> params;
     }
 
     void squared_exponential::set_lower_bounds(const vector<double> &lower_bounds) {
@@ -211,11 +223,11 @@ namespace gplib {
         pimpl-> upper_bounds = upper_bounds;
     }
     vector<double> squared_exponential::get_lower_bounds() const {
-        return pimpl->lower_bounds;
+        return pimpl-> lower_bounds;
     }
 
     vector<double> squared_exponential::get_upper_bounds() const {
-        return pimpl->upper_bounds;
+        return pimpl-> upper_bounds;
     }
   };
 };

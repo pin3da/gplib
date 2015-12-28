@@ -31,6 +31,7 @@ namespace gplib {
         squared_exponential(const std::vector<double> &params);
         ~squared_exponential();
         arma::mat eval(const arma::mat &X, const arma::mat &Y) const;
+        arma::mat eval_diag(const arma::mat &X, const arma::mat &Y) const;
         arma::mat derivate(size_t param_id, const arma::mat &X,
           const arma::mat &Y, bool diag = false) const;
         size_t n_params() const;
