@@ -25,7 +25,7 @@ namespace gplib{
         B = vector<mat>(kernels.size(), eye<mat>(n_outputs, n_outputs));
       }
 
-      mat eval(const vector<mat> &X, const vector<mat> &Y) {
+      mat eval(const vector<mat> &X, const vector<mat> &Y, bool diag = false) {
         size_t total_rows = 0, total_cols = 0;
         for (size_t i = 0; i < X.size(); ++i) {
           total_rows += X[i].n_rows;
@@ -35,22 +35,39 @@ namespace gplib{
         }
 
         //Compute cov mat
-        mat cov(total_rows, total_cols);
-        size_t first_row = 0, first_col = 0;
-        for (size_t i = 0; i < X.size(); i++) {
-          for (size_t j = 0; j < Y.size(); j++) {
-            mat cov_ab = zeros<mat> (X[i].n_rows, Y[j].n_rows);
+        mat cov;
+        if (diag) {
+          cov = zeros<mat>(total_rows, total_cols);
+          size_t first_row = 0, first_col = 0;
+          for (size_t i = 0; i < X.size(); i++) {
+            mat cov_ab = zeros<mat> (X[i].n_rows, Y[i].n_rows);
             for (size_t k = 0; k < B.size(); k++) {
-              cov_ab += B[k](i, j) * (kernels[k]-> eval(X[i], Y[j]));
+              cov_ab += B[k](i, i) * (kernels[k]-> eval(X[i], Y[i], true));
             }
-
             cov.submat (first_row, first_col, first_row + X[i].n_rows - 1,
-                first_col + Y[j].n_rows - 1) = cov_ab;
-
-            first_col += Y[j].n_rows;
+                first_col + Y[i].n_rows - 1) = cov_ab;
+            first_col += Y[i].n_rows;
+            first_row += X[i].n_rows;
           }
-          first_row += X[i].n_rows;
-          first_col = 0;
+          cov = cov;
+        } else {
+          cov.resize(total_rows, total_cols);
+          size_t first_row = 0, first_col = 0;
+          for (size_t i = 0; i < X.size(); i++) {
+            for (size_t j = 0; j < Y.size(); j++) {
+              mat cov_ab = zeros<mat> (X[i].n_rows, Y[j].n_rows);
+              for (size_t k = 0; k < B.size(); k++) {
+                cov_ab += B[k](i, j) * (kernels[k]-> eval(X[i], Y[j]));
+              }
+
+              cov.submat (first_row, first_col, first_row + X[i].n_rows - 1,
+                  first_col + Y[j].n_rows - 1) = cov_ab;
+
+              first_col += Y[j].n_rows;
+            }
+            first_row += X[i].n_rows;
+            first_col = 0;
+          }
         }
         return cov;
       }
@@ -454,8 +471,9 @@ namespace gplib{
       delete pimpl;
     }
 
-    mat lmc_kernel::eval(const vector<mat> &X, const vector<mat> &Y) const {
-      return pimpl-> eval(X, Y);
+    mat lmc_kernel::eval(const vector<mat> &X, const vector<mat> &Y,
+        bool diag) const {
+      return pimpl-> eval(X, Y, diag);
     }
 
     mat lmc_kernel::derivate(size_t param_id, const vector<mat> &X,

@@ -59,15 +59,19 @@ namespace gplib {
     mv_gauss predict_FITC(const vector<mat> &new_x) {
       mat Qn = comp_Q(X, X, M);
       mat Qm = comp_Q(new_x, new_x, M);
-      mat lambda = diagmat(kernel-> eval(X, X) - Qn);
+      mat Kff_diag = kernel-> eval(X, X, true);
+      mat lambda = Kff_diag - diagmat(Qn);
+      mat Kuu = kernel-> eval(M, M);
+      mat Kfu = kernel-> eval(X, M);
+      mat Kuf = kernel-> eval(M, X);
+      mat Knn = kernel-> eval(new_x, new_x);
+      mat Kun = kernel-> eval(M, new_x);
+      mat Knu = kernel-> eval(new_x, M);
       lambda = (lambda + sigma * eye(lambda.n_rows, lambda.n_cols)).i();
-      mat E = (kernel-> eval(M, M) + kernel-> eval(M, X) * lambda *
-              kernel-> eval(X, M)).i();
+      mat E = (Kuu + Kuf * lambda * Kfu).i();
       mat Y = flatten(y);
-      mat mean = kernel-> eval(new_x, M) * E * kernel-> eval(M, X) *
-                 lambda * Y;
-      mat cov = kernel-> eval(new_x, new_x) - Qm + kernel-> eval(new_x, M)
-                * E * kernel-> eval(M, new_x);
+      mat mean = Knu * E * Kuf * lambda * Y;
+      mat cov = Knn - Qm + Knu * E * Kun;
 
       return mv_gauss(mean, cov);
     }
@@ -154,9 +158,10 @@ namespace gplib {
 
       mat Qff = comp_Q (X, X, M);
       Qff = force_symmetric(Qff);
+      mat Kff_diag = kernel-> eval(X, X, true);
 
-      mat lambda = diagmat( kernel-> eval (X, X) - Qff) +
-                  sigma * eye<mat> (Qff.n_rows, Qff.n_cols);
+      mat lambda = Kff_diag - diagmat(Qff) + sigma *
+        eye<mat> (Qff.n_rows, Qff.n_cols);
       mat B = force_diag(Qff + lambda);
       B = chol(B);
       double log_det = 0;
@@ -201,8 +206,8 @@ namespace gplib {
                   pimpl-> comp_Q (pimpl-> X, pimpl-> X, pimpl-> M));
 
       mat I = eye<mat> (Qff.n_rows, Qff.n_cols);
-      mat lambda = diagmat (pimpl-> kernel-> eval (pimpl-> X, pimpl-> X) -
-                     Qff) + pimpl-> sigma * I;
+      mat Kff_diag = pimpl-> kernel-> eval(pimpl-> X, pimpl-> X, true);
+      mat lambda = Kff_diag - diagmat (Qff) + pimpl-> sigma * I;
       mat Ri = (Qff + lambda).i();
       mat ytRi = flat_y.t() * Ri;
       mat Riy = Ri * flat_y;

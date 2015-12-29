@@ -52,7 +52,7 @@ BOOST_AUTO_TEST_CASE( eval_kernel_diag ) {
   gplib::kernels::squared_exponential K(std::vector<double>({1.0, 2.3, 0.1}));
   arma::mat ans = K.eval(X, X);
   arma::mat tmp = arma::diagmat(ans);
-  arma::mat diag = K.eval_diag(X, X);
+  arma::mat diag = K.eval(X, X, true);
   for (size_t i = 0; i < X.n_rows; ++i)
     for (size_t j = 0; j < X.n_cols; ++j)
       BOOST_CHECK_EQUAL(diag(i, j), tmp(i, j));
