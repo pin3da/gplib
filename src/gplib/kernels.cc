@@ -18,20 +18,20 @@ namespace gplib {
         return sigma * sigma * exp(tmp(0,0));
       }
 
-      mat eval(const arma::mat& X, const arma::mat& Y ) {
-        mat ans = zeros<mat>(X.n_rows, Y.n_rows);
-        for (size_t i = 0; i < X.n_rows; ++i) {
-          for (size_t j = 0; j < Y.n_rows; ++j) {
-            ans(i, j) = kernel(X.row(i).t(), Y.row(j).t());
+      mat eval(const arma::mat& X, const arma::mat& Y, bool diag = false) {
+        mat ans;
+        if (diag) {
+          ans = zeros<mat>(X.n_rows, Y.n_rows);
+          for (size_t i = 0; i < X.n_rows; ++i) {
+            ans(i, i) = kernel(X.row(i).t(), Y.row(i).t());
           }
-        }
-        return ans + params[2] * params[2] * eye(X.n_rows, Y.n_rows);
-      }
-
-      mat eval_diag(const mat &X, const mat &Y) {
-        mat ans = zeros<mat>(X.n_rows, Y.n_rows);
-        for (size_t i = 0; i < X.n_rows; ++i) {
-          ans(i, i) = kernel(X.row(i).t(), Y.row(i).t());
+        } else {
+          ans.resize(X.n_rows, Y.n_rows);
+          for (size_t i = 0; i < X.n_rows; ++i) {
+            for (size_t j = 0; j < Y.n_rows; ++j) {
+              ans(i, j) = kernel(X.row(i).t(), Y.row(j).t());
+            }
+          }
         }
         return ans + params[2] * params[2] * eye(X.n_rows, Y.n_rows);
       }
@@ -189,12 +189,9 @@ namespace gplib {
       delete pimpl;
     }
 
-    mat squared_exponential::eval(const arma::mat& X, const arma::mat& Y) const {
-      return pimpl-> eval(X, Y);
-    }
-
-    mat squared_exponential::eval_diag(const arma::mat& X, const arma::mat& Y) const {
-      return pimpl-> eval_diag(X, Y);
+    mat squared_exponential::eval(const arma::mat& X, const arma::mat& Y,
+      bool diag) const {
+      return pimpl-> eval(X, Y, diag);
     }
 
     mat squared_exponential::derivate(size_t param_id, const arma::mat& X,
