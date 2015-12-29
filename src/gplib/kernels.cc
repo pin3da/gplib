@@ -18,11 +18,19 @@ namespace gplib {
         return sigma * sigma * exp(tmp(0,0));
       }
 
-      mat eval(const arma::mat& X, const arma::mat& Y ) {
-        mat ans(X.n_rows, Y.n_rows);
-        for (size_t i = 0; i < X.n_rows; ++i) {
-          for (size_t j = 0; j < Y.n_rows; ++j) {
-            ans(i, j) = kernel(X.row(i).t(), Y.row(j).t());
+      mat eval(const arma::mat& X, const arma::mat& Y, bool diag = false) {
+        mat ans;
+        if (diag) {
+          ans = zeros<mat>(X.n_rows, Y.n_rows);
+          for (size_t i = 0; i < X.n_rows; ++i) {
+            ans(i, i) = kernel(X.row(i).t(), Y.row(i).t());
+          }
+        } else {
+          ans.resize(X.n_rows, Y.n_rows);
+          for (size_t i = 0; i < X.n_rows; ++i) {
+            for (size_t j = 0; j < Y.n_rows; ++j) {
+              ans(i, j) = kernel(X.row(i).t(), Y.row(j).t());
+            }
           }
         }
         return ans + params[2] * params[2] * eye(X.n_rows, Y.n_rows);
@@ -48,7 +56,7 @@ namespace gplib {
       }
 
       mat derivate_wrt_inputs_an(size_t param_id, const arma::mat& X,
-                               const arma::mat& Y) {
+        const arma::mat& Y, bool diag = false) {
 
         mat ans = zeros<mat> (X.n_rows, Y.n_rows);
         size_t row, col;
@@ -64,27 +72,29 @@ namespace gplib {
         for (size_t i = 0; i < X.n_rows; ++i) {
           for (size_t j = 0; j < Y.n_rows; ++j) {
             //Compute only the entries that are not 0
-            bool ev_cond1 = (u && i == row) || (!u && j == row);
-            bool ev_cond2 = (X.size() == Y.size()) && (i == row || j == row);
-            if (ev_cond1 || ev_cond2){
-              vec dXdT = zeros<vec> (X.n_cols);
-              vec dYdT = zeros<vec> (Y.n_cols);
-              if (ev_cond1){
-                if (u)
-                  dXdT(col) = 1;
-                else
-                  dYdT(col) = 1;
-              } else {
-                if (i == row)
-                  dXdT(col) = 1;
-                if (j == row)
-                  dYdT(col) = 1;
-              }
-              mat long_term = X.row(i) * dXdT - Y.row(j) * dXdT -
-                              X.row(i) * dYdT + Y.row(j) * dYdT;
+            if ((diag && i == j) || !diag){
+              bool ev_cond1 = (u && i == row) || (!u && j == row);
+              bool ev_cond2 = (X.size() == Y.size()) && (i == row || j == row);
+              if (ev_cond1 || ev_cond2){
+                vec dXdT = zeros<vec> (X.n_cols);
+                vec dYdT = zeros<vec> (Y.n_cols);
+                if (ev_cond1){
+                  if (u)
+                    dXdT(col) = 1;
+                  else
+                    dYdT(col) = 1;
+                } else {
+                  if (i == row)
+                    dXdT(col) = 1;
+                  if (j == row)
+                    dYdT(col) = 1;
+                }
+                mat long_term = X.row(i) * dXdT - Y.row(j) * dXdT -
+                                X.row(i) * dYdT + Y.row(j) * dYdT;
 
-              ans(i, j) = (kernel(X.row(i).t(), Y.row(j).t()) * long_term(0, 0))
-                          / (-1.0 * params[1] * params[1]);
+                ans(i, j) = (kernel(X.row(i).t(), Y.row(j).t()) * long_term(0, 0))
+                            / (-1.0 * params[1] * params[1]);
+              }
             }
           }
         }
@@ -143,14 +153,15 @@ namespace gplib {
         }
       }
 
-      mat derivative(size_t param_id, const arma::mat& X, const arma::mat& Y) {
-
+      mat derivative(size_t param_id, const arma::mat& X, const arma::mat& Y,
+        bool diag = false) {
         if (param_id < 2) {
-          mat ans(X.n_rows, Y.n_rows);
+          mat ans = zeros<mat>(X.n_rows, Y.n_rows);
           for (size_t i = 0; i < ans.n_rows; ++i) {
             for (size_t j = 0; j < ans.n_cols; ++j) {
-              ans(i, j) = derivative_entry(param_id, X.row(i).t(),
-                          Y.row(j).t());
+              if ((diag && i == j) || !diag)
+                ans(i, j) = derivative_entry(param_id, X.row(i).t(),
+                Y.row(j).t());
             }
           }
           return ans;
@@ -158,9 +169,8 @@ namespace gplib {
 
         if (param_id == 2)
           return 2.0 * params[2] * eye(X.n_rows, Y.n_rows);
-
         //Substract previous params
-        mat ans = derivate_wrt_inputs_an(param_id - 3, X, Y);
+        mat ans = derivate_wrt_inputs_an(param_id - 3, X, Y,  diag);
         return ans;
 
       }
@@ -172,33 +182,34 @@ namespace gplib {
 
     squared_exponential::squared_exponential(const vector<double> &params)
       : squared_exponential() {
-      pimpl->params = params;
+      pimpl-> params = params;
     }
 
     squared_exponential::~squared_exponential() {
       delete pimpl;
     }
 
-    mat squared_exponential::eval(const arma::mat& X, const arma::mat& Y) const {
-      return pimpl->eval(X, Y);
+    mat squared_exponential::eval(const arma::mat& X, const arma::mat& Y,
+      bool diag) const {
+      return pimpl-> eval(X, Y, diag);
     }
 
     mat squared_exponential::derivate(size_t param_id, const arma::mat& X,
-        const arma::mat& Y) const {
+        const arma::mat& Y, bool diag) const {
 
-      return pimpl->derivative(param_id, X, Y);
+      return pimpl-> derivative(param_id, X, Y, diag);
     }
 
     size_t squared_exponential::n_params() const {
-      return pimpl->params.size();
+      return pimpl-> params.size();
     }
 
     void squared_exponential::set_params(const vector<double> &params) {
-      pimpl->params = params;
+      pimpl-> params = params;
     }
 
     vector<double> squared_exponential::get_params() const {
-      return pimpl->params;
+      return pimpl-> params;
     }
 
     void squared_exponential::set_lower_bounds(const vector<double> &lower_bounds) {
@@ -209,11 +220,11 @@ namespace gplib {
         pimpl-> upper_bounds = upper_bounds;
     }
     vector<double> squared_exponential::get_lower_bounds() const {
-        return pimpl->lower_bounds;
+        return pimpl-> lower_bounds;
     }
 
     vector<double> squared_exponential::get_upper_bounds() const {
-        return pimpl->upper_bounds;
+        return pimpl-> upper_bounds;
     }
   };
 };
