@@ -71,6 +71,8 @@ namespace gplib {
       virtual void set_upper_bounds(const std::vector<double> &params) = 0;
       virtual std::vector<double> get_lower_bounds() const = 0;
       virtual std::vector<double> get_upper_bounds() const = 0;
+      virtual arma::mat diag_deriv(size_t param_id, const std::vector<arma::mat> &X,
+          const std::vector<arma::mat> &Y) const = 0;
     };
 
     class gp_reg_multi {

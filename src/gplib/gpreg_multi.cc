@@ -231,8 +231,8 @@ namespace gplib {
           if (d > pimpl-> kernel-> n_params())
             dKffdT = zeros<mat>(Qff.n_rows, Qff.n_cols);
           else
-            dKffdT = pimpl-> kernel-> derivate (d, pimpl-> X, pimpl-> X);
-          dRdT = dQffdT + diagmat(dKffdT) - diagmat(dQffdT);
+            dKffdT = pimpl-> kernel-> diag_deriv (d, pimpl-> X, pimpl-> X);
+          dRdT = dQffdT + dKffdT - diagmat(dQffdT);
         } else { // Special case for sigma.
           dRdT = 2 * sqrt(pimpl-> sigma) * I;
         }
