@@ -19,7 +19,7 @@ namespace gplib {
       }
 
       mat eval(const arma::mat& X, const arma::mat& Y ) {
-        mat ans(X.n_rows, Y.n_rows);
+        mat ans = zeros<mat>(X.n_rows, Y.n_rows);
         for (size_t i = 0; i < X.n_rows; ++i) {
           for (size_t j = 0; j < Y.n_rows; ++j) {
             ans(i, j) = kernel(X.row(i).t(), Y.row(j).t());
@@ -148,7 +148,7 @@ namespace gplib {
       mat derivative(size_t param_id, const arma::mat& X, const arma::mat& Y,
         bool diag = false) {
         if (param_id < 2) {
-          mat ans(X.n_rows, Y.n_rows);
+          mat ans = zeros<mat>(X.n_rows, Y.n_rows);
           for (size_t i = 0; i < ans.n_rows; ++i) {
             for (size_t j = 0; j < ans.n_cols; ++j) {
               if ((diag && i == j) || !diag)

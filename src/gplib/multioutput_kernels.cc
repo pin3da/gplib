@@ -180,6 +180,8 @@ namespace gplib{
                 ans_ab = A[q](j, id_out_2) * (kernels[q]-> eval(X[i], Y[j]));
               }
               if (i * X.size() + j == param_id){
+                if (diag)
+                  ans_ab = diagmat(ans_ab);
                 ans.submat (first_row, first_col, first_row + X[i].n_rows - 1,
                     first_col + Y[j].n_rows - 1) = ans_ab;
               }
