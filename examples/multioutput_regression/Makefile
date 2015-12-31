@@ -14,3 +14,4 @@ so_fitc: so_fitc.cc
 
 clean:
 	rm -rf *.mio
+	rm -rf *.png

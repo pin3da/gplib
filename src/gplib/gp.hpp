@@ -22,9 +22,10 @@ namespace gplib {
        *  @param X : Temporal.
        *  @param Y : Temporal.
        * */
-      virtual arma::mat eval(const arma::mat &X, const arma::mat &Y) const = 0;
+      virtual arma::mat eval(const arma::mat &X, const arma::mat &Y,
+          bool diag = false) const = 0;
       virtual arma::mat derivate(size_t param_id, const arma::mat &X,
-          const arma::mat &Y) const = 0;
+          const arma::mat &Y, bool diag = false) const = 0;
       virtual size_t n_params() const = 0;
       virtual void set_params(const std::vector<double> &params) = 0;
       virtual void set_lower_bounds(const std::vector<double> &lower_bounds) = 0;
@@ -55,7 +56,8 @@ namespace gplib {
       multioutput_kernel_class (const std::vector<std::shared_ptr<kernel_class>> &kernels,
             const std::vector<arma::mat> &params) {}
       virtual ~multioutput_kernel_class() = default;
-      virtual arma::mat eval(const std::vector<arma::mat> &X, const std::vector<arma::mat> &Y) const = 0;
+      virtual arma::mat eval(const std::vector<arma::mat> &X,
+        const std::vector<arma::mat> &Y, bool diag = false) const = 0;
       virtual arma::mat derivate(size_t param_id, const std::vector<arma::mat> &X,
           const std::vector<arma::mat> &Y) const = 0;
       virtual size_t n_params() const = 0;
@@ -71,6 +73,8 @@ namespace gplib {
       virtual void set_upper_bounds(const std::vector<double> &params) = 0;
       virtual std::vector<double> get_lower_bounds() const = 0;
       virtual std::vector<double> get_upper_bounds() const = 0;
+      virtual arma::mat diag_deriv(size_t param_id, const std::vector<arma::mat> &X,
+          const std::vector<arma::mat> &Y) const = 0;
     };
 
     class gp_reg_multi {

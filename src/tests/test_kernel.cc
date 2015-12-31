@@ -33,6 +33,29 @@ BOOST_AUTO_TEST_CASE( eval_kernel ) {
   arma::mat ans = K.eval(X, X);
   arma::mat tmp = arma::chol(ans);
 
+  chrono::high_resolution_clock::time_point t2 =
+    chrono::high_resolution_clock::now();
+
+  chrono::duration<double> time_span =
+    chrono::duration_cast<chrono::duration<double>>(t2 - t1);
+
+  std::cout << "\033[32m\t eval kernel passed in "
+       << time_span.count() << " seconds. \033[0m\n";
+}
+
+BOOST_AUTO_TEST_CASE( eval_kernel_diag ) {
+
+  chrono::high_resolution_clock::time_point t1 =
+    chrono::high_resolution_clock::now();
+
+  arma::mat X = arma::randn(43, 13);
+  gplib::kernels::squared_exponential K(std::vector<double>({1.0, 2.3, 0.1}));
+  arma::mat ans = K.eval(X, X);
+  arma::mat tmp = arma::diagmat(ans);
+  arma::mat diag = K.eval(X, X, true);
+  for (size_t i = 0; i < X.n_rows; ++i)
+    for (size_t j = 0; j < X.n_cols; ++j)
+      BOOST_CHECK_EQUAL(diag(i, j), tmp(i, j));
 
   chrono::high_resolution_clock::time_point t2 =
     chrono::high_resolution_clock::now();
