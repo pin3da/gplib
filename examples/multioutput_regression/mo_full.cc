@@ -10,13 +10,7 @@ using namespace std;
 using namespace arma;
 using namespace gplib;
 
-const int MN = 100;
-const double m_pi = acos(-1);
-#define __d { db(__LINE__); }
-
-inline void db(int line){
-  cout<<line<<endl;
-}
+const int MN = 300;
 
 int main(int argc, char **argv) {
   size_t noutputs = 3, l_functions = 2;
@@ -44,8 +38,8 @@ int main(int argc, char **argv) {
     y[0](i) = sin(j) + noise;
     new_y[0](i) = sin(new_j) + noise;
 
-    y[1](i) = sin(j + m_pi * 0.25) + noise;
-    new_y[1](i) = sin(new_j + m_pi * 0.25) + noise;
+    y[1](i) = sin(j + pi * 0.25) + noise;
+    new_y[1](i) = sin(new_j + pi * 0.25) + noise;
 
     y[2](i) = 0.3 * sin(j) + noise;
     new_y[2](i) = 0.3 * sin(new_j) + noise;
