@@ -10,7 +10,7 @@ using namespace std;
 using namespace arma;
 using namespace gplib;
 
-const size_t MN = 100;
+const size_t MN = 300;
 
 int main(int argc, char **argv) {
   size_t noutputs = 3, l_functions = 2;
@@ -77,8 +77,8 @@ int main(int argc, char **argv) {
 
   //Set training set as the generated Data (with noise)
   test_reg.set_training_set(X_set, y);
-  size_t num_pi = 50;
-  test_reg.train(50, 1e-2, gp_reg_multi::FITC, (void *) &num_pi);
+  size_t num_pi = ceil(0.25 * MN);
+  test_reg.train(1000, 1e-4, gp_reg_multi::FITC, (void *) &num_pi);
 
   //Take the posterior distribution for the new data
   mv_gauss posterior = test_reg.full_predict(new_X_set);

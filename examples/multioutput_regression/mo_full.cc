@@ -10,7 +10,7 @@ using namespace std;
 using namespace arma;
 using namespace gplib;
 
-const int MN = 100;
+const int MN = 300;
 const double m_pi = acos(-1);
 #define __d { db(__LINE__); }
 
