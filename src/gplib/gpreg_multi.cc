@@ -251,6 +251,7 @@ namespace gplib {
           mat dKuudT = pimpl-> kernel-> derivate (d, pimpl-> M, pimpl-> M);
           mat dKufdT = pimpl-> kernel-> derivate (d, pimpl-> M, pimpl-> X);
           mat dQffdT = KfuKuui * (dKufdT - dKuudT * KuuiKuf) + dKfudT * KuuiKuf;
+          //mat dQffdT = zeros<mat>(Qff.n_rows, Qff.n_cols);
           mat dKffdT_diag;
           //If it is one of the pseudo-inputs dKff should be 0
           if (d > pimpl-> kernel-> n_params())
@@ -258,13 +259,14 @@ namespace gplib {
           else
             dKffdT_diag = pimpl-> kernel-> diag_deriv (d, pimpl-> X, pimpl-> X);
           dRdT = dQffdT + dKffdT_diag - diagmat(dQffdT);
+
         } else { // Special case for sigma.
           dRdT = 2 * sqrt(pimpl-> sigma) * I;
         }
         mat ans  = -trace(Ri * dRdT) + ytRi * dRdT * Riy;
         grad[d]  = 0.5 * ans(0,0);
 
-        if (d < pimpl-> kernel-> get_kernels().size () * pimpl-> X.size() * pimpl-> X.size()) {
+        if (d < pimpl-> kernel-> get_kernels().size() * pimpl-> X.size() * pimpl-> X.size()) {
           // TODO: check this.
           grad[d] *= 2;
         }

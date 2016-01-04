@@ -10,8 +10,8 @@ using namespace std;
 using namespace arma;
 using namespace gplib;
 
-const size_t MN = 300,
-             num_pi = ceil(MN * 0.35),
+const size_t MN = 100,
+             num_pi = ceil(MN * 0.23),
              iter = 1000;
 
 const double tol = 1e-4;

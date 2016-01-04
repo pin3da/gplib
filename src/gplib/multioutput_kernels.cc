@@ -100,9 +100,25 @@ namespace gplib{
         //Compute cov mat
         mat cov = zeros<mat> (ans_rows, ans_cols);
         size_t first_row = 0, first_col = 0;
-        for (size_t i = 0; i < X.size(); i++) {
-          for (size_t j = 0; j < Y.size(); j++) {
-            if((diag && i == j) || !diag){
+        if (diag) {
+          for (size_t i = 0; i < X.size(); i++) {
+            //Only compute the entries which aren't 0
+            if (i == which_u) {
+              mat cov_ab = zeros<mat> (X[i].n_rows, Y[i].n_rows);
+              for (size_t k = 0; k < B.size(); k++) {
+                cov_ab += B[k](i, i) * (kernels[k]-> derivate(param_id +
+                          kernels[k]-> n_params(), X[i], Y[i], diag));
+              }
+              cov.submat (first_row, first_col, first_row + X[i].n_rows - 1,
+                first_col + Y[i].n_rows - 1) = cov_ab;
+            }
+
+            first_col += Y[i].n_rows;
+            first_row += X[i].n_rows;
+          }
+        } else {
+          for (size_t i = 0; i < X.size(); i++) {
+            for (size_t j = 0; j < Y.size(); j++) {
               //Only compute the entries which aren't 0
               if ((u && i == which_u) || (!u && j == which_u)) {
                 mat cov_ab = zeros<mat> (X[i].n_rows, Y[j].n_rows);
@@ -113,11 +129,11 @@ namespace gplib{
                 cov.submat (first_row, first_col, first_row + X[i].n_rows - 1,
                   first_col + Y[j].n_rows - 1) = cov_ab;
               }
+              first_col += Y[j].n_rows;
             }
-            first_col += Y[j].n_rows;
+            first_row += X[i].n_rows;
+            first_col = 0;
           }
-          first_row += X[i].n_rows;
-          first_col = 0;
         }
         return cov;
       }

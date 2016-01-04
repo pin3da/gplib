@@ -68,11 +68,25 @@ namespace gplib {
           row = param_id / Y.n_cols;
           col = param_id % Y.n_cols;
         }
+        if (diag) {
+          size_t i = row;
+          //Compute only the entries that are not 0
+          vec dXdT = zeros<vec> (X.n_cols);
+          vec dYdT = zeros<vec> (Y.n_cols);
+          if (u)
+            dXdT(col) = 1;
+          else
+            dYdT(col) = 1;
 
-        for (size_t i = 0; i < X.n_rows; ++i) {
-          for (size_t j = 0; j < Y.n_rows; ++j) {
-            //Compute only the entries that are not 0
-            if ((diag && i == j) || !diag){
+          mat long_term = X.row(i) * dXdT - Y.row(i) * dXdT -
+                          X.row(i) * dYdT + Y.row(i) * dYdT;
+
+          ans(i, i) = (kernel(X.row(i).t(), Y.row(i).t()) * long_term(0, 0))
+                      / (-1.0 * params[1] * params[1]);
+        } else {
+          for (size_t i = 0; i < X.n_rows; ++i) {
+            for (size_t j = 0; j < Y.n_rows; ++j) {
+              //Compute only the entries that are not 0
               bool ev_cond1 = (u && i == row) || (!u && j == row);
               bool ev_cond2 = (X.size() == Y.size()) && (i == row || j == row);
               if (ev_cond1 || ev_cond2){
@@ -153,19 +167,28 @@ namespace gplib {
         }
       }
 
+      mat derivate_wrt_ls (size_t param_id, const mat &X, const mat &Y,
+        bool diag = false){
+        mat ans = zeros<mat>(X.n_rows, Y.n_rows);
+        if (diag){
+          for (size_t i = 0; i < ans.n_rows; ++i)
+            ans(i, i) = derivative_entry(param_id, X.row(i).t(),
+            Y.row(i).t());
+        } else {
+          for (size_t i = 0; i < ans.n_rows; ++i) {
+            for (size_t j = 0; j < ans.n_cols; ++j)
+              ans(i, j) = derivative_entry(param_id, X.row(i).t(),
+              Y.row(j).t());
+          }
+        }
+        return ans;
+      }
+
       mat derivative(size_t param_id, const arma::mat& X, const arma::mat& Y,
         bool diag = false) {
-        if (param_id < 2) {
-          mat ans = zeros<mat>(X.n_rows, Y.n_rows);
-          for (size_t i = 0; i < ans.n_rows; ++i) {
-            for (size_t j = 0; j < ans.n_cols; ++j) {
-              if ((diag && i == j) || !diag)
-                ans(i, j) = derivative_entry(param_id, X.row(i).t(),
-                Y.row(j).t());
-            }
-          }
-          return ans;
-        }
+        if (param_id < 2)
+          return derivate_wrt_ls (param_id, X, Y, diag);
+
 
         if (param_id == 2)
           return 2.0 * params[2] * eye(X.n_rows, Y.n_rows);
