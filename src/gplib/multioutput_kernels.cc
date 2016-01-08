@@ -199,9 +199,23 @@ namespace gplib{
         size_t id_out_1 = param_id / B[q].n_rows;
         size_t id_out_2 = param_id % B[q].n_rows;
         size_t first_row = 0, first_col = 0;
-        for (size_t i = 0; i < X.size(); i++) {
-          for (size_t j = 0; j < Y.size(); j++) {
-            if((diag && i == j) || !diag){
+        if (diag){
+          for (size_t i = 0; i < X.size(); i++) {
+            mat ans_ab = zeros<mat> (X[i].n_rows, Y[i].n_rows);
+            if (i == id_out_1) {
+              ans_ab = A[q](id_out_1, id_out_2) *
+                       (kernels[q]-> eval(X[i], Y[i], diag));
+            }
+            if (i * X.size() + i == param_id){
+              ans.submat (first_row, first_col, first_row + X[i].n_rows - 1,
+                  first_col + Y[i].n_rows - 1) = ans_ab;
+            }
+            first_col += Y[i].n_rows;
+            first_row += X[i].n_rows;
+          }
+        } else {
+          for (size_t i = 0; i < X.size(); i++) {
+            for (size_t j = 0; j < Y.size(); j++) {
               mat ans_ab = zeros<mat> (X[i].n_rows, Y[j].n_rows);
               if (i == id_out_1 && j == id_out_1) {
                 ans_ab = A[q](id_out_1, id_out_2) *
@@ -213,16 +227,14 @@ namespace gplib{
                 ans_ab = A[q](j, id_out_2) * (kernels[q]-> eval(X[i], Y[j]));
               }
               if (i * X.size() + j == param_id){
-                if (diag)
-                  ans_ab = diagmat(ans_ab);
                 ans.submat (first_row, first_col, first_row + X[i].n_rows - 1,
                     first_col + Y[j].n_rows - 1) = ans_ab;
               }
+              first_col += Y[j].n_rows;
             }
-            first_col += Y[j].n_rows;
+            first_row += X[i].n_rows;
+            first_col = 0;
           }
-          first_row += X[i].n_rows;
-          first_col = 0;
         }
         return ans;
       }
