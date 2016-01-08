@@ -42,7 +42,7 @@ namespace gplib{
           for (size_t i = 0; i < X.size(); i++) {
             mat cov_ab = zeros<mat> (X[i].n_rows, Y[i].n_rows);
             for (size_t k = 0; k < B.size(); k++) {
-              cov_ab += B[k](i, i) * (kernels[k]-> eval(X[i], Y[i], true));
+              cov_ab += B[k](i, i) * (kernels[k]-> eval(X[i], Y[i], diag));
             }
             cov.submat (first_row, first_col, first_row + X[i].n_rows - 1,
                 first_col + Y[i].n_rows - 1) = cov_ab;
@@ -232,18 +232,29 @@ namespace gplib{
         bool diag = false){
         mat ans = zeros<mat>(ans_rows, ans_cols);
         size_t first_row = 0, first_col = 0;
-        for (size_t i = 0; i < X.size(); i++) {
-          for (size_t j = 0; j < Y.size(); j++) {
-            if ((diag && i == j) || !diag){
-              mat ans_ab = B[q](i, j) *
-                           kernels[q]-> derivate(param_id, X[i], Y[j], diag);
-              ans.submat (first_row, first_col, first_row + X[i].n_rows - 1,
-                  first_col + Y[j].n_rows - 1) = ans_ab;
-            }
-            first_col += Y[j].n_rows;
+        if (diag) {
+          for (size_t i = 0; i < X.size(); i++) {
+            mat ans_ab = B[q](i, i) *
+              kernels[q]-> derivate(param_id, X[i], Y[i], diag);
+            ans.submat (first_row, first_col, first_row + X[i].n_rows - 1,
+                first_col + Y[i].n_rows - 1) = ans_ab;
+            first_row += X[i].n_rows;
+            first_col += Y[i].n_rows;
           }
-          first_row += X[i].n_rows;
-          first_col = 0;
+        } else {
+          for (size_t i = 0; i < X.size(); i++) {
+            for (size_t j = 0; j < Y.size(); j++) {
+              if ((diag && i == j) || !diag){
+                mat ans_ab = B[q](i, j) *
+                  kernels[q]-> derivate(param_id, X[i], Y[j], diag);
+                ans.submat (first_row, first_col, first_row + X[i].n_rows - 1,
+                    first_col + Y[j].n_rows - 1) = ans_ab;
+              }
+              first_col += Y[j].n_rows;
+            }
+            first_row += X[i].n_rows;
+            first_col = 0;
+          }
         }
         return ans;
       }
