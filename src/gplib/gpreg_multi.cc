@@ -263,9 +263,11 @@ namespace gplib {
         } else { // Special case for sigma.
           dRdT = 2 * sqrt(pimpl-> sigma) * I;
         }
-        mat ans  = -trace(Ri * dRdT) + ytRi * dRdT * Riy;
-        grad[d]  = 0.5 * ans(0,0);
 
+        double t = accu(Ri % dRdT); // trace(Ri * dRdT);
+        mat ans = -t + ytRi * dRdT * Riy;
+
+        grad[d]  = 0.5 * ans(0,0);
         if (d < pimpl-> kernel-> get_kernels().size() * pimpl-> X.size() * pimpl-> X.size()) {
           // TODO: check this.
           grad[d] *= 2;

@@ -72,4 +72,16 @@ namespace gplib {
     return ans;
   }
 
+  bool is_close(const mat &A, const mat &B, double eps = 1e-4) {
+    if (A.n_rows != B.n_rows || A.n_cols != B.n_cols)
+      return false;
+
+    for (size_t i = 0; i < A.n_rows; ++i)
+      for (size_t j = 0; j < B.n_rows; ++j)
+        if (fabs(A(i, j) - B(i, j)) > eps)
+          return false;
+
+    return true;
+  }
+
 };
