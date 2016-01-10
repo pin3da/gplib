@@ -210,7 +210,7 @@ namespace gplib {
         chrono::high_resolution_clock::now();
       chrono::duration<double> time_span =
         chrono::duration_cast<chrono::duration<double>>(t2 - t1);
-      cout << "Time for log_marginal_fitc: " << time_span.count() << endl;
+      cout << "log_marginal_fitc " << time_span.count() << endl;
       double tot_time = time_span.count();
 
       mat flat_y = pimpl-> flatten (pimpl-> y);
@@ -231,7 +231,7 @@ namespace gplib {
       mat KfuKuui = Kfu * Kuui;
       t2 = chrono::high_resolution_clock::now();
       time_span = chrono::duration_cast<chrono::duration<double>>(t2 - t1);
-      cout << "Time for comp. befor grad: " << time_span.count() << endl;
+      cout << "befor_grad " << time_span.count() << endl;
       tot_time += time_span.count();
 
       const vector<double> &lb = pimpl-> kernel-> get_lower_bounds();
@@ -275,13 +275,13 @@ namespace gplib {
         chrono::high_resolution_clock::time_point t4 =
           chrono::high_resolution_clock::now();
         time_span = chrono::duration_cast<chrono::duration<double>>(t4 - t3);
-        cout << " Time for " << d << " grad " << time_span.count() << endl;
+        // cout << "grad_" << d << " " << time_span.count() << endl;
       }
       t2 = chrono::high_resolution_clock::now();
       time_span = chrono::duration_cast<chrono::duration<double>>(t2 - t1);
-      cout << "Time for grad comp.: " << time_span.count() << endl;
+      cout << "total_grad " << time_span.count() << endl;
       tot_time += time_span.count();
-      cout << "Time for total comp.: " << tot_time << endl;
+      cout << "total_iter " << tot_time << endl;
       /*
       vector<double> grad2(grad.size());
       vector<double> params = theta;
