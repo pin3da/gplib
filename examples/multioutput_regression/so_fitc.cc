@@ -64,8 +64,8 @@ int main(int argc, char **argv) {
 
   //Set training set as the generated Data (with noise)
   gp.set_training_set(X_set, y);
-  gp.train(num_iter, tol, gp_reg_multi::FITC, (void *) &num_pi);
-  // gp.train(num_iter, gp_reg_multi::FULL, (void *) &num_pi);
+  //gp.train(num_iter, tol, gp_reg_multi::FITC, (void *) &num_pi);
+  gp.train(num_iter, gp_reg_multi::FULL);
 
   //Take the posterior distribution for the new data
   mv_gauss posterior = gp.full_predict(new_X_set);

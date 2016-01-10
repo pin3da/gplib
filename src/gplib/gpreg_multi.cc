@@ -183,17 +183,40 @@ namespace gplib {
       implementation *pimpl = (implementation*) fdata;
       pimpl-> kernel-> set_params(theta);
 
+      chrono::high_resolution_clock::time_point t1 =
+        chrono::high_resolution_clock::now();
       double ans = pimpl-> log_marginal();
+      chrono::high_resolution_clock::time_point t2 =
+        chrono::high_resolution_clock::now();
 
+      chrono::duration<double> time_span =
+        chrono::duration_cast<chrono::duration<double>>(t2 - t1);
+      cout << "log_marginal_full " << time_span.count() << endl;
+
+
+      t1 = chrono::high_resolution_clock::now();
       vec mx = pimpl-> eval_mean(pimpl-> X);
       mat K = pimpl-> kernel-> eval(pimpl-> X, pimpl-> X);
       mat Kinv = K.i();
       vec diff = pimpl-> flatten(pimpl-> y);
       mat dLLdK = -0.5 * Kinv + 0.5 * Kinv * diff * diff.t() * Kinv;
+
+      t2 = chrono::high_resolution_clock::now();
+
+      time_span = chrono::duration_cast<chrono::duration<double>>(t2 - t1);
+      cout << "befor_grad " << time_span.count() << endl;
+
+
+      t1 = chrono::high_resolution_clock::now();
       for (size_t d = 0; d < grad.size(); d++) {
         mat dKdT = pimpl-> kernel-> derivate(d, pimpl-> X, pimpl-> X);
         grad[d] = trace(dLLdK * dKdT);
       }
+
+      t2 =  chrono::high_resolution_clock::now();
+      time_span = chrono::duration_cast<chrono::duration<double>>(t2 - t1);
+      cout << "total_grad " << time_span.count() << endl;
+
       cout << "ANS: " << ans << endl;
       return ans;
     }
