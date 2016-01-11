@@ -30,6 +30,11 @@ namespace gplib {
 
   arma::mat force_symmetric(const arma::mat &A);
   arma::mat force_diag(const arma::mat &A);
+  arma::mat flatten(std::vector<arma::vec> &y);
+  std::vector<double> flatten(std::vector<arma::mat> &M);
+  std::vector<arma::mat> unflatten(std::vector<double> &M_params, std::vector<arma::mat> &M);
+  void split(const std::vector<double> &theta, std::vector<double> &kernel_params,
+      std::vector<double> &M_params);
 };
 
 #endif

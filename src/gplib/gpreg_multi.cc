@@ -25,6 +25,9 @@ namespace gplib {
     }
 
     mv_gauss predict(const vector<mat> &new_data) {
+      chrono::high_resolution_clock::time_point t1 =
+        chrono::high_resolution_clock::now();
+
       //Add new data to observations
       vector<mat> M(X.size());
       vec fill_y;
@@ -50,6 +53,12 @@ namespace gplib {
       }
       //Conditon Multivariate Gaussian
       mv_gauss gd(mean, cov);
+
+      chrono::high_resolution_clock::time_point t2 =
+        chrono::high_resolution_clock::now();
+      chrono::duration<double> time_span =
+        chrono::duration_cast<chrono::duration<double>>(t2 - t1);
+      cout << "Time for predict full: " << time_span.count() << endl;
       return gd.conditional(fill_y, observed);
     }
 
@@ -59,6 +68,9 @@ namespace gplib {
     }
 
     mv_gauss predict_FITC(const vector<mat> &new_x) {
+      chrono::high_resolution_clock::time_point t1 =
+        chrono::high_resolution_clock::now();
+
       mat Qn = comp_Q(X, X, M);
       mat Qm = comp_Q(new_x, new_x, M);
       mat Kff_diag = kernel-> eval(X, X, true);
@@ -75,6 +87,11 @@ namespace gplib {
       mat mean = Knu * E * Kuf * lambda * Y;
       mat cov = Knn - Qm + Knu * E * Kun;
 
+      chrono::high_resolution_clock::time_point t2 =
+        chrono::high_resolution_clock::now();
+      chrono::duration<double> time_span =
+        chrono::duration_cast<chrono::duration<double>>(t2 - t1);
+      cout << "Time for predict FITC: " << time_span.count() << endl;
       return mv_gauss(mean, cov);
     }
 
@@ -82,51 +99,6 @@ namespace gplib {
       vec mean = eval_mean(X);
       mat cov = kernel-> eval(X, X);
       return mv_gauss(mean, cov);
-    }
-
-    mat flatten(vector<vec> &y) {
-      mat flat;
-      for (size_t i = 0; i < y.size(); i++) {
-        flat = join_cols<mat> (flat, y[i]);
-      }
-      return flat;
-    }
-
-    vector<double> flatten(vector<mat> &M) {
-      size_t t_size = 0;
-      for (size_t i = 0; i < M.size(); ++i)
-        t_size += M[i].size();
-
-      vector<double> ans(t_size);
-      size_t iter = 0;
-      for (size_t q = 0; q < M.size(); ++q) {
-        copy (M[q].begin(), M[q].end(), ans.begin() + iter);
-        iter += M[q].size();
-      }
-      return ans;
-    }
-
-    vector<mat> unflatten(vector<double> &M_params) {
-      size_t iter = 0;
-      vector<mat> out(M.size());
-      for(size_t q = 0; q < out.size(); ++q) {
-        out[q].resize(M[q].n_rows, M[q].n_cols);
-        for(size_t i = 0; i < M[q].n_rows; ++i)
-          for(size_t j = 0; j < M[q].n_cols; ++j) {
-            out[q](i, j) = M_params[iter];
-            ++iter;
-          }
-      }
-      return out;
-    }
-
-    void split(const vector<double> &theta, vector<double> &kernel_params,
-              vector<double> &M_params) {
-      copy(theta.begin(), theta.begin() + kernel_params.size(),
-          kernel_params.begin());
-
-      copy(theta.begin() + kernel_params.size(), theta.end() - 1,
-           M_params.begin());
     }
 
     void set_params(const vector<double> &params) {
@@ -138,7 +110,7 @@ namespace gplib {
       vector<double> kernel_params(params.size() - M_size - 1), M_params(M_size);
       split(params, kernel_params, M_params);
       kernel-> set_params(kernel_params);
-      M = unflatten(M_params);
+      M = unflatten(M_params, M);
     }
 
     vector<double> get_params() {
@@ -198,7 +170,7 @@ namespace gplib {
       vec mx = pimpl-> eval_mean(pimpl-> X);
       mat K = pimpl-> kernel-> eval(pimpl-> X, pimpl-> X);
       mat Kinv = K.i();
-      vec diff = pimpl-> flatten(pimpl-> y);
+      vec diff = flatten(pimpl-> y);
       mat dLLdK = -0.5 * Kinv + 0.5 * Kinv * diff * diff.t() * Kinv;
 
       t2 = chrono::high_resolution_clock::now();
@@ -236,7 +208,7 @@ namespace gplib {
       cout << "log_marginal_fitc " << time_span.count() << endl;
       double tot_time = time_span.count();
 
-      mat flat_y = pimpl-> flatten (pimpl-> y);
+      mat flat_y = flatten (pimpl-> y);
       mat Qff = force_symmetric(
                 pimpl-> comp_Q (pimpl-> X, pimpl-> X, pimpl-> M));
 
@@ -399,7 +371,9 @@ namespace gplib {
     }
 
     double train_FITC(int max_iter, double tol) {
-      size_t M_size = M.size() * M[0].size(); // TODO: Compute M_size using all the matrices in M
+      size_t M_size = 0;
+      for (size_t i = 0; i < M.size(); ++i)
+        M_size += M[i].size();
       size_t n_params = kernel-> n_params() + M_size + 1; // added sigma
       nlopt::opt best(nlopt::LD_MMA, n_params);
       best.set_max_objective(implementation::training_obj_FITC, this);
