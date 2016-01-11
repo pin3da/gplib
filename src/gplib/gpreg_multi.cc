@@ -24,7 +24,6 @@ namespace gplib {
     }
 
     mv_gauss predict(const vector<mat> &new_data) {
-
       //Add new data to observations
       vector<mat> M(X.size());
       vec fill_y;
@@ -151,7 +150,6 @@ namespace gplib {
         grad[d] = trace(dLLdK * dKdT);
       }
 
-      cout << "ANS: " << ans << endl;
       return ans;
     }
 
@@ -192,7 +190,6 @@ namespace gplib {
           mat dKuudT = pimpl-> kernel-> derivate (d, pimpl-> M, pimpl-> M);
           mat dKufdT = pimpl-> kernel-> derivate (d, pimpl-> M, pimpl-> X);
           mat dQffdT = KfuKuui * (dKufdT - dKuudT * KuuiKuf) + dKfudT * KuuiKuf;
-          //mat dQffdT = zeros<mat>(Qff.n_rows, Qff.n_cols);
           mat dKffdT_diag;
           //If it is one of the pseudo-inputs dKff should be 0
           if (d > pimpl-> kernel-> n_params())
@@ -210,83 +207,9 @@ namespace gplib {
 
         grad[d]  = 0.5 * ans(0,0);
         if (d < pimpl-> kernel-> get_kernels().size() * pimpl-> X.size() * pimpl-> X.size()) {
-          // TODO: check this.
           grad[d] *= 2;
         }
       }
-      /*
-      vector<double> grad2(grad.size());
-      vector<double> params = theta;
-      vector<double> lb = pimpl-> kernel-> get_lower_bounds();
-      vector<double> ub = pimpl-> kernel-> get_upper_bounds();
-      double eps = 1e-6;
-      size_t dif_found = 0;
-      for (size_t d = 0; d < grad.size(); d++) {
-        if ((d < lb.size() && ub[d] > lb[d]) || d >= lb.size()) {
-          params[d] += eps;
-          pimpl-> set_params(params);
-          // s1
-          double cur = pimpl-> log_marginal_fitc();
-          mat _dQff = force_symmetric(pimpl-> comp_Q (pimpl-> X, pimpl-> X, pimpl-> M));
-
-          // es1
-          params[d] -= 2 * eps;
-          pimpl-> set_params(params);
-          // s2
-          cur -= pimpl-> log_marginal_fitc();
-          _dQff -= force_symmetric(pimpl-> comp_Q (pimpl-> X, pimpl-> X, pimpl-> M));
-          // es2
-          params[d] += eps;
-          pimpl-> set_params(params);
-          // s3
-          cur /= 2.0 * eps;
-          _dQff /= 2.0 * eps;
-          // es3
-
-          grad2[d] = cur;
-
-
-          if(d + 1 < grad.size()) {
-            // Extra test for inner derivatives.
-            mat dKfudT = pimpl-> kernel-> derivate (d, pimpl-> X, pimpl-> M);
-            mat dKuudT = pimpl-> kernel-> derivate (d, pimpl-> M, pimpl-> M);
-            mat dKufdT = pimpl-> kernel-> derivate (d, pimpl-> M, pimpl-> X);
-            mat dKffdT = pimpl-> kernel-> derivate (d, pimpl-> X, pimpl-> X);
-            mat dQffdT = KfuKuui * (dKufdT - dKuudT * KuuiKuf) + dKfudT * KuuiKuf;
-
-
-            for (size_t i = 0; i < _dqff.n_rows; ++i) {
-              for (size_t j = 0; j <  _dqff.n_cols; ++j) {
-                if (fabs(_dqff(i, j) - dqffdt(i, j)) > eps) {
-                  cout << "difference found at " << d << " i " << i << " j " << j << endl;
-                  cout << _dqff(i, j) << " != " << dqffdt(i, j) << endl;
-                  dif_found++;
-                }
-              }
-            }
-          }
-
-        } else {
-          grad2[d] = 0;
-        }
-
-        if (fabs((grad2[d] / grad[d]) - 1.0) > 0.2) {
-          cout << "Difference found at : " << d << endl;
-          cout << "\t" << grad[d] << " : " << grad2[d] << endl;
-          dif_found++;
-        }
-        //To change between analytical an numerical comment or uncomment this line
-        grad[d] = grad2[d];
-      }
-
-
-      if (dif_found > 0){
-        cout << dif_found << " Diferences found out of " << grad.size() * Qff.size() << endl;
-        // exit(1);
-      }
-      */
-
-      std::cout << "ANS: " << ans << std::endl;
       return ans;
     }
 
@@ -323,17 +246,12 @@ namespace gplib {
       ub.resize(ub.size() + M_size, HUGE_VAL);
       lb.push_back(0.0);
       ub.push_back(HUGE_VAL);
-      // assert(lb.size() == n_params);
       best.set_lower_bounds(lb);
       best.set_upper_bounds(ub);
 
-
-
       double error; //final value of error function
       vector<double> x = get_params();
-      // cout << "before optimization" << endl;
       best.optimize(x, error);
-      // cout << "after optimization" << endl;
       set_params(x);
 
       return error;
@@ -361,7 +279,6 @@ namespace gplib {
   }
 
   double gp_reg_multi::train(const int max_iter, const double tol) {
-    // TODO: add option to set different num_pi for each output.
     return pimpl-> train(max_iter, tol);
   }
 
