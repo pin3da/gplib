@@ -59,7 +59,7 @@ namespace gplib {
       virtual arma::mat eval(const std::vector<arma::mat> &X,
         const std::vector<arma::mat> &Y, bool diag = false) const = 0;
       virtual arma::mat derivate(size_t param_id, const std::vector<arma::mat> &X,
-          const std::vector<arma::mat> &Y) const = 0;
+          const std::vector<arma::mat> &Y, bool diag = false) const = 0;
       virtual size_t n_params() const = 0;
       virtual void set_params_k(const std::vector<arma::mat> &params) = 0;
       virtual void set_params(const std::vector<double> &params, size_t n_outputs = -1) = 0;
@@ -73,8 +73,6 @@ namespace gplib {
       virtual void set_upper_bounds(const std::vector<double> &params) = 0;
       virtual std::vector<double> get_lower_bounds() const = 0;
       virtual std::vector<double> get_upper_bounds() const = 0;
-      virtual arma::mat diag_deriv(size_t param_id, const std::vector<arma::mat> &X,
-          const std::vector<arma::mat> &Y) const = 0;
     };
 
     class gp_reg_multi {
