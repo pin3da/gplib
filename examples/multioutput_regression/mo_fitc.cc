@@ -81,7 +81,7 @@ int main(int argc, char **argv) {
 
   //Set training set as the generated Data (with noise)
   test_reg.set_training_set(X_set, y);
-  
+
   test_reg.train(iter, tol, num_pi);
 
   //Take the posterior distribution for the new data

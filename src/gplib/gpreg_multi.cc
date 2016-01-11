@@ -198,7 +198,7 @@ namespace gplib {
           if (d > pimpl-> kernel-> n_params())
             dKffdT_diag = zeros<mat>(Qff.n_rows, Qff.n_cols);
           else
-            dKffdT_diag = pimpl-> kernel-> diag_deriv (d, pimpl-> X, pimpl-> X);
+            dKffdT_diag = pimpl-> kernel-> derivate (d, pimpl-> X, pimpl-> X, true);
           dRdT = dQffdT + dKffdT_diag - diagmat(dQffdT);
 
         } else { // Special case for sigma.
