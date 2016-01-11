@@ -272,7 +272,7 @@ namespace gplib{
       }
 
       mat derivate(size_t param_id, const vector<mat> &X, const vector<mat> &Y,
-        bool diag = false) {
+        bool diag) {
 
         size_t tot_rows = 0, tot_cols = 0;
         for (size_t i = 0; i < X.size(); ++i)
@@ -516,13 +516,8 @@ namespace gplib{
     }
 
     mat lmc_kernel::derivate(size_t param_id, const vector<mat> &X,
-      const vector<mat> &Y) const {
-      return pimpl-> derivate(param_id, X, Y);
-    }
-
-    mat lmc_kernel::diag_deriv(size_t param_id, const vector<mat> &X,
-      const vector<mat> &Y) const{
-      return pimpl-> derivate(param_id, X, Y, true);
+      const vector<mat> &Y, bool diag) const {
+      return pimpl-> derivate(param_id, X, Y, diag);
     }
 
     size_t lmc_kernel::n_params() const {

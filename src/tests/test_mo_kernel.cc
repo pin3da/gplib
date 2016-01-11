@@ -352,7 +352,7 @@ BOOST_AUTO_TEST_CASE( mo_kernel_diag_deriv ) {
   arma::mat diag_deriv;
   for (size_t i = 0; i < K.n_params(); ++i){
     n_diag = diagmat(K.derivate(i, X, Y));
-    diag_deriv = K.diag_deriv(i, X, Y);
+    diag_deriv = K.derivate(i, X, Y, true);
     for (size_t l = 0; l < n_diag.n_rows; ++l)
       for (size_t n = 0; n < n_diag.n_cols; ++n)
         BOOST_CHECK_CLOSE(n_diag(l, n), diag_deriv(l, n), eps);
@@ -362,7 +362,7 @@ BOOST_AUTO_TEST_CASE( mo_kernel_diag_deriv ) {
     for (size_t i = 0; i < X[k].n_rows; ++i){
       for (size_t j = 0; j < X[k].n_cols; ++j){
         n_diag = diagmat(K.derivate(param_id, X, Y));
-        diag_deriv = K.diag_deriv(param_id, X, Y);
+        diag_deriv = K.derivate(param_id, X, Y, true);
         param_id++;
         for (size_t l = 0; l < n_diag.n_rows; ++l)
           for (size_t n = 0; n < n_diag.n_cols; ++n)
