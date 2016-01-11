@@ -16,7 +16,7 @@ before_install:
   - sudo apt-get update -qq
 install:
   - sudo apt-get install -qq libyajl-dev libxml2-dev libxqilla-dev
-  - sudo apt-get install libarmadillo-dev libarmadillo6
+  - sudo apt-get install libarmadillo-dev libarmadillo5
   - sudo apt-get install libnlopt-dev libnlopt0
   - sudo apt-get install libboost-test-dev
   - if [ "$CXX" = "clang++" ]; then sudo apt-get install -qq clang-3.5; fi
