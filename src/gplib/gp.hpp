@@ -227,10 +227,31 @@ namespace gplib {
        *  @param k : Temporal.
        * */
       void set_kernel(const std::shared_ptr<multioutput_kernel_class> &k);
+      /* *
+       *  @param max_iter : Temporal.
+       *  @param tol : Temporal.
+       * */
       double train(const int max_iter, const double tol);
+      /* *
+       *  @param max_iter : Temporal.
+       *  @param tol : Temporal.
+       *  @param num_pi : Temporal.
+       * */
       double train(const int max_iter, const double tol, const size_t num_pi);
+      /* *
+       *  @param max_iter : Temporal.
+       *  @param tol : Temporal.
+       *  @param num_pi : Temporal.
+       * */
       double train(const int max_iter, const double tol,
         const std::vector<size_t> num_pi);
+      /* *
+       *  @param max_iter : Temporal.
+       *  @param tol : Temporal.
+       *  @param M : Temporal.
+       * */
+      double train(const int max_iter, const double tol,
+        const std::vector<arma::mat> num_pi);
       /* *
        *  @param X : Temporal.
        *  @param y : Temporal.

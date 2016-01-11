@@ -283,25 +283,25 @@ namespace gplib {
   }
 
   double gp_reg_multi::train(const int max_iter, const double tol,
-    const size_t num_pi){
+    const size_t num_pi) {
     //Initial check
     if (pimpl-> X.size() == 0 || pimpl-> X[0].size() == 0)
       throw logic_error("Parameters Uninitialized");
 
     pimpl-> M = vector<mat>(pimpl-> X.size());
-    for (size_t i = 0; i < pimpl-> X.size(); ++i){
+    for (size_t i = 0; i < pimpl-> X.size(); ++i) {
       //Check for too many inducing points
       if (num_pi > pimpl-> X[i].n_rows)
         throw length_error("Too many inducing points");
       //Initial matrix
       pimpl-> M[i] = zeros<mat>(num_pi, pimpl-> X[i].n_cols);
       //Fill matrix
-      for (size_t j = 0; j < pimpl-> X[i].n_cols; ++j){
+      for (size_t j = 0; j < pimpl-> X[i].n_cols; ++j) {
         double col_max = pimpl-> X[i].col(j).max();
         double col_min = pimpl-> X[i].col(j).min();
         double step = (col_max - col_min) / num_pi;
         double cur = col_min;
-        for (size_t k = 0; k < num_pi; ++k){
+        for (size_t k = 0; k < num_pi; ++k) {
           pimpl-> M[i](k, j) = cur;
           cur += step;
         }
@@ -312,7 +312,7 @@ namespace gplib {
   }
 
   double gp_reg_multi::train(const int max_iter, const double tol,
-    const vector<size_t> num_pi){
+    const vector<size_t> num_pi) {
     //Initial check
     if (pimpl-> X.size() == 0 || pimpl-> X[0].size() == 0)
       throw logic_error("Parameters Uninitialized");
@@ -320,24 +320,44 @@ namespace gplib {
       throw length_error("Wrong inducing point vector size");
 
     pimpl-> M = vector<mat>(pimpl-> X.size());
-    for (size_t i = 0; i < pimpl-> X.size(); ++i){
+    for (size_t i = 0; i < pimpl-> X.size(); ++i) {
       //Check for too many inducing points
       if (num_pi[i] >= pimpl-> X[i].n_rows)
         throw length_error("Too many inducing points");
       //Create initial matrix
       pimpl-> M[i] = zeros<mat>(num_pi[i], pimpl-> X[i].n_cols);
       //Fill matrix
-      for (size_t j = 0; j < pimpl-> X[i].n_cols; ++j){
+      for (size_t j = 0; j < pimpl-> X[i].n_cols; ++j) {
         double col_max = pimpl-> X[i].col(j).max();
         double col_min = pimpl-> X[i].col(j).min();
         double step = (col_max - col_min) / num_pi[i];
         double cur = col_min;
-        for (size_t k = 0; k < num_pi[i]; ++k){
+        for (size_t k = 0; k < num_pi[i]; ++k) {
           pimpl-> M[i](k, j) = cur;
           cur += step;
         }
       }
     }
+    pimpl-> state = FITC;
+    return pimpl-> train_FITC(max_iter, tol);
+  }
+
+  double gp_reg_multi::train(const int max_iter, const double tol,
+    const vector<mat> num_pi) {
+    //Initial check
+    if (pimpl-> X.size() == 0 || pimpl-> X[0].size() == 0)
+      throw logic_error("Parameters Uninitialized");
+    if (num_pi.size() != pimpl-> X.size())
+      throw length_error("Wrong inducing point vector size");
+
+    for (size_t i = 0; i < pimpl-> X.size(); ++i) {
+      //Check for too many inducing points
+      if (num_pi[i].n_rows >= pimpl-> X[i].n_rows)
+        throw length_error("Too many inducing points");
+      if (num_pi[i].size() == 0)
+        throw length_error("No inducing points assigned");
+    }
+    pimpl-> M = num_pi;
     pimpl-> state = FITC;
     return pimpl-> train_FITC(max_iter, tol);
   }
