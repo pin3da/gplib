@@ -13,7 +13,7 @@ namespace gplib {
     vector<vec> y;
     vector<mat> M;
     double sigma = 0.01;
-    size_t state;
+    size_t state = FULL;
 
     vec eval_mean(vector<mat> &data) {
       size_t total_size = 0;
@@ -318,6 +318,7 @@ namespace gplib {
       best.set_maxeval(max_iter);
       vector<double> lb = kernel-> get_lower_bounds();
       vector<double> ub = kernel-> get_upper_bounds();
+
       lb.resize(lb.size() + M_size, -HUGE_VAL);
       ub.resize(ub.size() + M_size, HUGE_VAL);
       lb.push_back(0.0);
@@ -359,19 +360,69 @@ namespace gplib {
     pimpl-> y = y;
   }
 
-  double gp_reg_multi::train(const int max_iter, const double tol,
-      const size_t type, void *param) {
-
+  double gp_reg_multi::train(const int max_iter, const double tol) {
     // TODO: add option to set different num_pi for each output.
-    pimpl-> state = type;
-    if (type == FITC) {
-      size_t num_pi = *((size_t *) param);
-      pimpl-> M = vector<mat> (pimpl-> X.size(),
-                  randi<mat>(num_pi, pimpl-> X[0].n_cols, distr_param(0, +50)));
+    return pimpl-> train(max_iter, tol);
+  }
 
-      return pimpl-> train_FITC(max_iter, tol);
-    } else
-      return pimpl-> train(max_iter, tol);
+  double gp_reg_multi::train(const int max_iter, const double tol,
+    const size_t num_pi){
+    //Initial check
+    if (pimpl-> X.size() == 0 || pimpl-> X[0].size() == 0)
+      throw logic_error("Parameters Uninitialized");
+
+    pimpl-> M = vector<mat>(pimpl-> X.size());
+    for (size_t i = 0; i < pimpl-> X.size(); ++i){
+      //Check for too many inducing points
+      if (num_pi > pimpl-> X[i].n_rows)
+        throw length_error("Too many inducing points");
+      //Initial matrix
+      pimpl-> M[i] = zeros<mat>(num_pi, pimpl-> X[i].n_cols);
+      //Fill matrix
+      for (size_t j = 0; j < pimpl-> X[i].n_cols; ++j){
+        double col_max = pimpl-> X[i].col(j).max();
+        double col_min = pimpl-> X[i].col(j).min();
+        double step = (col_max - col_min) / num_pi;
+        double cur = col_min;
+        for (size_t k = 0; k < num_pi; ++k){
+          pimpl-> M[i](k, j) = cur;
+          cur += step;
+        }
+      }
+    }
+    pimpl-> state = FITC;
+    return pimpl-> train_FITC(max_iter, tol);
+  }
+
+  double gp_reg_multi::train(const int max_iter, const double tol,
+    const vector<size_t> num_pi){
+    //Initial check
+    if (pimpl-> X.size() == 0 || pimpl-> X[0].size() == 0)
+      throw logic_error("Parameters Uninitialized");
+    if (num_pi.size() != pimpl-> X.size())
+      throw length_error("Wrong inducing point vector size");
+
+    pimpl-> M = vector<mat>(pimpl-> X.size());
+    for (size_t i = 0; i < pimpl-> X.size(); ++i){
+      //Check for too many inducing points
+      if (num_pi[i] >= pimpl-> X[i].n_rows)
+        throw length_error("Too many inducing points");
+      //Create initial matrix
+      pimpl-> M[i] = zeros<mat>(num_pi[i], pimpl-> X[i].n_cols);
+      //Fill matrix
+      for (size_t j = 0; j < pimpl-> X[i].n_cols; ++j){
+        double col_max = pimpl-> X[i].col(j).max();
+        double col_min = pimpl-> X[i].col(j).min();
+        double step = (col_max - col_min) / num_pi[i];
+        double cur = col_min;
+        for (size_t k = 0; k < num_pi[i]; ++k){
+          pimpl-> M[i](k, j) = cur;
+          cur += step;
+        }
+      }
+    }
+    pimpl-> state = FITC;
+    return pimpl-> train_FITC(max_iter, tol);
   }
 
   mv_gauss gp_reg_multi::full_predict(const vector<mat> &new_data) {

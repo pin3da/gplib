@@ -89,8 +89,12 @@ namespace gplib {
       gp_reg_multi();
       ~gp_reg_multi();
       void set_kernel(const std::shared_ptr<multioutput_kernel_class> &k);
-      void set_training_set(const std::vector<arma::mat> &X, const std::vector<arma::vec> &y);
-      double train(int max_iter, double tol, size_t type = 0, void *param = NULL);
+      void set_training_set(const std::vector<arma::mat> &X,
+        const std::vector<arma::vec> &y);
+      double train(const int max_iter, const double tol);
+      double train(const int max_iter, const double tol, const size_t num_pi);
+      double train(const int max_iter, const double tol,
+        const std::vector<size_t> num_pi);
       mv_gauss full_predict(const std::vector<arma::mat> &new_data);
       arma::vec predict(const std::vector<arma::mat> &new_data) const;
       std::vector<double> get_params() const;

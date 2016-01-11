@@ -70,7 +70,8 @@ BOOST_AUTO_TEST_CASE( gp_reg_multi_get_set ) {
   //Set training set as the generated Data (with noise)
   test_reg.set_training_set(X_set, y);
   size_t num_pi = 20;
-  test_reg.train(1, 1, gplib::gp_reg_multi::FITC, (void *) &num_pi);
+  vector<size_t> vec_pi(2, 20);
+  test_reg.train(1, 1, vec_pi);
 
   vector<double> test_params;
 
