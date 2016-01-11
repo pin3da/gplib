@@ -8,7 +8,7 @@ using namespace std;
 using namespace arma;
 using namespace gplib;
 
-const size_t MN = 1500,
+const size_t MN = 2000,
              noutputs = 1,
              l_functions = 1,
              num_pi = 30, // ceil(MN * 0.35),
@@ -64,8 +64,8 @@ int main(int argc, char **argv) {
 
   //Set training set as the generated Data (with noise)
   gp.set_training_set(X_set, y);
-  gp.train(num_iter, tol, gp_reg_multi::FITC, (void *) &num_pi);
-  //gp.train(num_iter, gp_reg_multi::FULL);
+  //gp.train(num_iter, tol, gp_reg_multi::FITC, (void *) &num_pi);
+  gp.train(num_iter, gp_reg_multi::FULL);
 
   //Take the posterior distribution for the new data
   mv_gauss posterior = gp.full_predict(new_X_set);
