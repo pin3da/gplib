@@ -10,13 +10,13 @@ before_install:
   - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
   # clang 3.5
   # - sudo add-apt-repository -y ppa:h-rayflood/llvm
-  - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu trusty main universe"
+  - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu xenial main universe"
   - sudo add-apt-repository -y "deb http://llvm.org/apt/precise/ llvm-toolchain-precise-3.5 main"
   - wget -O - http://llvm.org/apt/llvm-snapshot.gpg.key|sudo apt-key add -
   - sudo apt-get update -qq
 install:
   - sudo apt-get install -qq libyajl-dev libxml2-dev libxqilla-dev
-  - sudo apt-get install libarmadillo-dev libarmadillo5
+  - sudo apt-get install libarmadillo-dev libarmadillo6
   - sudo apt-get install libnlopt-dev libnlopt0
   - sudo apt-get install libboost-test-dev
   - if [ "$CXX" = "clang++" ]; then sudo apt-get install -qq clang-3.5; fi
