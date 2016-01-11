@@ -1,7 +1,6 @@
 #include "gplib.hpp"
 #include <nlopt.hpp>
 #include <ctime>
-#include <chrono>
 
 using namespace arma;
 using namespace std;
@@ -25,8 +24,6 @@ namespace gplib {
     }
 
     mv_gauss predict(const vector<mat> &new_data) {
-      chrono::high_resolution_clock::time_point t1 =
-        chrono::high_resolution_clock::now();
 
       //Add new data to observations
       vector<mat> M(X.size());
@@ -53,12 +50,6 @@ namespace gplib {
       }
       //Conditon Multivariate Gaussian
       mv_gauss gd(mean, cov);
-
-      chrono::high_resolution_clock::time_point t2 =
-        chrono::high_resolution_clock::now();
-      chrono::duration<double> time_span =
-        chrono::duration_cast<chrono::duration<double>>(t2 - t1);
-      cout << "Time for predict full: " << time_span.count() << endl;
       return gd.conditional(fill_y, observed);
     }
 
@@ -68,9 +59,6 @@ namespace gplib {
     }
 
     mv_gauss predict_FITC(const vector<mat> &new_x) {
-      chrono::high_resolution_clock::time_point t1 =
-        chrono::high_resolution_clock::now();
-
       mat Qn = comp_Q(X, X, M);
       mat Qm = comp_Q(new_x, new_x, M);
       mat Kff_diag = kernel-> eval(X, X, true);
@@ -87,11 +75,6 @@ namespace gplib {
       mat mean = Knu * E * Kuf * lambda * Y;
       mat cov = Knn - Qm + Knu * E * Kun;
 
-      chrono::high_resolution_clock::time_point t2 =
-        chrono::high_resolution_clock::now();
-      chrono::duration<double> time_span =
-        chrono::duration_cast<chrono::duration<double>>(t2 - t1);
-      cout << "Time for predict FITC: " << time_span.count() << endl;
       return mv_gauss(mean, cov);
     }
 
@@ -155,39 +138,18 @@ namespace gplib {
       implementation *pimpl = (implementation*) fdata;
       pimpl-> kernel-> set_params(theta);
 
-      chrono::high_resolution_clock::time_point t1 =
-        chrono::high_resolution_clock::now();
       double ans = pimpl-> log_marginal();
-      chrono::high_resolution_clock::time_point t2 =
-        chrono::high_resolution_clock::now();
 
-      chrono::duration<double> time_span =
-        chrono::duration_cast<chrono::duration<double>>(t2 - t1);
-      cout << "log_marginal_full " << time_span.count() << endl;
-
-
-      t1 = chrono::high_resolution_clock::now();
       vec mx = pimpl-> eval_mean(pimpl-> X);
       mat K = pimpl-> kernel-> eval(pimpl-> X, pimpl-> X);
       mat Kinv = K.i();
       vec diff = flatten(pimpl-> y);
       mat dLLdK = -0.5 * Kinv + 0.5 * Kinv * diff * diff.t() * Kinv;
 
-      t2 = chrono::high_resolution_clock::now();
-
-      time_span = chrono::duration_cast<chrono::duration<double>>(t2 - t1);
-      cout << "befor_grad " << time_span.count() << endl;
-
-
-      t1 = chrono::high_resolution_clock::now();
       for (size_t d = 0; d < grad.size(); d++) {
         mat dKdT = pimpl-> kernel-> derivate(d, pimpl-> X, pimpl-> X);
         grad[d] = trace(dLLdK * dKdT);
       }
-
-      t2 =  chrono::high_resolution_clock::now();
-      time_span = chrono::duration_cast<chrono::duration<double>>(t2 - t1);
-      cout << "total_grad " << time_span.count() << endl;
 
       cout << "ANS: " << ans << endl;
       return ans;
@@ -198,21 +160,12 @@ namespace gplib {
       implementation *pimpl = (implementation*) fdata;
       pimpl-> set_params(theta);
 
-      chrono::high_resolution_clock::time_point t1 =
-        chrono::high_resolution_clock::now();
       double ans = pimpl-> log_marginal_fitc();
-      chrono::high_resolution_clock::time_point t2 =
-        chrono::high_resolution_clock::now();
-      chrono::duration<double> time_span =
-        chrono::duration_cast<chrono::duration<double>>(t2 - t1);
-      cout << "log_marginal_fitc " << time_span.count() << endl;
-      double tot_time = time_span.count();
 
       mat flat_y = flatten (pimpl-> y);
       mat Qff = force_symmetric(
                 pimpl-> comp_Q (pimpl-> X, pimpl-> X, pimpl-> M));
 
-      t1 = chrono::high_resolution_clock::now();
       mat I = eye<mat> (Qff.n_rows, Qff.n_cols);
       mat Kff_diag = pimpl-> kernel-> eval(pimpl-> X, pimpl-> X, true);
       mat lambda = Kff_diag - diagmat (Qff) + pimpl-> sigma * I;
@@ -224,18 +177,11 @@ namespace gplib {
       mat KuuiKuf = Kuui * Kuf;
       mat Kfu = pimpl-> kernel-> eval(pimpl-> X, pimpl-> M);
       mat KfuKuui = Kfu * Kuui;
-      t2 = chrono::high_resolution_clock::now();
-      time_span = chrono::duration_cast<chrono::duration<double>>(t2 - t1);
-      cout << "befor_grad " << time_span.count() << endl;
-      tot_time += time_span.count();
 
       const vector<double> &lb = pimpl-> kernel-> get_lower_bounds();
       const vector<double> &ub = pimpl-> kernel-> get_upper_bounds();
 
-      t1 = chrono::high_resolution_clock::now();
       for (size_t d = 0; d < grad.size(); d++) {
-        chrono::high_resolution_clock::time_point t3 =
-          chrono::high_resolution_clock::now();
         if (d < lb.size() && ub[d] <= lb[d]) {
            grad[d] = 0;
            continue;
@@ -267,16 +213,7 @@ namespace gplib {
           // TODO: check this.
           grad[d] *= 2;
         }
-        chrono::high_resolution_clock::time_point t4 =
-          chrono::high_resolution_clock::now();
-        time_span = chrono::duration_cast<chrono::duration<double>>(t4 - t3);
-        // cout << "grad_" << d << " " << time_span.count() << endl;
       }
-      t2 = chrono::high_resolution_clock::now();
-      time_span = chrono::duration_cast<chrono::duration<double>>(t2 - t1);
-      cout << "total_grad " << time_span.count() << endl;
-      tot_time += time_span.count();
-      cout << "total_iter " << tot_time << endl;
       /*
       vector<double> grad2(grad.size());
       vector<double> params = theta;
