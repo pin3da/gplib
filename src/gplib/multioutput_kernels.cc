@@ -25,7 +25,7 @@ namespace gplib{
         B = vector<mat>(kernels.size(), eye<mat>(n_outputs, n_outputs));
       }
 
-      mat eval(const vector<mat> &X, const vector<mat> &Y) {
+      mat eval(const vector<mat> &X, const vector<mat> &Y, bool diag = false) {
         size_t total_rows = 0, total_cols = 0;
         for (size_t i = 0; i < X.size(); ++i) {
           total_rows += X[i].n_rows;
@@ -35,28 +35,244 @@ namespace gplib{
         }
 
         //Compute cov mat
-        mat cov(total_rows, total_cols);
-        size_t first_row = 0, first_col = 0;
-        for (size_t i = 0; i < X.size(); i++) {
-          for (size_t j = 0; j < Y.size(); j++) {
-            mat cov_ab = zeros<mat> (X[i].n_rows, Y[j].n_rows);
+        mat cov;
+        if (diag) {
+          cov = zeros<mat>(total_rows, total_cols);
+          size_t first_row = 0, first_col = 0;
+          for (size_t i = 0; i < X.size(); i++) {
+            mat cov_ab = zeros<mat> (X[i].n_rows, Y[i].n_rows);
             for (size_t k = 0; k < B.size(); k++) {
-              cov_ab += B[k](i, j) * (kernels[k]-> eval(X[i], Y[j]));
+              cov_ab += B[k](i, i) * (kernels[k]-> eval(X[i], Y[i], diag));
             }
-
             cov.submat (first_row, first_col, first_row + X[i].n_rows - 1,
-                first_col + Y[j].n_rows - 1) = cov_ab;
-
-            first_col += Y[j].n_rows;
+                first_col + Y[i].n_rows - 1) = cov_ab;
+            first_col += Y[i].n_rows;
+            first_row += X[i].n_rows;
           }
-          first_row += X[i].n_rows;
-          first_col = 0;
+          cov = cov;
+        } else {
+          cov.resize(total_rows, total_cols);
+          size_t first_row = 0, first_col = 0;
+          for (size_t i = 0; i < X.size(); i++) {
+            for (size_t j = 0; j < Y.size(); j++) {
+              mat cov_ab = zeros<mat> (X[i].n_rows, Y[j].n_rows);
+              for (size_t k = 0; k < B.size(); k++) {
+                cov_ab += B[k](i, j) * (kernels[k]-> eval(X[i], Y[j]));
+              }
+
+              cov.submat (first_row, first_col, first_row + X[i].n_rows - 1,
+                  first_col + Y[j].n_rows - 1) = cov_ab;
+
+              first_col += Y[j].n_rows;
+            }
+            first_row += X[i].n_rows;
+            first_col = 0;
+          }
         }
         return cov;
       }
 
+      mat derivate_wrt_data_an(size_t param_id, const vector<mat> &X, const
+        vector<mat> &Y, size_t ans_rows, size_t ans_cols,
+        bool diag = false) {
 
-      mat derivate(size_t param_id, const vector<mat> &X, const vector<mat> &Y) {
+        //Put together a vector of sizes
+        vector<size_t> x_sizes (X.size());
+        vector<size_t> y_sizes (Y.size());
+        for (size_t i = 0; i < X.size(); ++i)
+          x_sizes[i] = X[i].size();
+        for (size_t i = 0; i < Y.size(); ++i)
+          y_sizes[i] = Y[i].size();
+
+
+        //Set which size should be used to locate the pseudo-input
+        vector<size_t> &U = (X[0].size() < Y[0].size()) ? x_sizes : y_sizes;
+        bool u = X[0].size() < Y[0].size();
+
+        //Find which matrix contains the pseudo-input of those in the vector
+        size_t which_u;
+        for (which_u = 0; which_u < U.size(); ++which_u) {
+          if (param_id < U[which_u])
+            break;
+          param_id -= U[which_u];
+        }
+
+        //Compute cov mat
+        mat cov = zeros<mat> (ans_rows, ans_cols);
+        size_t first_row = 0, first_col = 0;
+        if (diag) {
+          for (size_t i = 0; i < X.size(); i++) {
+            //Only compute the entries which aren't 0
+            if (i == which_u) {
+              mat cov_ab = zeros<mat> (X[i].n_rows, Y[i].n_rows);
+              for (size_t k = 0; k < B.size(); k++) {
+                cov_ab += B[k](i, i) * (kernels[k]-> derivate(param_id +
+                          kernels[k]-> n_params(), X[i], Y[i], diag));
+              }
+              cov.submat (first_row, first_col, first_row + X[i].n_rows - 1,
+                first_col + Y[i].n_rows - 1) = cov_ab;
+            }
+
+            first_col += Y[i].n_rows;
+            first_row += X[i].n_rows;
+          }
+        } else {
+          for (size_t i = 0; i < X.size(); i++) {
+            for (size_t j = 0; j < Y.size(); j++) {
+              //Only compute the entries which aren't 0
+              if ((u && i == which_u) || (!u && j == which_u)) {
+                mat cov_ab = zeros<mat> (X[i].n_rows, Y[j].n_rows);
+                for (size_t k = 0; k < B.size(); k++) {
+                  cov_ab += B[k](i, j) * (kernels[k]-> derivate(param_id +
+                            kernels[k]-> n_params(), X[i], Y[j], diag));
+                }
+                cov.submat (first_row, first_col, first_row + X[i].n_rows - 1,
+                  first_col + Y[j].n_rows - 1) = cov_ab;
+              }
+              first_col += Y[j].n_rows;
+            }
+            first_row += X[i].n_rows;
+            first_col = 0;
+          }
+        }
+        return cov;
+      }
+
+      mat derivate_wrt_data_num(size_t param_id, const vector<mat> &X,
+        const vector<mat> &Y, size_t ans_rows, size_t ans_cols,
+        bool diag = false){
+
+        //Puut together a vector of sizes
+        vector<size_t> x_sizes (X.size());
+        vector<size_t> y_sizes (Y.size());
+        for (size_t i = 0; i < X.size(); ++i)
+          x_sizes[i] = X[i].size();
+        for (size_t i = 0; i < Y.size(); ++i)
+          y_sizes[i] = Y[i].size();
+
+        //Set which size should be used to locate the pseudo-input
+        vector<size_t> &U = (X[0].size() < Y[0].size()) ? x_sizes : y_sizes;
+        bool u = X[0].size() < Y[0].size();
+
+        //Find which matrix contains the pseudo-input of those in the vector
+        size_t which_u;
+        for (which_u = 0; which_u < U.size(); ++which_u) {
+          if (param_id < U[which_u])
+            break;
+          param_id -= U[which_u];
+        }
+
+        size_t row, col;
+        mat ans = zeros<mat>(ans_rows, ans_cols);
+        vector<mat> tmp;
+        double eps = 1e-5;
+        if (u){
+          tmp = X;
+          row = param_id / tmp[which_u].n_cols;
+          col = param_id % tmp[which_u].n_cols;
+          tmp[which_u](row, col) += eps;
+          ans = eval(tmp, Y);
+          tmp[which_u](row, col) -= 2 * eps;
+          ans -= eval(tmp, Y);
+          ans = ans / (2 * eps);
+        } else{
+          tmp = Y;
+          row = param_id / tmp[which_u].n_cols;
+          col = param_id % tmp[which_u].n_cols;
+          tmp[which_u](row, col) += eps;
+          ans = eval(X, tmp);
+          tmp[which_u](row, col) -= 2 * eps;
+          ans -= eval(X, tmp);
+          ans = ans / (2 * eps);
+        }
+        if (X[0].size() == Y[0].size()) ans += ans.t();
+        if (diag) return diagmat(ans);
+        return ans;
+
+      }
+
+      mat derivative_wrt_B(size_t q, size_t param_id, const vector<mat> &X,
+        const vector<mat> &Y, size_t ans_rows, size_t ans_cols,
+        bool diag = false){
+
+        mat ans = zeros<mat>(ans_rows, ans_cols);
+        size_t id_out_1 = param_id / B[q].n_rows;
+        size_t id_out_2 = param_id % B[q].n_rows;
+        size_t first_row = 0, first_col = 0;
+        if (diag){
+          for (size_t i = 0; i < X.size(); i++) {
+            mat ans_ab = zeros<mat> (X[i].n_rows, Y[i].n_rows);
+            if (i == id_out_1) {
+              ans_ab = A[q](id_out_1, id_out_2) *
+                       (kernels[q]-> eval(X[i], Y[i], diag));
+            }
+            if (i * X.size() + i == param_id){
+              ans.submat (first_row, first_col, first_row + X[i].n_rows - 1,
+                  first_col + Y[i].n_rows - 1) = ans_ab;
+            }
+            first_col += Y[i].n_rows;
+            first_row += X[i].n_rows;
+          }
+        } else {
+          for (size_t i = 0; i < X.size(); i++) {
+            for (size_t j = 0; j < Y.size(); j++) {
+              mat ans_ab = zeros<mat> (X[i].n_rows, Y[j].n_rows);
+              if (i == id_out_1 && j == id_out_1) {
+                ans_ab = A[q](id_out_1, id_out_2) *
+                         (kernels[q]-> eval(X[i], Y[j]));
+              }
+              else if (j == id_out_1) {
+                ans_ab = A[q](i, id_out_2) * (kernels[q]-> eval(X[i], Y[j]));
+              } else if (i == id_out_1) {
+                ans_ab = A[q](j, id_out_2) * (kernels[q]-> eval(X[i], Y[j]));
+              }
+              if (i * X.size() + j == param_id){
+                ans.submat (first_row, first_col, first_row + X[i].n_rows - 1,
+                    first_col + Y[j].n_rows - 1) = ans_ab;
+              }
+              first_col += Y[j].n_rows;
+            }
+            first_row += X[i].n_rows;
+            first_col = 0;
+          }
+        }
+        return ans;
+      }
+
+      mat derivative_wrt_kernels(size_t q, size_t param_id, const vector<mat>
+        &X, const vector<mat> &Y, size_t ans_rows, size_t ans_cols,
+        bool diag = false){
+        mat ans = zeros<mat>(ans_rows, ans_cols);
+        size_t first_row = 0, first_col = 0;
+        if (diag) {
+          for (size_t i = 0; i < X.size(); i++) {
+            mat ans_ab = B[q](i, i) *
+              kernels[q]-> derivate(param_id, X[i], Y[i], diag);
+            ans.submat (first_row, first_col, first_row + X[i].n_rows - 1,
+                first_col + Y[i].n_rows - 1) = ans_ab;
+            first_row += X[i].n_rows;
+            first_col += Y[i].n_rows;
+          }
+        } else {
+          for (size_t i = 0; i < X.size(); i++) {
+            for (size_t j = 0; j < Y.size(); j++) {
+              if ((diag && i == j) || !diag){
+                mat ans_ab = B[q](i, j) *
+                  kernels[q]-> derivate(param_id, X[i], Y[j], diag);
+                ans.submat (first_row, first_col, first_row + X[i].n_rows - 1,
+                    first_col + Y[j].n_rows - 1) = ans_ab;
+              }
+              first_col += Y[j].n_rows;
+            }
+            first_row += X[i].n_rows;
+            first_col = 0;
+          }
+        }
+        return ans;
+      }
+
+      mat derivate(size_t param_id, const vector<mat> &X, const vector<mat> &Y,
+        bool diag) {
 
         size_t tot_rows = 0, tot_cols = 0;
         for (size_t i = 0; i < X.size(); ++i)
@@ -65,60 +281,26 @@ namespace gplib{
         for (size_t i = 0; i < Y.size(); ++i)
           tot_cols += Y[i].n_rows;
 
-        mat ans = zeros(tot_rows, tot_cols);
         for (size_t q = 0; q < B.size(); ++q) { // current latent fuction.
-          if (param_id < B[q].size()) {
-            size_t id_out_1 = param_id / B[q].n_rows;
-            size_t id_out_2 = param_id % B[q].n_rows;
-            size_t first_row = 0, first_col = 0;
-            for (size_t i = 0; i < X.size(); i++) {
-              for (size_t j = 0; j < Y.size(); j++) {
-                mat ans_ab = zeros<mat> (X[i].n_rows, Y[j].n_rows);
-                if (i == id_out_1 && j == id_out_1) {
-                  ans_ab = A[q](id_out_1, id_out_2) * (kernels[q]-> eval(X[i], X[j]));
-                }
-                else if (j == id_out_1) {
-                  ans_ab = A[q](i, id_out_2) * (kernels[q]-> eval(X[i], Y[j]));
-                } else if (i == id_out_1) {
-                  ans_ab = A[q](j, id_out_2) * (kernels[q]-> eval(X[i], Y[j]));
-                }
-                if (i * X.size() + j == param_id)
-                  ans.submat (first_row, first_col, first_row + X[i].n_rows - 1,
-                      first_col + X[j].n_rows - 1) = ans_ab;
-                first_col += X[j].n_rows;
-              }
-              first_row += X[i].n_rows;
-              first_col = 0;
-            }
-            return ans;
-          }
+          if (param_id < B[q].size())
+            return derivative_wrt_B(q, param_id, X, Y, tot_rows, tot_cols,
+            diag);
           param_id -= B[q].size();
         }
 
         // from here they must be params of each little kernel.
         for (size_t q = 0; q < kernels.size(); ++q) {
-          if (param_id < kernels[q]-> n_params()) {
-            size_t first_row = 0, first_col = 0;
-            for (size_t i = 0; i < X.size(); i++) {
-              for (size_t j = 0; j < Y.size(); j++) {
-                mat ans_ab = B[q](i, j) * kernels[q]-> derivate(param_id, X[i], Y[j]);
-
-                ans.submat (first_row, first_col, first_row + X[i].n_rows - 1,
-                    first_col + X[j].n_rows - 1) = ans_ab;
-
-                first_col += X[j].n_rows;
-              }
-              first_row += X[i].n_rows;
-              first_col = 0;
-            }
-            return ans;
-
-            //  ans must be equals to kron(B[q], kernels[q]-> derivate(param_id, X, Y));
-          }
+          if (param_id < kernels[q]-> n_params())
+            return derivative_wrt_kernels(q, param_id, X, Y, tot_rows, tot_cols,
+            diag);
+            //  ans must be equal to
+            //  kron(B[q], kernels[q]-> derivate(param_id, X, Y));
           param_id -= kernels[q]-> n_params();
         }
-        return ans;
+
+        return derivate_wrt_data_an(param_id, X, Y, tot_rows, tot_cols, diag);
       }
+
 
       vector<double> get_params() {
         //set total size of vector
@@ -132,9 +314,12 @@ namespace gplib{
         vector<double> ans(t_size);
         size_t iter = 0;
         for (size_t q = 0; q < A.size(); ++q) {
-          copy (A[q].begin(), A[q].end(), ans.begin() + iter);
-          iter += A[q].size();
-
+          for (size_t i = 0; i < A[q].n_rows; ++i) {
+            for (size_t j = 0; j < A[q].n_cols; ++j) {
+              ans[iter] = A[q](i, j);
+              iter++;
+            }
+          }
         }
 
         vector<double> tmp;
@@ -146,8 +331,8 @@ namespace gplib{
         return ans;
       }
 
-      void set_params(const vector<double> &params, int n_outputs = -1) {
-        if (n_outputs == -1){
+      void set_params(const vector<double> &params, size_t n_outputs = 0) {
+        if (n_outputs <= 0){
           if (A.size() > 0 && A[0].size() > 0)
             n_outputs = A[0].n_cols;
           else
@@ -157,28 +342,33 @@ namespace gplib{
         for (size_t k = 0; k < kernels.size(); ++k)
           t_size += kernels[k]-> n_params();
 
-        if(t_size != params.size()){
+        if (t_size != params.size()) {
           throw length_error("Wrong parameter vector size");
         }
         size_t iter = 0;
         for (size_t q = 0; q < A.size(); ++q) {
           if (A[q].size() <= 0)
             A[q] = mat(n_outputs, n_outputs, fill::zeros);
-          for (size_t i = 0; i < A[0].n_rows; ++i) {
-            for (size_t j = 0; j < A[0].n_cols; ++j) {
+          for (size_t i = 0; i < A[q].n_rows; ++i) {
+            for (size_t j = 0; j < A[q].n_cols; ++j) {
+              A[q](i, j) = params[iter];
               if (j > i && fabs(params[iter]) > datum::eps) {
                 throw logic_error("Params matrix must be lower triangular");
               }
-              A[q](i, j) = params[iter];
               ++iter;
             }
           }
           B[q] = A[q] * A[q].t();
+          if (!check_symmetric(B[q]))
+            cout << "Matrix B is not symmetric :(" << endl;
         }
+
         for (size_t k = 0; k < kernels.size(); ++k) {
-          vector<double> subparams(params.begin() + iter, params.begin() + iter + kernels[k]-> n_params());
+          vector<double> subparams(params.begin() + iter,
+              params.begin() + iter + kernels[k]-> n_params());
+
           kernels[k]->set_params(subparams);
-          iter += (kernels[k]-> n_params() + 1);
+          iter += (kernels[k]-> n_params());
         }
       }
 
@@ -261,6 +451,14 @@ namespace gplib{
         upper_bounds = upper_bound;
       }
 
+      size_t in_kernel_np() {
+        size_t ans = 0;
+        for (size_t k = 0; k < kernels.size(); ++k) {
+          ans += kernels[k]-> n_params();
+        }
+        return ans;
+      }
+
       void set_lower_bounds(const double &l_bound) {
         vector<double> lower_bound(n_params(), l_bound);
         size_t iter = 0;
@@ -312,12 +510,14 @@ namespace gplib{
       delete pimpl;
     }
 
-    mat lmc_kernel::eval(const vector<mat> &X, const vector<mat> &Y) const {
-      return pimpl-> eval(X, Y);
+    mat lmc_kernel::eval(const vector<mat> &X, const vector<mat> &Y,
+        bool diag) const {
+      return pimpl-> eval(X, Y, diag);
     }
 
-    mat lmc_kernel::derivate(size_t param_id, const vector<mat> &X, const vector<mat> &Y) const {
-      return pimpl-> derivate(param_id, X, Y);
+    mat lmc_kernel::derivate(size_t param_id, const vector<mat> &X,
+      const vector<mat> &Y, bool diag) const {
+      return pimpl-> derivate(param_id, X, Y, diag);
     }
 
     size_t lmc_kernel::n_params() const {
