@@ -3,8 +3,8 @@ Times
 
 In this test we compared the performance of the library using two different methods.
 
-- The first method is the Full GP which have a theoretical complexity of O(N ^ 3), where N represents the number of inputs.
-- The second method is the FITC sparse approximation which have a theoretical complexity of O(N * K ^ 2), where N is the number of points and K is the number of "inducing points".
+- The first method is the Full GP which has a theoretical complexity of O(N ^ 3), where N represents the number of inputs.
+- The second method is the FITC sparse approximation which has a theoretical complexity of O(N * K ^ 2), where N is the number of points and K is the number of "inducing points".
 
 
 ### Single output GP
