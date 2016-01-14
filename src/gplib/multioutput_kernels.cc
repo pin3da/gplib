@@ -331,8 +331,8 @@ namespace gplib{
         return ans;
       }
 
-      void set_params(const vector<double> &params, int n_outputs = -1) {
-        if (n_outputs == -1) {
+      void set_params(const vector<double> &params, size_t n_outputs = 0) {
+        if (n_outputs <= 0){
           if (A.size() > 0 && A[0].size() > 0)
             n_outputs = A[0].n_cols;
           else

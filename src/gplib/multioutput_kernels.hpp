@@ -69,7 +69,7 @@ namespace gplib{
          *  @param n_outputs : Temporal.
          * */
         void set_params(const std::vector<double> &params,
-          size_t n_outputs = -1);
+          size_t n_outputs = 0);
         /* *
          *  @param q : Temporal.
          *  @param a : Temporal.
