@@ -19,8 +19,10 @@ Example in debian-based distributions
     $apt_pref install libarmadillo-dev g++ libboost-test-dev libnlopt-dev
 
 
-Note: Install Armadillo from the source code, for a more updated
-version. [link](http://arma.sourceforge.net/download.html)
+Notes:
+- Install Armadillo from the source code, for a more updated version. [link](http://arma.sourceforge.net/download.html)
+- If you install nlopt from the source code remember to set the [enable\_shared flag.](http://ab-initio.mit.edu/wiki/index.php/NLopt_Installation#Shared_libraries)
+
 
 Installation
 ------------
