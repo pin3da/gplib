@@ -24,7 +24,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">gplib
-   &#160;<span id="projectnumber">0.0.1</span>
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
    <div id="projectbrief">C++ Gaussian Process Library</div>
   </td>
@@ -95,13 +95,25 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a href="gplib_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef GPLIB_H</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#define GPLIB_H</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;</div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="mvgauss_8hpp.html">mvgauss.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="basic_8hpp.html">basic.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="gp_8hpp.html">gp.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="kernels_8hpp.html">kernels.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="multioutput__kernels_8hpp.html">multioutput_kernels.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;</div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">/*  Version macros for compile-time API version detection                     */</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno"><a class="line" href="gplib_8hpp.html#a7f16449f492001fd16747f85f8ab9edf">    6</a></span>&#160;<span class="preprocessor">#define GPLIB_VERSION_MAJOR 1</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno"><a class="line" href="gplib_8hpp.html#af8645d2647a959541f36911104708c9c">    7</a></span>&#160;<span class="preprocessor">#define GPLIB_VERSION_MINOR 0</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno"><a class="line" href="gplib_8hpp.html#a4de38d90fb7acf238dc8bcd8a4fd912c">    8</a></span>&#160;<span class="preprocessor">#define GPLIB_VERSION_PATCH 0</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="gplib_8hpp.html#af2b4110411b23f03bc5072e7a3630e3f">   10</a></span>&#160;<span class="preprocessor">#define GPLIB_MAKE_VERSION(major, minor, patch) \</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">    ((major) * 10000 + (minor) * 100 + (patch))</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;</div>
+<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="gplib_8hpp.html#a6c7e4d915922b5d4f8b9a9899f546e28">   13</a></span>&#160;<span class="preprocessor">#define GPLIB_VERSION \</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">    GPLIB_MAKE_VERSION(GPLIB_VERSION_MAJOR, GPLIB_VERSION_MINOR, GPLIB_VERSION_PATCH)</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="mvgauss_8hpp.html">mvgauss.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="basic_8hpp.html">basic.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="gp_8hpp.html">gp.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="kernels_8hpp.html">kernels.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="multioutput__kernels_8hpp.html">multioutput_kernels.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="gp_8hpp_html"><div class="ttname"><a href="gp_8hpp.html">gp.hpp</a></div></div>
 <div class="ttc" id="mvgauss_8hpp_html"><div class="ttname"><a href="mvgauss_8hpp.html">mvgauss.hpp</a></div></div>
 <div class="ttc" id="multioutput__kernels_8hpp_html"><div class="ttname"><a href="multioutput__kernels_8hpp.html">multioutput_kernels.hpp</a></div></div>
@@ -110,7 +122,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Oct 6 2015 22:39:30 for gplib by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jan 18 2016 10:10:04 for gplib by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

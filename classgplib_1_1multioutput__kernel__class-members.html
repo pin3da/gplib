@@ -24,7 +24,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">gplib
-   &#160;<span id="projectnumber">0.0.1</span>
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
    <div id="projectbrief">C++ Gaussian Process Library</div>
   </td>
@@ -97,8 +97,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>This is the complete list of members for <a class="el" href="classgplib_1_1multioutput__kernel__class.html">gplib::multioutput_kernel_class</a>, including all inherited members.</p>
 <table class="directory">
-  <tr class="even"><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernel__class.html#a52e7e7c35b02811cb1ad520a5640ac38">derivate</a>(size_t param_id, const std::vector&lt; arma::mat &gt; &amp;X, const std::vector&lt; arma::mat &gt; &amp;Y) const =0</td><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernel__class.html">gplib::multioutput_kernel_class</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernel__class.html#a01f21cd5b6c7825b8a742a654554291d">eval</a>(const std::vector&lt; arma::mat &gt; &amp;X, const std::vector&lt; arma::mat &gt; &amp;Y) const =0</td><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernel__class.html">gplib::multioutput_kernel_class</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernel__class.html#a59eb5f11c8bc7a06a7296a31b1e706d8">derivate</a>(size_t param_id, const std::vector&lt; arma::mat &gt; &amp;X, const std::vector&lt; arma::mat &gt; &amp;Y, bool diag=false) const =0</td><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernel__class.html">gplib::multioutput_kernel_class</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernel__class.html#a05cb965e58d3224d02f4a2ee901ae493">eval</a>(const std::vector&lt; arma::mat &gt; &amp;X, const std::vector&lt; arma::mat &gt; &amp;Y, bool diag=false) const =0</td><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernel__class.html">gplib::multioutput_kernel_class</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernel__class.html#af38c3105197b6ab21fcb5ab91c6cf4b4">get_kernels</a>() const =0</td><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernel__class.html">gplib::multioutput_kernel_class</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
   <tr><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernel__class.html#af0598acedeb09e5df39f716820e3c34a">get_lower_bounds</a>() const =0</td><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernel__class.html">gplib::multioutput_kernel_class</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernel__class.html#a80a45d9df82f5ad8cc455e8d21b48444">get_params</a>() const =0</td><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernel__class.html">gplib::multioutput_kernel_class</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
@@ -110,7 +110,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <tr class="even"><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernel__class.html#a5c3c5db90a9f815621a7491544ecb6c6">set_kernels</a>(const std::vector&lt; std::shared_ptr&lt; kernel_class &gt;&gt; &amp;kernels)=0</td><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernel__class.html">gplib::multioutput_kernel_class</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
   <tr><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernel__class.html#adec0209151fef0fca5c586bafe2fdd74">set_lower_bounds</a>(const double &amp;lower_bounds)=0</td><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernel__class.html">gplib::multioutput_kernel_class</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernel__class.html#ab212a6701e1b5c5fb893e084fd52e150">set_lower_bounds</a>(const std::vector&lt; double &gt; &amp;lower_bounds)=0</td><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernel__class.html">gplib::multioutput_kernel_class</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernel__class.html#aaf751130e60a85073e2d94ddb10fcc50">set_params</a>(const std::vector&lt; double &gt; &amp;params, size_t n_outputs=-1)=0</td><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernel__class.html">gplib::multioutput_kernel_class</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernel__class.html#a3b95dd9de71934ca4088cf60c373e546">set_params</a>(const std::vector&lt; double &gt; &amp;params, size_t n_outputs=0)=0</td><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernel__class.html">gplib::multioutput_kernel_class</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernel__class.html#ae728e87a470e61e19cf88f285ee849ab">set_params_k</a>(const std::vector&lt; arma::mat &gt; &amp;params)=0</td><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernel__class.html">gplib::multioutput_kernel_class</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
   <tr><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernel__class.html#a8a4db2e3fef46974afcd95f43d90fe75">set_upper_bounds</a>(const double &amp;upper_bounds)=0</td><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernel__class.html">gplib::multioutput_kernel_class</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernel__class.html#a693f6db5e0b77c05d49e273b5f87450a">set_upper_bounds</a>(const std::vector&lt; double &gt; &amp;params)=0</td><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernel__class.html">gplib::multioutput_kernel_class</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
@@ -118,7 +118,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </table></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Oct 6 2015 22:39:30 for gplib by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jan 18 2016 10:10:04 for gplib by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

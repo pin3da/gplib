@@ -24,7 +24,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">gplib
-   &#160;<span id="projectnumber">0.0.1</span>
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
    <div id="projectbrief">C++ Gaussian Process Library</div>
   </td>
@@ -82,12 +82,51 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">gplib Documentation</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h2>gplib </h2>
-<p>One more test </p>
+<div class="textblock"><h1>gplib </h1>
+<p>Build status : <a href="https://travis-ci.org/pin3da/gplib">![Build Status](https://travis-ci.org/pin3da/gplib.svg?branch=master)</a></p>
+<p>C++ Gaussian Process Library</p>
+<h2>Requirements/Dependencies </h2>
+<ul>
+<li><a href="http://arma.sourceforge.net/">Armadillo</a>.</li>
+<li>C++11 compliant compiler. (g++ &gt;= 4.7, clang++ &gt;= 3.5).</li>
+<li>(Optinal, only for test) <a href="http://www.boost.org/doc/libs/1_57_0/libs/test/doc/html/index.html">Boost test suites</a>.</li>
+<li><a href="http://ab-initio.mit.edu/wiki/index.php/NLopt">NLOpt Optimization library</a>.</li>
+</ul>
+<p>Example in debian-based distributions </p><pre class="fragment">$apt_pref update
+$apt_pref install libarmadillo-dev g++ libboost-test-dev libnlopt-dev
+</pre><p>Notes:</p><ul>
+<li>Install Armadillo from the source code, for a more updated version. <a href="http://arma.sourceforge.net/download.html">link</a></li>
+<li>If you install nlopt from the source code remember to set the <a href="http://ab-initio.mit.edu/wiki/index.php/NLopt_Installation#Shared_libraries">enable flag.</a></li>
+</ul>
+<h2>Installation </h2>
+<p>Installation can be done by the standard make &amp;&amp; make install. If the boost unittest framework is install check and installcheck can be run for sanity checking. </p><pre class="fragment">git clone https://github.com/pin3da/gplib.git
+cd gplib
+make
+make check
+make install
+make installcheck
+</pre><p>The most commonly useful overrides are setting CXX, to change the compiler used, and PREFIX to change install location. The CXX prefix should be used on all targets as the compiler version is used in the build path. PREFIX is only relevant for the install target.</p>
+<p>Example compiling with clang++ </p><pre class="fragment">export CXX=clang++
+make
+make check
+</pre><h1>Contributing </h1>
+<p>Contribution to this library is welcome and it is suggested using pull requests in github that will then be reviewed and merged or commented on. A more specific contribution guideline is outlined on the <a href="http://zeromq.org/docs:contributing">zmq site</a></p>
+<p>Please feel free to add yourself to the <a href="https://github.com/pin3da/gplib/blob/master/AUTHORS">AUTHORS</a> file in an alphanumerically sorted way before you raise the pull request.</p>
+<h1>Documentation </h1>
+<p>Most of the code is now commented with doxygen style tags, and a basic configuration file to generate them is in the root directory.</p>
+<p>To build the documentation with doxygen use </p><pre class="fragment">doxygen
+</pre><p>And the resulting html or latex docs will be in the docs/html or docs/latex directories.</p>
+<p>An online version of this documentation is brought to you by <a href="http://pin3da.github.io/gplib/">gh-pages</a></p>
+<p><em>Disclaimer : The online documentation may be outdated</em></p>
+<h1>Licensing </h1>
+<p>The library is released under the MPLv2 license.</p>
+<p>Please see LICENSE for full details.</p>
+<hr/>
+<p>Developed by In-silico. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Oct 6 2015 22:39:30 for gplib by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jan 18 2016 10:10:04 for gplib by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

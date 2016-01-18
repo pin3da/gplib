@@ -24,7 +24,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">gplib
-   &#160;<span id="projectnumber">0.0.1</span>
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
    <div id="projectbrief">C++ Gaussian Process Library</div>
   </td>
@@ -105,33 +105,52 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;  <span class="comment">//definition of basic constants</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno"><a class="line" href="namespacegplib.html#a9a740284e96deb2a4115aea9d87d78c8">   12</a></span>&#160;  <span class="keyword">const</span> <span class="keywordtype">double</span> <a class="code" href="namespacegplib.html#a9a740284e96deb2a4115aea9d87d78c8">pi</a> = std::acos(-1);</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;  arma::mat <a class="code" href="namespacegplib.html#ad97e99cdb90814a49837247f192ed4ba">upper_triangular_inverse</a>(<span class="keyword">const</span> arma::mat&amp; upper_t);</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;  arma::mat <a class="code" href="namespacegplib.html#ad97e99cdb90814a49837247f192ed4ba">upper_triangular_inverse</a>(<span class="keyword">const</span> arma::mat &amp;upper_t);</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;  <span class="comment">/* Takes a vector of real values and a boolean vector telling which dimensions are observed</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment">   * and returns a new vector with the observed dimensions only.</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">   */</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;  arma::vec <a class="code" href="namespacegplib.html#ac569dad2e8231426f5e0ae3194a7166e">get_observed_only</a>(<span class="keyword">const</span> arma::vec&amp; vec, <span class="keyword">const</span> std::vector&lt;bool&gt;&amp; observed);</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;  <span class="comment">/*</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">   * Splits the indices (Zero indexed) on the ones where the pradicate is true and the part it is false</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment">   */</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="namespacegplib.html#a387d3404f74d7c7f6e2c684f208de393">split_indices</a>(<span class="keyword">const</span> std::vector&lt;bool&gt; &amp;predicates, std::vector&lt;arma::uword&gt; &amp;true_part, std::vector&lt;arma::uword&gt; &amp;false_part);</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;  <span class="comment">/* Return true if all the values in the boolean vector are true. */</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="namespacegplib.html#a9bedfff719e1a3c7da93d4f5cc67482a">all_true</a>(<span class="keyword">const</span> std::vector&lt;bool&gt;&amp; vec);</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;};</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;  arma::vec <a class="code" href="namespacegplib.html#ae433213371a3197939bf1a42a1472292">get_observed_only</a>(<span class="keyword">const</span> arma::vec &amp;vec,</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;                              <span class="keyword">const</span> std::vector&lt;bool&gt; &amp;observed);</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="namespacegplib.html#a2b8f2cb03294e6816f258a5c4abb436e">split_indices</a>(<span class="keyword">const</span> std::vector&lt;bool&gt; &amp;predicates,</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;                     std::vector&lt;arma::uword&gt; &amp;true_part,</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;                     std::vector&lt;arma::uword&gt; &amp;false_part);</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="namespacegplib.html#aeb6a5659329337d458b1906c5b4cfea8">all_true</a>(<span class="keyword">const</span> std::vector&lt;bool&gt; &amp;vec);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="namespacegplib.html#a0db0cce1b44b97a1df129491113e5800">check_symmetric</a>(<span class="keyword">const</span> arma::mat &amp;A);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;  arma::mat <a class="code" href="namespacegplib.html#a7969a6341804c2b25178917bb2607140">force_symmetric</a>(<span class="keyword">const</span> arma::mat &amp;A);</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;  arma::mat <a class="code" href="namespacegplib.html#a727f4318e0ed17c24db68f2b268d00db">force_diag</a>(<span class="keyword">const</span> arma::mat &amp;A);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  arma::mat <a class="code" href="namespacegplib.html#a507bc0d0252a2bc01ed7d7f2476c811d">flatten</a>(std::vector&lt;arma::vec&gt; &amp;y);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  std::vector&lt;double&gt; <a class="code" href="namespacegplib.html#a507bc0d0252a2bc01ed7d7f2476c811d">flatten</a>(std::vector&lt;arma::mat&gt; &amp;M);</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;  std::vector&lt;arma::mat&gt; <a class="code" href="namespacegplib.html#a045438d7ce3c9d7b6470ac8c83ff83ab">unflatten</a>(std::vector&lt;double&gt; &amp;M_params,</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;                                   std::vector&lt;arma::mat&gt; &amp;M);</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="namespacegplib.html#a678fea9f94bbf5bb5eea5c3c57fae24e">split</a>(<span class="keyword">const</span> std::vector&lt;double&gt; &amp;theta, std::vector&lt;double&gt; &amp;kernel_params,</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;      std::vector&lt;double&gt; &amp;M_params);</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;};</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="namespacegplib_html_a0db0cce1b44b97a1df129491113e5800"><div class="ttname"><a href="namespacegplib.html#a0db0cce1b44b97a1df129491113e5800">gplib::check_symmetric</a></div><div class="ttdeci">bool check_symmetric(const mat &amp;A)</div><div class="ttdef"><b>Definition:</b> basic.cc:52</div></div>
+<div class="ttc" id="namespacegplib_html_ae433213371a3197939bf1a42a1472292"><div class="ttname"><a href="namespacegplib.html#ae433213371a3197939bf1a42a1472292">gplib::get_observed_only</a></div><div class="ttdeci">arma::vec get_observed_only(const arma::vec &amp;vec, const vector&lt; bool &gt; &amp;observed)</div><div class="ttdoc">Takes a vector of real values and a boolean vector telling which dimensions are observed and returns ...</div><div class="ttdef"><b>Definition:</b> basic.cc:25</div></div>
 <div class="ttc" id="namespacegplib_html_a9a740284e96deb2a4115aea9d87d78c8"><div class="ttname"><a href="namespacegplib.html#a9a740284e96deb2a4115aea9d87d78c8">gplib::pi</a></div><div class="ttdeci">const double pi</div><div class="ttdef"><b>Definition:</b> basic.hpp:12</div></div>
-<div class="ttc" id="namespacegplib_html_ad97e99cdb90814a49837247f192ed4ba"><div class="ttname"><a href="namespacegplib.html#ad97e99cdb90814a49837247f192ed4ba">gplib::upper_triangular_inverse</a></div><div class="ttdeci">mat upper_triangular_inverse(const mat &amp;upper_t)</div><div class="ttdef"><b>Definition:</b> basic.cc:8</div></div>
-<div class="ttc" id="namespacegplib_html_ac569dad2e8231426f5e0ae3194a7166e"><div class="ttname"><a href="namespacegplib.html#ac569dad2e8231426f5e0ae3194a7166e">gplib::get_observed_only</a></div><div class="ttdeci">arma::vec get_observed_only(const arma::vec &amp;vec, const vector&lt; bool &gt; &amp;observed)</div><div class="ttdef"><b>Definition:</b> basic.cc:27</div></div>
-<div class="ttc" id="namespacegplib_html_a9bedfff719e1a3c7da93d4f5cc67482a"><div class="ttname"><a href="namespacegplib.html#a9bedfff719e1a3c7da93d4f5cc67482a">gplib::all_true</a></div><div class="ttdeci">bool all_true(const vector&lt; bool &gt; &amp;vec)</div><div class="ttdef"><b>Definition:</b> basic.cc:45</div></div>
-<div class="ttc" id="namespacegplib_html_a387d3404f74d7c7f6e2c684f208de393"><div class="ttname"><a href="namespacegplib.html#a387d3404f74d7c7f6e2c684f208de393">gplib::split_indices</a></div><div class="ttdeci">void split_indices(const vector&lt; bool &gt; &amp;predicates, vector&lt; arma::uword &gt; &amp;true_part, vector&lt; arma::uword &gt; &amp;false_part)</div><div class="ttdef"><b>Definition:</b> basic.cc:36</div></div>
+<div class="ttc" id="namespacegplib_html_ad97e99cdb90814a49837247f192ed4ba"><div class="ttname"><a href="namespacegplib.html#ad97e99cdb90814a49837247f192ed4ba">gplib::upper_triangular_inverse</a></div><div class="ttdeci">mat upper_triangular_inverse(const mat &amp;upper_t)</div><div class="ttdef"><b>Definition:</b> basic.cc:7</div></div>
+<div class="ttc" id="namespacegplib_html_a7969a6341804c2b25178917bb2607140"><div class="ttname"><a href="namespacegplib.html#a7969a6341804c2b25178917bb2607140">gplib::force_symmetric</a></div><div class="ttdeci">mat force_symmetric(const mat &amp;A)</div><div class="ttdef"><b>Definition:</b> basic.cc:62</div></div>
 <div class="ttc" id="namespacegplib_html"><div class="ttname"><a href="namespacegplib.html">gplib</a></div><div class="ttdef"><b>Definition:</b> basic.cc:6</div></div>
+<div class="ttc" id="namespacegplib_html_a678fea9f94bbf5bb5eea5c3c57fae24e"><div class="ttname"><a href="namespacegplib.html#a678fea9f94bbf5bb5eea5c3c57fae24e">gplib::split</a></div><div class="ttdeci">void split(const vector&lt; double &gt; &amp;theta, vector&lt; double &gt; &amp;kernel_params, vector&lt; double &gt; &amp;M_params)</div><div class="ttdoc">Splits the params contained in &#39;theta&#39; based on the size of kernel_params and M_params. </div><div class="ttdef"><b>Definition:</b> basic.cc:123</div></div>
+<div class="ttc" id="namespacegplib_html_a045438d7ce3c9d7b6470ac8c83ff83ab"><div class="ttname"><a href="namespacegplib.html#a045438d7ce3c9d7b6470ac8c83ff83ab">gplib::unflatten</a></div><div class="ttdeci">vector&lt; mat &gt; unflatten(vector&lt; double &gt; &amp;M_params, vector&lt; mat &gt; &amp;M)</div><div class="ttdef"><b>Definition:</b> basic.cc:109</div></div>
+<div class="ttc" id="namespacegplib_html_a2b8f2cb03294e6816f258a5c4abb436e"><div class="ttname"><a href="namespacegplib.html#a2b8f2cb03294e6816f258a5c4abb436e">gplib::split_indices</a></div><div class="ttdeci">void split_indices(const vector&lt; bool &gt; &amp;predicates, vector&lt; arma::uword &gt; &amp;true_part, vector&lt; arma::uword &gt; &amp;false_part)</div><div class="ttdoc">Splits the indices (zero indexed) on the ones where the pradicate is true and the part it is false...</div><div class="ttdef"><b>Definition:</b> basic.cc:34</div></div>
+<div class="ttc" id="namespacegplib_html_a727f4318e0ed17c24db68f2b268d00db"><div class="ttname"><a href="namespacegplib.html#a727f4318e0ed17c24db68f2b268d00db">gplib::force_diag</a></div><div class="ttdeci">mat force_diag(const mat &amp;A)</div><div class="ttdef"><b>Definition:</b> basic.cc:66</div></div>
+<div class="ttc" id="namespacegplib_html_aeb6a5659329337d458b1906c5b4cfea8"><div class="ttname"><a href="namespacegplib.html#aeb6a5659329337d458b1906c5b4cfea8">gplib::all_true</a></div><div class="ttdeci">bool all_true(const vector&lt; bool &gt; &amp;vec)</div><div class="ttdoc">Return true if all the values in the boolean vector are true. </div><div class="ttdef"><b>Definition:</b> basic.cc:45</div></div>
+<div class="ttc" id="namespacegplib_html_a507bc0d0252a2bc01ed7d7f2476c811d"><div class="ttname"><a href="namespacegplib.html#a507bc0d0252a2bc01ed7d7f2476c811d">gplib::flatten</a></div><div class="ttdeci">mat flatten(vector&lt; vec &gt; &amp;y)</div><div class="ttdef"><b>Definition:</b> basic.cc:87</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Oct 6 2015 22:39:30 for gplib by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jan 18 2016 10:10:04 for gplib by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

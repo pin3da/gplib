@@ -5,7 +5,8 @@
 <area shape="rect" id="node5" href="$kernels_8cc.html" title="src/gplib/kernels.cc" alt="" coords="488,87,623,114"/>
 <area shape="rect" id="node6" href="$multioutput__kernels_8cc.html" title="src/gplib/multioutput\l_kernels.cc" alt="" coords="647,80,786,121"/>
 <area shape="rect" id="node7" href="$mvgauss_8cc.html" title="src/gplib/mvgauss.cc" alt="" coords="810,87,957,114"/>
-<area shape="rect" id="node8" href="$test__kernel_8cc.html" title="src/tests/test_kernel.cc" alt="" coords="981,87,1140,114"/>
-<area shape="rect" id="node9" href="$test__mo__kernel_8cc.html" title="src/tests/test_mo_kernel.cc" alt="" coords="1165,87,1349,114"/>
-<area shape="rect" id="node10" href="$test__mvgauss_8cc.html" title="src/tests/test_mvgauss.cc" alt="" coords="1373,87,1551,114"/>
+<area shape="rect" id="node8" href="$test__gp__reg__multi_8cc.html" title="src/tests/test_gp_reg\l_multi.cc" alt="" coords="981,80,1127,121"/>
+<area shape="rect" id="node9" href="$test__kernel_8cc.html" title="src/tests/test_kernel.cc" alt="" coords="1151,87,1309,114"/>
+<area shape="rect" id="node10" href="$test__mo__kernel_8cc.html" title="src/tests/test_mo_kernel.cc" alt="" coords="1334,87,1518,114"/>
+<area shape="rect" id="node11" href="$test__mvgauss_8cc.html" title="src/tests/test_mvgauss.cc" alt="" coords="1543,87,1720,114"/>
 </map>

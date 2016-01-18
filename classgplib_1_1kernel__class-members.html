@@ -24,7 +24,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">gplib
-   &#160;<span id="projectnumber">0.0.1</span>
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
    <div id="projectbrief">C++ Gaussian Process Library</div>
   </td>
@@ -97,8 +97,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>This is the complete list of members for <a class="el" href="classgplib_1_1kernel__class.html">gplib::kernel_class</a>, including all inherited members.</p>
 <table class="directory">
-  <tr class="even"><td class="entry"><a class="el" href="classgplib_1_1kernel__class.html#a9856c9bfbd6941a0aeff535f72b6475c">derivate</a>(size_t param_id, const arma::mat &amp;X, const arma::mat &amp;Y) const =0</td><td class="entry"><a class="el" href="classgplib_1_1kernel__class.html">gplib::kernel_class</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classgplib_1_1kernel__class.html#a9181ce01cf3164516d4e2b39bcc3c43d">eval</a>(const arma::mat &amp;X, const arma::mat &amp;Y) const =0</td><td class="entry"><a class="el" href="classgplib_1_1kernel__class.html">gplib::kernel_class</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classgplib_1_1kernel__class.html#a152cb94d30d26d5eb031e38ce318b8a1">derivate</a>(size_t param_id, const arma::mat &amp;X, const arma::mat &amp;Y, bool diag=false) const =0</td><td class="entry"><a class="el" href="classgplib_1_1kernel__class.html">gplib::kernel_class</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classgplib_1_1kernel__class.html#ae31e4bfe2537787068c9d65a676c14d4">eval</a>(const arma::mat &amp;X, const arma::mat &amp;Y, bool diag=false) const =0</td><td class="entry"><a class="el" href="classgplib_1_1kernel__class.html">gplib::kernel_class</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classgplib_1_1kernel__class.html#a84c02416722aa5a7faf33b29f1a0d048">get_lower_bounds</a>() const =0</td><td class="entry"><a class="el" href="classgplib_1_1kernel__class.html">gplib::kernel_class</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
   <tr><td class="entry"><a class="el" href="classgplib_1_1kernel__class.html#a8b15e33f65f19706d537c0307a218278">get_params</a>() const =0</td><td class="entry"><a class="el" href="classgplib_1_1kernel__class.html">gplib::kernel_class</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classgplib_1_1kernel__class.html#a47b06881e6d858195cb43a8f0e89fa37">get_upper_bounds</a>() const =0</td><td class="entry"><a class="el" href="classgplib_1_1kernel__class.html">gplib::kernel_class</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
@@ -106,12 +106,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <tr class="even"><td class="entry"><a class="el" href="classgplib_1_1kernel__class.html#a782b0d6e1773ebe50f3d5c2ef636d0dc">n_params</a>() const =0</td><td class="entry"><a class="el" href="classgplib_1_1kernel__class.html">gplib::kernel_class</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
   <tr><td class="entry"><a class="el" href="classgplib_1_1kernel__class.html#a2cd7ea83e90ceb0dbb3396cde76eea2c">set_lower_bounds</a>(const std::vector&lt; double &gt; &amp;lower_bounds)=0</td><td class="entry"><a class="el" href="classgplib_1_1kernel__class.html">gplib::kernel_class</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classgplib_1_1kernel__class.html#a3d91b690b7bbbf32489929242b7450be">set_params</a>(const std::vector&lt; double &gt; &amp;params)=0</td><td class="entry"><a class="el" href="classgplib_1_1kernel__class.html">gplib::kernel_class</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classgplib_1_1kernel__class.html#a81e2fcb4f7fa6ffc9dc38eb07354d879">set_upper_bounds</a>(const std::vector&lt; double &gt; &amp;params)=0</td><td class="entry"><a class="el" href="classgplib_1_1kernel__class.html">gplib::kernel_class</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classgplib_1_1kernel__class.html#ab6770275627f180ba235204bbc75dfa3">set_upper_bounds</a>(const std::vector&lt; double &gt; &amp;upper_bounds)=0</td><td class="entry"><a class="el" href="classgplib_1_1kernel__class.html">gplib::kernel_class</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classgplib_1_1kernel__class.html#a0167aa661f50b7f413aade434506c0ab">~kernel_class</a>()=default</td><td class="entry"><a class="el" href="classgplib_1_1kernel__class.html">gplib::kernel_class</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
 </table></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Oct 6 2015 22:39:30 for gplib by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jan 18 2016 10:10:04 for gplib by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

@@ -24,7 +24,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">gplib
-   &#160;<span id="projectnumber">0.0.1</span>
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
    <div id="projectbrief">C++ Gaussian Process Library</div>
   </td>
@@ -108,12 +108,18 @@ Collaboration diagram for gplib::kernels::squared_exponential::implementation:</
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a567654c17bb0b946a4c9d37a5be03284"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgplib_1_1kernels_1_1squared__exponential_1_1implementation.html#a567654c17bb0b946a4c9d37a5be03284">kernel</a> (const vec &amp;X, const vec &amp;Y)</td></tr>
 <tr class="separator:a567654c17bb0b946a4c9d37a5be03284"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a65d5006a86d17e9f14099196e58f2d9f"><td class="memItemLeft" align="right" valign="top">mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgplib_1_1kernels_1_1squared__exponential_1_1implementation.html#a65d5006a86d17e9f14099196e58f2d9f">eval</a> (const arma::mat &amp;X, const arma::mat &amp;Y)</td></tr>
-<tr class="separator:a65d5006a86d17e9f14099196e58f2d9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ec2a81893353fccda95d9d10e176333"><td class="memItemLeft" align="right" valign="top">mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgplib_1_1kernels_1_1squared__exponential_1_1implementation.html#a5ec2a81893353fccda95d9d10e176333">eval</a> (const arma::mat &amp;X, const arma::mat &amp;Y, bool diag=false)</td></tr>
+<tr class="separator:a5ec2a81893353fccda95d9d10e176333"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb0aeddeff36833ff54a513a98cc8e32"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgplib_1_1kernels_1_1squared__exponential_1_1implementation.html#adb0aeddeff36833ff54a513a98cc8e32">derivative_entry</a> (size_t param_id, const vec &amp;X, const vec &amp;Y)</td></tr>
 <tr class="separator:adb0aeddeff36833ff54a513a98cc8e32"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4c80e8824d670525a1fc4a20e73f036b"><td class="memItemLeft" align="right" valign="top">mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgplib_1_1kernels_1_1squared__exponential_1_1implementation.html#a4c80e8824d670525a1fc4a20e73f036b">derivative</a> (size_t param_id, const arma::mat &amp;X, const arma::mat &amp;Y)</td></tr>
-<tr class="separator:a4c80e8824d670525a1fc4a20e73f036b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f8e537096e46266836fd650ecfcf0ea"><td class="memItemLeft" align="right" valign="top">mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgplib_1_1kernels_1_1squared__exponential_1_1implementation.html#a3f8e537096e46266836fd650ecfcf0ea">derivate_wrt_inputs_an</a> (size_t param_id, const arma::mat &amp;X, const arma::mat &amp;Y, bool diag=false)</td></tr>
+<tr class="separator:a3f8e537096e46266836fd650ecfcf0ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2cbd9c1d743db2b5f9656992fa12bb4"><td class="memItemLeft" align="right" valign="top">mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgplib_1_1kernels_1_1squared__exponential_1_1implementation.html#ae2cbd9c1d743db2b5f9656992fa12bb4">derivate_wrt_inputs_num</a> (size_t param_id, const arma::mat &amp;X, const arma::mat &amp;Y)</td></tr>
+<tr class="separator:ae2cbd9c1d743db2b5f9656992fa12bb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:addffcc0f421ef24a18a9238dae776a2e"><td class="memItemLeft" align="right" valign="top">mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgplib_1_1kernels_1_1squared__exponential_1_1implementation.html#addffcc0f421ef24a18a9238dae776a2e">derivate_wrt_ls</a> (size_t param_id, const mat &amp;X, const mat &amp;Y, bool diag=false)</td></tr>
+<tr class="separator:addffcc0f421ef24a18a9238dae776a2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4afa094b388846fc7e68242b66bec465"><td class="memItemLeft" align="right" valign="top">mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgplib_1_1kernels_1_1squared__exponential_1_1implementation.html#a4afa094b388846fc7e68242b66bec465">derivative</a> (size_t param_id, const arma::mat &amp;X, const arma::mat &amp;Y, bool diag=false)</td></tr>
+<tr class="separator:a4afa094b388846fc7e68242b66bec465"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -125,7 +131,139 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a12a4e04232a1401b2e08a2a317ee54aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="a4c80e8824d670525a1fc4a20e73f036b"></a>
+<a class="anchor" id="a3f8e537096e46266836fd650ecfcf0ea"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">mat gplib::kernels::squared_exponential::implementation::derivate_wrt_inputs_an </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>param_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const arma::mat &amp;&#160;</td>
+          <td class="paramname"><em>X</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const arma::mat &amp;&#160;</td>
+          <td class="paramname"><em>Y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>diag</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ae2cbd9c1d743db2b5f9656992fa12bb4"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">mat gplib::kernels::squared_exponential::implementation::derivate_wrt_inputs_num </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>param_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const arma::mat &amp;&#160;</td>
+          <td class="paramname"><em>X</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const arma::mat &amp;&#160;</td>
+          <td class="paramname"><em>Y</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="addffcc0f421ef24a18a9238dae776a2e"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">mat gplib::kernels::squared_exponential::implementation::derivate_wrt_ls </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>param_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const mat &amp;&#160;</td>
+          <td class="paramname"><em>X</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const mat &amp;&#160;</td>
+          <td class="paramname"><em>Y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>diag</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a4afa094b388846fc7e68242b66bec465"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -148,7 +286,13 @@ Public Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const arma::mat &amp;&#160;</td>
-          <td class="paramname"><em>Y</em>&#160;</td>
+          <td class="paramname"><em>Y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>diag</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -205,7 +349,7 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a65d5006a86d17e9f14099196e58f2d9f"></a>
+<a class="anchor" id="a5ec2a81893353fccda95d9d10e176333"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -222,7 +366,13 @@ Public Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const arma::mat &amp;&#160;</td>
-          <td class="paramname"><em>Y</em>&#160;</td>
+          <td class="paramname"><em>Y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>diag</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -316,7 +466,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Oct 6 2015 22:39:30 for gplib by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jan 18 2016 10:10:04 for gplib by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

@@ -24,7 +24,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">gplib
-   &#160;<span id="projectnumber">0.0.1</span>
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
    <div id="projectbrief">C++ Gaussian Process Library</div>
   </td>
@@ -101,7 +101,7 @@ Include dependency graph for basic.cc:</div>
 <div class="dyncontent">
 <div class="center"><img src="basic_8cc__incl.png" border="0" usemap="#src_2gplib_2basic_8cc" alt=""/></div>
 <map name="src_2gplib_2basic_8cc" id="src_2gplib_2basic_8cc">
-<area shape="rect" id="node2" href="gplib_8hpp.html" title="gplib.hpp" alt="" coords="190,80,265,107"/><area shape="rect" id="node3" href="mvgauss_8hpp.html" title="mvgauss.hpp" alt="" coords="17,304,117,331"/><area shape="rect" id="node6" href="basic_8hpp.html" title="basic.hpp" alt="" coords="379,155,457,181"/><area shape="rect" id="node9" href="gp_8hpp.html" title="gp.hpp" alt="" coords="197,229,258,256"/><area shape="rect" id="node11" href="kernels_8hpp.html" title="kernels.hpp" alt="" coords="265,155,355,181"/><area shape="rect" id="node12" href="multioutput__kernels_8hpp.html" title="multioutput_kernels.hpp" alt="" coords="30,155,190,181"/></map>
+<area shape="rect" id="node2" href="gplib_8hpp.html" title="gplib.hpp" alt="" coords="279,80,354,107"/><area shape="rect" id="node3" href="mvgauss_8hpp.html" title="mvgauss.hpp" alt="" coords="256,304,356,331"/><area shape="rect" id="node6" href="basic_8hpp.html" title="basic.hpp" alt="" coords="439,155,517,181"/><area shape="rect" id="node9" href="gp_8hpp.html" title="gp.hpp" alt="" coords="169,229,230,256"/><area shape="rect" id="node12" href="kernels_8hpp.html" title="kernels.hpp" alt="" coords="5,155,95,181"/><area shape="rect" id="node13" href="multioutput__kernels_8hpp.html" title="multioutput_kernels.hpp" alt="" coords="119,155,279,181"/></map>
 </div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
@@ -113,17 +113,37 @@ Namespaces</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:ad97e99cdb90814a49837247f192ed4ba"><td class="memItemLeft" align="right" valign="top">mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegplib.html#ad97e99cdb90814a49837247f192ed4ba">gplib::upper_triangular_inverse</a> (const mat &amp;upper_t)</td></tr>
 <tr class="separator:ad97e99cdb90814a49837247f192ed4ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac569dad2e8231426f5e0ae3194a7166e"><td class="memItemLeft" align="right" valign="top">arma::vec&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegplib.html#ac569dad2e8231426f5e0ae3194a7166e">gplib::get_observed_only</a> (const arma::vec &amp;vec, const vector&lt; bool &gt; &amp;observed)</td></tr>
-<tr class="separator:ac569dad2e8231426f5e0ae3194a7166e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a387d3404f74d7c7f6e2c684f208de393"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegplib.html#a387d3404f74d7c7f6e2c684f208de393">gplib::split_indices</a> (const vector&lt; bool &gt; &amp;predicates, vector&lt; arma::uword &gt; &amp;true_part, vector&lt; arma::uword &gt; &amp;false_part)</td></tr>
-<tr class="separator:a387d3404f74d7c7f6e2c684f208de393"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9bedfff719e1a3c7da93d4f5cc67482a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegplib.html#a9bedfff719e1a3c7da93d4f5cc67482a">gplib::all_true</a> (const vector&lt; bool &gt; &amp;vec)</td></tr>
-<tr class="separator:a9bedfff719e1a3c7da93d4f5cc67482a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae433213371a3197939bf1a42a1472292"><td class="memItemLeft" align="right" valign="top">arma::vec&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegplib.html#ae433213371a3197939bf1a42a1472292">gplib::get_observed_only</a> (const arma::vec &amp;vec, const std::vector&lt; bool &gt; &amp;observed)</td></tr>
+<tr class="memdesc:ae433213371a3197939bf1a42a1472292"><td class="mdescLeft">&#160;</td><td class="mdescRight">Takes a vector of real values and a boolean vector telling which dimensions are observed and returns a new vector with the observed dimensions only.  <a href="#ae433213371a3197939bf1a42a1472292">More...</a><br /></td></tr>
+<tr class="separator:ae433213371a3197939bf1a42a1472292"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b8f2cb03294e6816f258a5c4abb436e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegplib.html#a2b8f2cb03294e6816f258a5c4abb436e">gplib::split_indices</a> (const std::vector&lt; bool &gt; &amp;predicates, std::vector&lt; arma::uword &gt; &amp;true_part, std::vector&lt; arma::uword &gt; &amp;false_part)</td></tr>
+<tr class="memdesc:a2b8f2cb03294e6816f258a5c4abb436e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Splits the indices (zero indexed) on the ones where the pradicate is true and the part it is false.  <a href="#a2b8f2cb03294e6816f258a5c4abb436e">More...</a><br /></td></tr>
+<tr class="separator:a2b8f2cb03294e6816f258a5c4abb436e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb6a5659329337d458b1906c5b4cfea8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegplib.html#aeb6a5659329337d458b1906c5b4cfea8">gplib::all_true</a> (const std::vector&lt; bool &gt; &amp;vec)</td></tr>
+<tr class="memdesc:aeb6a5659329337d458b1906c5b4cfea8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return true if all the values in the boolean vector are true.  <a href="#aeb6a5659329337d458b1906c5b4cfea8">More...</a><br /></td></tr>
+<tr class="separator:aeb6a5659329337d458b1906c5b4cfea8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0db0cce1b44b97a1df129491113e5800"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegplib.html#a0db0cce1b44b97a1df129491113e5800">gplib::check_symmetric</a> (const mat &amp;A)</td></tr>
+<tr class="separator:a0db0cce1b44b97a1df129491113e5800"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7969a6341804c2b25178917bb2607140"><td class="memItemLeft" align="right" valign="top">mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegplib.html#a7969a6341804c2b25178917bb2607140">gplib::force_symmetric</a> (const mat &amp;A)</td></tr>
+<tr class="separator:a7969a6341804c2b25178917bb2607140"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a727f4318e0ed17c24db68f2b268d00db"><td class="memItemLeft" align="right" valign="top">mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegplib.html#a727f4318e0ed17c24db68f2b268d00db">gplib::force_diag</a> (const mat &amp;A)</td></tr>
+<tr class="separator:a727f4318e0ed17c24db68f2b268d00db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88827c0535db64f82ea99db37979de16"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegplib.html#a88827c0535db64f82ea99db37979de16">gplib::is_close</a> (const mat &amp;A, const mat &amp;B, double <a class="el" href="test__mo__kernel_8cc.html#a3d8c24629d725b9ef8c238cf27c9b158">eps</a>=1e-4)</td></tr>
+<tr class="separator:a88827c0535db64f82ea99db37979de16"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a507bc0d0252a2bc01ed7d7f2476c811d"><td class="memItemLeft" align="right" valign="top">mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegplib.html#a507bc0d0252a2bc01ed7d7f2476c811d">gplib::flatten</a> (vector&lt; vec &gt; &amp;y)</td></tr>
+<tr class="separator:a507bc0d0252a2bc01ed7d7f2476c811d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7056a4d451d37e437629f9e20af4dad9"><td class="memItemLeft" align="right" valign="top">vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegplib.html#a7056a4d451d37e437629f9e20af4dad9">gplib::flatten</a> (vector&lt; mat &gt; &amp;M)</td></tr>
+<tr class="separator:a7056a4d451d37e437629f9e20af4dad9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a045438d7ce3c9d7b6470ac8c83ff83ab"><td class="memItemLeft" align="right" valign="top">vector&lt; mat &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegplib.html#a045438d7ce3c9d7b6470ac8c83ff83ab">gplib::unflatten</a> (vector&lt; double &gt; &amp;M_params, vector&lt; mat &gt; &amp;M)</td></tr>
+<tr class="separator:a045438d7ce3c9d7b6470ac8c83ff83ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a678fea9f94bbf5bb5eea5c3c57fae24e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegplib.html#a678fea9f94bbf5bb5eea5c3c57fae24e">gplib::split</a> (const std::vector&lt; double &gt; &amp;theta, std::vector&lt; double &gt; &amp;kernel_params, std::vector&lt; double &gt; &amp;M_params)</td></tr>
+<tr class="memdesc:a678fea9f94bbf5bb5eea5c3c57fae24e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Splits the params contained in 'theta' based on the size of kernel_params and M_params.  <a href="#a678fea9f94bbf5bb5eea5c3c57fae24e">More...</a><br /></td></tr>
+<tr class="separator:a678fea9f94bbf5bb5eea5c3c57fae24e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Oct 6 2015 22:39:30 for gplib by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jan 18 2016 10:10:04 for gplib by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

@@ -1,7 +1,7 @@
 <map id="src/gplib/gplib.hpp" name="src/gplib/gplib.hpp">
-<area shape="rect" id="node2" href="$mvgauss_8hpp.html" title="mvgauss.hpp" alt="" coords="17,229,117,256"/>
-<area shape="rect" id="node5" href="$basic_8hpp.html" title="basic.hpp" alt="" coords="379,80,457,107"/>
-<area shape="rect" id="node8" href="$gp_8hpp.html" title="gp.hpp" alt="" coords="197,155,258,181"/>
-<area shape="rect" id="node10" href="$kernels_8hpp.html" title="kernels.hpp" alt="" coords="265,80,355,107"/>
-<area shape="rect" id="node11" href="$multioutput__kernels_8hpp.html" title="multioutput_kernels.hpp" alt="" coords="30,80,190,107"/>
+<area shape="rect" id="node2" href="$mvgauss_8hpp.html" title="mvgauss.hpp" alt="" coords="256,229,356,256"/>
+<area shape="rect" id="node5" href="$basic_8hpp.html" title="basic.hpp" alt="" coords="439,80,517,107"/>
+<area shape="rect" id="node8" href="$gp_8hpp.html" title="gp.hpp" alt="" coords="169,155,230,181"/>
+<area shape="rect" id="node11" href="$kernels_8hpp.html" title="kernels.hpp" alt="" coords="5,80,95,107"/>
+<area shape="rect" id="node12" href="$multioutput__kernels_8hpp.html" title="multioutput_kernels.hpp" alt="" coords="119,80,279,107"/>
 </map>

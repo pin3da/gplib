@@ -24,7 +24,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">gplib
-   &#160;<span id="projectnumber">0.0.1</span>
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
    <div id="projectbrief">C++ Gaussian Process Library</div>
   </td>
@@ -118,14 +118,52 @@ Classes</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:ad97e99cdb90814a49837247f192ed4ba"><td class="memItemLeft" align="right" valign="top">mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegplib.html#ad97e99cdb90814a49837247f192ed4ba">upper_triangular_inverse</a> (const mat &amp;upper_t)</td></tr>
 <tr class="separator:ad97e99cdb90814a49837247f192ed4ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac569dad2e8231426f5e0ae3194a7166e"><td class="memItemLeft" align="right" valign="top">arma::vec&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegplib.html#ac569dad2e8231426f5e0ae3194a7166e">get_observed_only</a> (const arma::vec &amp;vec, const vector&lt; bool &gt; &amp;observed)</td></tr>
-<tr class="separator:ac569dad2e8231426f5e0ae3194a7166e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a387d3404f74d7c7f6e2c684f208de393"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegplib.html#a387d3404f74d7c7f6e2c684f208de393">split_indices</a> (const vector&lt; bool &gt; &amp;predicates, vector&lt; arma::uword &gt; &amp;true_part, vector&lt; arma::uword &gt; &amp;false_part)</td></tr>
-<tr class="separator:a387d3404f74d7c7f6e2c684f208de393"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9bedfff719e1a3c7da93d4f5cc67482a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegplib.html#a9bedfff719e1a3c7da93d4f5cc67482a">all_true</a> (const vector&lt; bool &gt; &amp;vec)</td></tr>
-<tr class="separator:a9bedfff719e1a3c7da93d4f5cc67482a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae433213371a3197939bf1a42a1472292"><td class="memItemLeft" align="right" valign="top">arma::vec&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegplib.html#ae433213371a3197939bf1a42a1472292">get_observed_only</a> (const arma::vec &amp;vec, const std::vector&lt; bool &gt; &amp;observed)</td></tr>
+<tr class="memdesc:ae433213371a3197939bf1a42a1472292"><td class="mdescLeft">&#160;</td><td class="mdescRight">Takes a vector of real values and a boolean vector telling which dimensions are observed and returns a new vector with the observed dimensions only.  <a href="#ae433213371a3197939bf1a42a1472292">More...</a><br /></td></tr>
+<tr class="separator:ae433213371a3197939bf1a42a1472292"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b8f2cb03294e6816f258a5c4abb436e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegplib.html#a2b8f2cb03294e6816f258a5c4abb436e">split_indices</a> (const std::vector&lt; bool &gt; &amp;predicates, std::vector&lt; arma::uword &gt; &amp;true_part, std::vector&lt; arma::uword &gt; &amp;false_part)</td></tr>
+<tr class="memdesc:a2b8f2cb03294e6816f258a5c4abb436e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Splits the indices (zero indexed) on the ones where the pradicate is true and the part it is false.  <a href="#a2b8f2cb03294e6816f258a5c4abb436e">More...</a><br /></td></tr>
+<tr class="separator:a2b8f2cb03294e6816f258a5c4abb436e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb6a5659329337d458b1906c5b4cfea8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegplib.html#aeb6a5659329337d458b1906c5b4cfea8">all_true</a> (const std::vector&lt; bool &gt; &amp;vec)</td></tr>
+<tr class="memdesc:aeb6a5659329337d458b1906c5b4cfea8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return true if all the values in the boolean vector are true.  <a href="#aeb6a5659329337d458b1906c5b4cfea8">More...</a><br /></td></tr>
+<tr class="separator:aeb6a5659329337d458b1906c5b4cfea8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0db0cce1b44b97a1df129491113e5800"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegplib.html#a0db0cce1b44b97a1df129491113e5800">check_symmetric</a> (const mat &amp;A)</td></tr>
+<tr class="separator:a0db0cce1b44b97a1df129491113e5800"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7969a6341804c2b25178917bb2607140"><td class="memItemLeft" align="right" valign="top">mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegplib.html#a7969a6341804c2b25178917bb2607140">force_symmetric</a> (const mat &amp;A)</td></tr>
+<tr class="separator:a7969a6341804c2b25178917bb2607140"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a727f4318e0ed17c24db68f2b268d00db"><td class="memItemLeft" align="right" valign="top">mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegplib.html#a727f4318e0ed17c24db68f2b268d00db">force_diag</a> (const mat &amp;A)</td></tr>
+<tr class="separator:a727f4318e0ed17c24db68f2b268d00db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88827c0535db64f82ea99db37979de16"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegplib.html#a88827c0535db64f82ea99db37979de16">is_close</a> (const mat &amp;A, const mat &amp;B, double <a class="el" href="test__mo__kernel_8cc.html#a3d8c24629d725b9ef8c238cf27c9b158">eps</a>=1e-4)</td></tr>
+<tr class="separator:a88827c0535db64f82ea99db37979de16"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a507bc0d0252a2bc01ed7d7f2476c811d"><td class="memItemLeft" align="right" valign="top">mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegplib.html#a507bc0d0252a2bc01ed7d7f2476c811d">flatten</a> (vector&lt; vec &gt; &amp;y)</td></tr>
+<tr class="separator:a507bc0d0252a2bc01ed7d7f2476c811d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7056a4d451d37e437629f9e20af4dad9"><td class="memItemLeft" align="right" valign="top">vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegplib.html#a7056a4d451d37e437629f9e20af4dad9">flatten</a> (vector&lt; mat &gt; &amp;M)</td></tr>
+<tr class="separator:a7056a4d451d37e437629f9e20af4dad9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a045438d7ce3c9d7b6470ac8c83ff83ab"><td class="memItemLeft" align="right" valign="top">vector&lt; mat &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegplib.html#a045438d7ce3c9d7b6470ac8c83ff83ab">unflatten</a> (vector&lt; double &gt; &amp;M_params, vector&lt; mat &gt; &amp;M)</td></tr>
+<tr class="separator:a045438d7ce3c9d7b6470ac8c83ff83ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a678fea9f94bbf5bb5eea5c3c57fae24e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegplib.html#a678fea9f94bbf5bb5eea5c3c57fae24e">split</a> (const std::vector&lt; double &gt; &amp;theta, std::vector&lt; double &gt; &amp;kernel_params, std::vector&lt; double &gt; &amp;M_params)</td></tr>
+<tr class="memdesc:a678fea9f94bbf5bb5eea5c3c57fae24e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Splits the params contained in 'theta' based on the size of kernel_params and M_params.  <a href="#a678fea9f94bbf5bb5eea5c3c57fae24e">More...</a><br /></td></tr>
+<tr class="separator:a678fea9f94bbf5bb5eea5c3c57fae24e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acbb7ff29402595c44df0565fdbd9f5a2"><td class="memItemLeft" align="right" valign="top">arma::mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegplib.html#acbb7ff29402595c44df0565fdbd9f5a2">upper_triangular_inverse</a> (const arma::mat &amp;upper_t)</td></tr>
 <tr class="separator:acbb7ff29402595c44df0565fdbd9f5a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60a400c0f91813ac367ae2ad40111e56"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegplib.html#a60a400c0f91813ac367ae2ad40111e56">check_symmetric</a> (const arma::mat &amp;A)</td></tr>
+<tr class="memdesc:a60a400c0f91813ac367ae2ad40111e56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the matrix is symmetric.  <a href="#a60a400c0f91813ac367ae2ad40111e56">More...</a><br /></td></tr>
+<tr class="separator:a60a400c0f91813ac367ae2ad40111e56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4525fe9611d56d3cfebd257e2549bf5"><td class="memItemLeft" align="right" valign="top">arma::mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegplib.html#ae4525fe9611d56d3cfebd257e2549bf5">force_symmetric</a> (const arma::mat &amp;A)</td></tr>
+<tr class="memdesc:ae4525fe9611d56d3cfebd257e2549bf5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a new matrix which is (A + A.t()) / 2.0 A must be square.  <a href="#ae4525fe9611d56d3cfebd257e2549bf5">More...</a><br /></td></tr>
+<tr class="separator:ae4525fe9611d56d3cfebd257e2549bf5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b645122643d066cc1f8e4c06332db6d"><td class="memItemLeft" align="right" valign="top">arma::mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegplib.html#a8b645122643d066cc1f8e4c06332db6d">force_diag</a> (const arma::mat &amp;A)</td></tr>
+<tr class="memdesc:a8b645122643d066cc1f8e4c06332db6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a new matrix with no zeroes in the diagonal.  <a href="#a8b645122643d066cc1f8e4c06332db6d">More...</a><br /></td></tr>
+<tr class="separator:a8b645122643d066cc1f8e4c06332db6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2175e302fc25db0db662edf8b1485ffe"><td class="memItemLeft" align="right" valign="top">arma::mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegplib.html#a2175e302fc25db0db662edf8b1485ffe">flatten</a> (std::vector&lt; arma::vec &gt; &amp;y)</td></tr>
+<tr class="memdesc:a2175e302fc25db0db662edf8b1485ffe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a vector-like matrix with all the values contained in y concatenated.  <a href="#a2175e302fc25db0db662edf8b1485ffe">More...</a><br /></td></tr>
+<tr class="separator:a2175e302fc25db0db662edf8b1485ffe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:affef66958500cd220118318864e5f299"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegplib.html#affef66958500cd220118318864e5f299">flatten</a> (std::vector&lt; arma::mat &gt; &amp;M)</td></tr>
+<tr class="memdesc:affef66958500cd220118318864e5f299"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a vector with all the values contained in M concatenated.  <a href="#affef66958500cd220118318864e5f299">More...</a><br /></td></tr>
+<tr class="separator:affef66958500cd220118318864e5f299"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a11dc9c82587db64a8fdad927fd20b401"><td class="memItemLeft" align="right" valign="top">std::vector&lt; arma::mat &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegplib.html#a11dc9c82587db64a8fdad927fd20b401">unflatten</a> (std::vector&lt; double &gt; &amp;M_params, std::vector&lt; arma::mat &gt; &amp;M)</td></tr>
+<tr class="memdesc:a11dc9c82587db64a8fdad927fd20b401"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a vector of matrices with all the values in M_params.  <a href="#a11dc9c82587db64a8fdad927fd20b401">More...</a><br /></td></tr>
+<tr class="separator:a11dc9c82587db64a8fdad927fd20b401"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -133,7 +171,7 @@ Variables</h2></td></tr>
 <tr class="separator:a9a740284e96deb2a4115aea9d87d78c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="a9bedfff719e1a3c7da93d4f5cc67482a"></a>
+<a class="anchor" id="aeb6a5659329337d458b1906c5b4cfea8"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -147,9 +185,181 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Return true if all the values in the boolean vector are true. </p>
+
 </div>
 </div>
-<a class="anchor" id="ac569dad2e8231426f5e0ae3194a7166e"></a>
+<a class="anchor" id="a60a400c0f91813ac367ae2ad40111e56"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gplib::check_symmetric </td>
+          <td>(</td>
+          <td class="paramtype">const arma::mat &amp;&#160;</td>
+          <td class="paramname"><em>A</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Checks if the matrix is symmetric. </p>
+
+</div>
+</div>
+<a class="anchor" id="a0db0cce1b44b97a1df129491113e5800"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gplib::check_symmetric </td>
+          <td>(</td>
+          <td class="paramtype">const mat &amp;&#160;</td>
+          <td class="paramname"><em>A</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a2175e302fc25db0db662edf8b1485ffe"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">arma::mat gplib::flatten </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; arma::vec &gt; &amp;&#160;</td>
+          <td class="paramname"><em>y</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns a vector-like matrix with all the values contained in y concatenated. </p>
+
+</div>
+</div>
+<a class="anchor" id="affef66958500cd220118318864e5f299"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;double&gt; gplib::flatten </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; arma::mat &gt; &amp;&#160;</td>
+          <td class="paramname"><em>M</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns a vector with all the values contained in M concatenated. </p>
+
+</div>
+</div>
+<a class="anchor" id="a507bc0d0252a2bc01ed7d7f2476c811d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">mat gplib::flatten </td>
+          <td>(</td>
+          <td class="paramtype">vector&lt; vec &gt; &amp;&#160;</td>
+          <td class="paramname"><em>y</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a7056a4d451d37e437629f9e20af4dad9"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">vector&lt;double&gt; gplib::flatten </td>
+          <td>(</td>
+          <td class="paramtype">vector&lt; mat &gt; &amp;&#160;</td>
+          <td class="paramname"><em>M</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a8b645122643d066cc1f8e4c06332db6d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">arma::mat gplib::force_diag </td>
+          <td>(</td>
+          <td class="paramtype">const arma::mat &amp;&#160;</td>
+          <td class="paramname"><em>A</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns a new matrix with no zeroes in the diagonal. </p>
+
+</div>
+</div>
+<a class="anchor" id="a727f4318e0ed17c24db68f2b268d00db"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">mat gplib::force_diag </td>
+          <td>(</td>
+          <td class="paramtype">const mat &amp;&#160;</td>
+          <td class="paramname"><em>A</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ae4525fe9611d56d3cfebd257e2549bf5"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">arma::mat gplib::force_symmetric </td>
+          <td>(</td>
+          <td class="paramtype">const arma::mat &amp;&#160;</td>
+          <td class="paramname"><em>A</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns a new matrix which is (A + A.t()) / 2.0 A must be square. </p>
+
+</div>
+</div>
+<a class="anchor" id="a7969a6341804c2b25178917bb2607140"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">mat gplib::force_symmetric </td>
+          <td>(</td>
+          <td class="paramtype">const mat &amp;&#160;</td>
+          <td class="paramname"><em>A</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ae433213371a3197939bf1a42a1472292"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -173,9 +383,77 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Takes a vector of real values and a boolean vector telling which dimensions are observed and returns a new vector with the observed dimensions only. </p>
+
 </div>
 </div>
-<a class="anchor" id="a387d3404f74d7c7f6e2c684f208de393"></a>
+<a class="anchor" id="a88827c0535db64f82ea99db37979de16"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gplib::is_close </td>
+          <td>(</td>
+          <td class="paramtype">const mat &amp;&#160;</td>
+          <td class="paramname"><em>A</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const mat &amp;&#160;</td>
+          <td class="paramname"><em>B</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>eps</em> = <code>1e-4</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a678fea9f94bbf5bb5eea5c3c57fae24e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gplib::split </td>
+          <td>(</td>
+          <td class="paramtype">const vector&lt; double &gt; &amp;&#160;</td>
+          <td class="paramname"><em>theta</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">vector&lt; double &gt; &amp;&#160;</td>
+          <td class="paramname"><em>kernel_params</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">vector&lt; double &gt; &amp;&#160;</td>
+          <td class="paramname"><em>M_params</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Splits the params contained in 'theta' based on the size of kernel_params and M_params. </p>
+
+</div>
+</div>
+<a class="anchor" id="a2b8f2cb03294e6816f258a5c4abb436e"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -196,6 +474,63 @@ Variables</h2></td></tr>
           <td></td>
           <td class="paramtype">vector&lt; arma::uword &gt; &amp;&#160;</td>
           <td class="paramname"><em>false_part</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Splits the indices (zero indexed) on the ones where the pradicate is true and the part it is false. </p>
+
+</div>
+</div>
+<a class="anchor" id="a11dc9c82587db64a8fdad927fd20b401"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;arma::mat&gt; gplib::unflatten </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; double &gt; &amp;&#160;</td>
+          <td class="paramname"><em>M_params</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; arma::mat &gt; &amp;&#160;</td>
+          <td class="paramname"><em>M</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns a vector of matrices with all the values in M_params. </p>
+<p>Each matrix of the vector has the dimensions provided by M. </p>
+
+</div>
+</div>
+<a class="anchor" id="a045438d7ce3c9d7b6470ac8c83ff83ab"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">vector&lt;mat&gt; gplib::unflatten </td>
+          <td>(</td>
+          <td class="paramtype">vector&lt; double &gt; &amp;&#160;</td>
+          <td class="paramname"><em>M_params</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">vector&lt; mat &gt; &amp;&#160;</td>
+          <td class="paramname"><em>M</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -255,7 +590,7 @@ Variables</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Oct 6 2015 22:39:30 for gplib by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jan 18 2016 10:10:04 for gplib by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

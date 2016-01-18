@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['upper_5fbounds',['upper_bounds',['../structgplib_1_1kernels_1_1squared__exponential_1_1implementation.html#a12a4e04232a1401b2e08a2a317ee54aa',1,'gplib::kernels::squared_exponential::implementation::upper_bounds()'],['../structgplib_1_1multioutput__kernels_1_1lmc__kernel_1_1implementation.html#aebfe4ecef94ae0491661563736ca5d45',1,'gplib::multioutput_kernels::lmc_kernel::implementation::upper_bounds()']]]
+  ['sigma',['sigma',['../structgplib_1_1gp__reg__multi_1_1implementation.html#a778c69e926f3989c366bf69a95235463',1,'gplib::gp_reg_multi::implementation']]],
+  ['state',['state',['../structgplib_1_1gp__reg__multi_1_1implementation.html#a795b0ebb2f46706d66744afca6ea66f8',1,'gplib::gp_reg_multi::implementation']]]
 ];

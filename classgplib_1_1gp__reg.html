@@ -24,7 +24,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">gplib
-   &#160;<span id="projectnumber">0.0.1</span>
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
    <div id="projectbrief">C++ Gaussian Process Library</div>
   </td>
@@ -117,20 +117,28 @@ Classes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ac6926b48bdaa7ae1f1f137cd94a9145b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1gp__reg.html#ac6926b48bdaa7ae1f1f137cd94a9145b">gp_reg</a> ()</td></tr>
+<tr class="memdesc:ac6926b48bdaa7ae1f1f137cd94a9145b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#ac6926b48bdaa7ae1f1f137cd94a9145b">More...</a><br /></td></tr>
 <tr class="separator:ac6926b48bdaa7ae1f1f137cd94a9145b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8a2e2f1701c2e933d102645f923836b8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1gp__reg.html#a8a2e2f1701c2e933d102645f923836b8">~gp_reg</a> ()</td></tr>
+<tr class="memdesc:a8a2e2f1701c2e933d102645f923836b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor.  <a href="#a8a2e2f1701c2e933d102645f923836b8">More...</a><br /></td></tr>
 <tr class="separator:a8a2e2f1701c2e933d102645f923836b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af67aa31d51525327170c3deffe1be854"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1gp__reg.html#af67aa31d51525327170c3deffe1be854">set_kernel</a> (const std::shared_ptr&lt; <a class="el" href="classgplib_1_1kernel__class.html">kernel_class</a> &gt; &amp;k)</td></tr>
+<tr class="memdesc:af67aa31d51525327170c3deffe1be854"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the kernel to be used during the regression process.  <a href="#af67aa31d51525327170c3deffe1be854">More...</a><br /></td></tr>
 <tr class="separator:af67aa31d51525327170c3deffe1be854"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac62c7895e6ce32163093ca1421fbea63"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classgplib_1_1kernel__class.html">kernel_class</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1gp__reg.html#ac62c7895e6ce32163093ca1421fbea63">get_kernel</a> () const </td></tr>
+<tr class="memdesc:ac62c7895e6ce32163093ca1421fbea63"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current kernel set to be used during the regression process.  <a href="#ac62c7895e6ce32163093ca1421fbea63">More...</a><br /></td></tr>
 <tr class="separator:ac62c7895e6ce32163093ca1421fbea63"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a99955641e3da5ed51efe6071e5cbe1b0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1gp__reg.html#a99955641e3da5ed51efe6071e5cbe1b0">set_training_set</a> (const arma::mat &amp;X, const arma::vec &amp;y)</td></tr>
+<tr class="memdesc:a99955641e3da5ed51efe6071e5cbe1b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the training set to be used during the training process.  <a href="#a99955641e3da5ed51efe6071e5cbe1b0">More...</a><br /></td></tr>
 <tr class="separator:a99955641e3da5ed51efe6071e5cbe1b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8f104f44d72182878b90247bccab1876"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1gp__reg.html#a8f104f44d72182878b90247bccab1876">train</a> (int max_iter)</td></tr>
-<tr class="separator:a8f104f44d72182878b90247bccab1876"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea47169d78e1ce22369fb0c6642d0612"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1gp__reg.html#aea47169d78e1ce22369fb0c6642d0612">train</a> (int max_iter, double tol)</td></tr>
+<tr class="memdesc:aea47169d78e1ce22369fb0c6642d0612"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trains the model using the provided training set.  <a href="#aea47169d78e1ce22369fb0c6642d0612">More...</a><br /></td></tr>
+<tr class="separator:aea47169d78e1ce22369fb0c6642d0612"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad08afe8ade3797799b623103e96dbf67"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classgplib_1_1mv__gauss.html">mv_gauss</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1gp__reg.html#ad08afe8ade3797799b623103e96dbf67">full_predict</a> (const arma::mat &amp;new_data) const </td></tr>
+<tr class="memdesc:ad08afe8ade3797799b623103e96dbf67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Uses the already trained model to predict output values for new inputs provided in the parameter, this method returns the complete multivariate gaussian distribution resulting from the regression process.  <a href="#ad08afe8ade3797799b623103e96dbf67">More...</a><br /></td></tr>
 <tr class="separator:ad08afe8ade3797799b623103e96dbf67"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae96556ae3a88a2287654e8e17645f900"><td class="memItemLeft" align="right" valign="top">arma::vec&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1gp__reg.html#ae96556ae3a88a2287654e8e17645f900">predict</a> (const arma::mat &amp;new_data) const </td></tr>
+<tr class="memdesc:ae96556ae3a88a2287654e8e17645f900"><td class="mdescLeft">&#160;</td><td class="mdescRight">Uses the already trained model to predict output values for new inputs provided in the parameter, this method returns only the mean of the multivariate gaussian distribution resulting from the regression process, which is the "best guess" for each new input.  <a href="#ae96556ae3a88a2287654e8e17645f900">More...</a><br /></td></tr>
 <tr class="separator:ae96556ae3a88a2287654e8e17645f900"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
@@ -152,6 +160,8 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Constructor. </p>
+
 </div>
 </div>
 <a class="anchor" id="a8a2e2f1701c2e933d102645f923836b8"></a>
@@ -166,6 +176,8 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Destructor. </p>
 
 </div>
 </div>
@@ -184,6 +196,14 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Uses the already trained model to predict output values for new inputs provided in the parameter, this method returns the complete multivariate gaussian distribution resulting from the regression process. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">new_data</td><td>: A matrix containing points for which output data is unknown. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a class="anchor" id="ac62c7895e6ce32163093ca1421fbea63"></a>
@@ -198,6 +218,8 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns the current kernel set to be used during the regression process. </p>
 
 </div>
 </div>
@@ -215,6 +237,14 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Uses the already trained model to predict output values for new inputs provided in the parameter, this method returns only the mean of the multivariate gaussian distribution resulting from the regression process, which is the "best guess" for each new input. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">new_data</td><td>: A matrix containing points for which output data is unknown. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a class="anchor" id="af67aa31d51525327170c3deffe1be854"></a>
@@ -230,6 +260,14 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Sets the kernel to be used during the regression process. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">k</td><td>: A <a class="el" href="classgplib_1_1kernel__class.html">kernel_class</a> kernel. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -257,9 +295,18 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets the training set to be used during the training process. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">X</td><td>: Matrix of known inputs, each row represents one input. </td></tr>
+    <tr><td class="paramname">y</td><td>: Vector of known outputs corresponding to the known inputs. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
-<a class="anchor" id="a8f104f44d72182878b90247bccab1876"></a>
+<a class="anchor" id="aea47169d78e1ce22369fb0c6642d0612"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -267,11 +314,30 @@ Private Attributes</h2></td></tr>
           <td class="memname">double gplib::gp_reg::train </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>max_iter</em></td><td>)</td>
+          <td class="paramname"><em>max_iter</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>tol</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Trains the model using the provided training set. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">max_iter</td><td>: Maximum number of iterations. </td></tr>
+    <tr><td class="paramname">tol</td><td>: Relative tolerance on the optimization parameters. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -303,7 +369,7 @@ Private Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Oct 6 2015 22:39:30 for gplib by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jan 18 2016 10:10:04 for gplib by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

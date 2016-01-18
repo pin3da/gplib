@@ -24,7 +24,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">gplib
-   &#160;<span id="projectnumber">0.0.1</span>
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
    <div id="projectbrief">C++ Gaussian Process Library</div>
   </td>
@@ -110,8 +110,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a2550c6c051dd1e7584e47617c4fa4079"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a71c5efbd0a976f87fa9cc8f912ba282c"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgplib_1_1gp__reg_1_1implementation.html#a71c5efbd0a976f87fa9cc8f912ba282c">log_marginal</a> ()</td></tr>
 <tr class="separator:a71c5efbd0a976f87fa9cc8f912ba282c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a39342318a205c4cc9fbaf00b0f6ecc73"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgplib_1_1gp__reg_1_1implementation.html#a39342318a205c4cc9fbaf00b0f6ecc73">train</a> (int max_iter)</td></tr>
-<tr class="separator:a39342318a205c4cc9fbaf00b0f6ecc73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5daffaed44c31c7f279f14a3c20a61a3"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgplib_1_1gp__reg_1_1implementation.html#a5daffaed44c31c7f279f14a3c20a61a3">train</a> (int max_iter, double tol)</td></tr>
+<tr class="separator:a5daffaed44c31c7f279f14a3c20a61a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -222,7 +222,7 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a39342318a205c4cc9fbaf00b0f6ecc73"></a>
+<a class="anchor" id="a5daffaed44c31c7f279f14a3c20a61a3"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -233,8 +233,18 @@ Public Attributes</h2></td></tr>
           <td class="memname">double gplib::gp_reg::implementation::train </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>max_iter</em></td><td>)</td>
+          <td class="paramname"><em>max_iter</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>tol</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -329,7 +339,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Oct 6 2015 22:39:30 for gplib by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jan 18 2016 10:10:04 for gplib by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

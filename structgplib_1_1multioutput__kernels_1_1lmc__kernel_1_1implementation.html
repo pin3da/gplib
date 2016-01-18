@@ -24,7 +24,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">gplib
-   &#160;<span id="projectnumber">0.0.1</span>
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
    <div id="projectbrief">C++ Gaussian Process Library</div>
   </td>
@@ -108,14 +108,22 @@ Collaboration diagram for gplib::multioutput_kernels::lmc_kernel::implementation
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aba54408251668977a3d17ebb85d3119e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgplib_1_1multioutput__kernels_1_1lmc__kernel_1_1implementation.html#aba54408251668977a3d17ebb85d3119e">default_constructor</a> (size_t lf_number, size_t n_outputs)</td></tr>
 <tr class="separator:aba54408251668977a3d17ebb85d3119e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4607e9505f3677d768f9b62c322898a7"><td class="memItemLeft" align="right" valign="top">mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgplib_1_1multioutput__kernels_1_1lmc__kernel_1_1implementation.html#a4607e9505f3677d768f9b62c322898a7">eval</a> (const vector&lt; mat &gt; &amp;X, const vector&lt; mat &gt; &amp;Y)</td></tr>
-<tr class="separator:a4607e9505f3677d768f9b62c322898a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac833d427ed5c8e6a28351fc3f114a673"><td class="memItemLeft" align="right" valign="top">mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgplib_1_1multioutput__kernels_1_1lmc__kernel_1_1implementation.html#ac833d427ed5c8e6a28351fc3f114a673">derivate</a> (size_t param_id, const vector&lt; mat &gt; &amp;X, const vector&lt; mat &gt; &amp;Y)</td></tr>
-<tr class="separator:ac833d427ed5c8e6a28351fc3f114a673"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a543142815fc5aef23d012b461c24c992"><td class="memItemLeft" align="right" valign="top">mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgplib_1_1multioutput__kernels_1_1lmc__kernel_1_1implementation.html#a543142815fc5aef23d012b461c24c992">eval</a> (const vector&lt; mat &gt; &amp;X, const vector&lt; mat &gt; &amp;Y, bool diag=false)</td></tr>
+<tr class="separator:a543142815fc5aef23d012b461c24c992"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c9972a2f0d3eacf4412f3f349a014b5"><td class="memItemLeft" align="right" valign="top">mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgplib_1_1multioutput__kernels_1_1lmc__kernel_1_1implementation.html#a4c9972a2f0d3eacf4412f3f349a014b5">derivate_wrt_data_an</a> (size_t param_id, const vector&lt; mat &gt; &amp;X, const vector&lt; mat &gt; &amp;Y, size_t ans_rows, size_t ans_cols, bool diag=false)</td></tr>
+<tr class="separator:a4c9972a2f0d3eacf4412f3f349a014b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ac3a353cc0ca61aaf1b0ceea83d2c47"><td class="memItemLeft" align="right" valign="top">mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgplib_1_1multioutput__kernels_1_1lmc__kernel_1_1implementation.html#a9ac3a353cc0ca61aaf1b0ceea83d2c47">derivate_wrt_data_num</a> (size_t param_id, const vector&lt; mat &gt; &amp;X, const vector&lt; mat &gt; &amp;Y, size_t ans_rows, size_t ans_cols, bool diag=false)</td></tr>
+<tr class="separator:a9ac3a353cc0ca61aaf1b0ceea83d2c47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26329bafe96ca10560683b22b7519c20"><td class="memItemLeft" align="right" valign="top">mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgplib_1_1multioutput__kernels_1_1lmc__kernel_1_1implementation.html#a26329bafe96ca10560683b22b7519c20">derivative_wrt_B</a> (size_t q, size_t param_id, const vector&lt; mat &gt; &amp;X, const vector&lt; mat &gt; &amp;Y, size_t ans_rows, size_t ans_cols, bool diag=false)</td></tr>
+<tr class="separator:a26329bafe96ca10560683b22b7519c20"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4573cbe17e359394ca65d6550c11203"><td class="memItemLeft" align="right" valign="top">mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgplib_1_1multioutput__kernels_1_1lmc__kernel_1_1implementation.html#ab4573cbe17e359394ca65d6550c11203">derivative_wrt_kernels</a> (size_t q, size_t param_id, const vector&lt; mat &gt; &amp;X, const vector&lt; mat &gt; &amp;Y, size_t ans_rows, size_t ans_cols, bool diag=false)</td></tr>
+<tr class="separator:ab4573cbe17e359394ca65d6550c11203"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62c0b20079862a3a58d4f6e3c8b0b0e1"><td class="memItemLeft" align="right" valign="top">mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgplib_1_1multioutput__kernels_1_1lmc__kernel_1_1implementation.html#a62c0b20079862a3a58d4f6e3c8b0b0e1">derivate</a> (size_t param_id, const vector&lt; mat &gt; &amp;X, const vector&lt; mat &gt; &amp;Y, bool diag)</td></tr>
+<tr class="separator:a62c0b20079862a3a58d4f6e3c8b0b0e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9566bd6aed3ad9905f5e31e380639b93"><td class="memItemLeft" align="right" valign="top">vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgplib_1_1multioutput__kernels_1_1lmc__kernel_1_1implementation.html#a9566bd6aed3ad9905f5e31e380639b93">get_params</a> ()</td></tr>
 <tr class="separator:a9566bd6aed3ad9905f5e31e380639b93"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0d006eadebc7d5a76a459718ba3effe2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgplib_1_1multioutput__kernels_1_1lmc__kernel_1_1implementation.html#a0d006eadebc7d5a76a459718ba3effe2">set_params</a> (const vector&lt; double &gt; &amp;params, int n_outputs=-1)</td></tr>
-<tr class="separator:a0d006eadebc7d5a76a459718ba3effe2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9be5851892dd9f4d208ad2815f4f5e99"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgplib_1_1multioutput__kernels_1_1lmc__kernel_1_1implementation.html#a9be5851892dd9f4d208ad2815f4f5e99">set_params</a> (const vector&lt; double &gt; &amp;params, size_t n_outputs=0)</td></tr>
+<tr class="separator:a9be5851892dd9f4d208ad2815f4f5e99"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3ae4acfc0dce520cbe54b52a4a40fcc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgplib_1_1multioutput__kernels_1_1lmc__kernel_1_1implementation.html#ab3ae4acfc0dce520cbe54b52a4a40fcc">set_params_k</a> (const vector&lt; mat &gt; &amp;params)</td></tr>
 <tr class="separator:ab3ae4acfc0dce520cbe54b52a4a40fcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e97e5e78f5784f459d004877343d6b5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgplib_1_1multioutput__kernels_1_1lmc__kernel_1_1implementation.html#a6e97e5e78f5784f459d004877343d6b5">set_param</a> (size_t q, size_t a, size_t b, double param)</td></tr>
@@ -134,6 +142,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a57cde96fd33d316f4ba292e244378e62"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb63d2245f0d6cda29e1025f32bbea7a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgplib_1_1multioutput__kernels_1_1lmc__kernel_1_1implementation.html#adb63d2245f0d6cda29e1025f32bbea7a">set_upper_bounds</a> (const vector&lt; double &gt; &amp;upper_bound)</td></tr>
 <tr class="separator:adb63d2245f0d6cda29e1025f32bbea7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af76872c2e5eca059d0f1115cb3f34496"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgplib_1_1multioutput__kernels_1_1lmc__kernel_1_1implementation.html#af76872c2e5eca059d0f1115cb3f34496">in_kernel_np</a> ()</td></tr>
+<tr class="separator:af76872c2e5eca059d0f1115cb3f34496"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2ce99d828cb5ad0223b28454207a839d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgplib_1_1multioutput__kernels_1_1lmc__kernel_1_1implementation.html#a2ce99d828cb5ad0223b28454207a839d">set_lower_bounds</a> (const double &amp;l_bound)</td></tr>
 <tr class="separator:a2ce99d828cb5ad0223b28454207a839d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3935d52d34319610194a40aafe7afb1f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgplib_1_1multioutput__kernels_1_1lmc__kernel_1_1implementation.html#a3935d52d34319610194a40aafe7afb1f">set_upper_bounds</a> (const double &amp;u_bound)</td></tr>
@@ -211,7 +221,7 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ac833d427ed5c8e6a28351fc3f114a673"></a>
+<a class="anchor" id="a62c0b20079862a3a58d4f6e3c8b0b0e1"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -234,7 +244,13 @@ Public Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const vector&lt; mat &gt; &amp;&#160;</td>
-          <td class="paramname"><em>Y</em>&#160;</td>
+          <td class="paramname"><em>Y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>diag</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -251,7 +267,251 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a4607e9505f3677d768f9b62c322898a7"></a>
+<a class="anchor" id="a4c9972a2f0d3eacf4412f3f349a014b5"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">mat gplib::multioutput_kernels::lmc_kernel::implementation::derivate_wrt_data_an </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>param_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const vector&lt; mat &gt; &amp;&#160;</td>
+          <td class="paramname"><em>X</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const vector&lt; mat &gt; &amp;&#160;</td>
+          <td class="paramname"><em>Y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>ans_rows</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>ans_cols</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>diag</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a9ac3a353cc0ca61aaf1b0ceea83d2c47"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">mat gplib::multioutput_kernels::lmc_kernel::implementation::derivate_wrt_data_num </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>param_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const vector&lt; mat &gt; &amp;&#160;</td>
+          <td class="paramname"><em>X</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const vector&lt; mat &gt; &amp;&#160;</td>
+          <td class="paramname"><em>Y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>ans_rows</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>ans_cols</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>diag</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a26329bafe96ca10560683b22b7519c20"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">mat gplib::multioutput_kernels::lmc_kernel::implementation::derivative_wrt_B </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>q</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>param_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const vector&lt; mat &gt; &amp;&#160;</td>
+          <td class="paramname"><em>X</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const vector&lt; mat &gt; &amp;&#160;</td>
+          <td class="paramname"><em>Y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>ans_rows</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>ans_cols</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>diag</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ab4573cbe17e359394ca65d6550c11203"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">mat gplib::multioutput_kernels::lmc_kernel::implementation::derivative_wrt_kernels </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>q</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>param_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const vector&lt; mat &gt; &amp;&#160;</td>
+          <td class="paramname"><em>X</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const vector&lt; mat &gt; &amp;&#160;</td>
+          <td class="paramname"><em>Y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>ans_rows</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>ans_cols</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>diag</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a543142815fc5aef23d012b461c24c992"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -268,7 +528,13 @@ Public Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const vector&lt; mat &gt; &amp;&#160;</td>
-          <td class="paramname"><em>Y</em>&#160;</td>
+          <td class="paramname"><em>Y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>diag</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -368,6 +634,29 @@ Public Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">vector&lt;double&gt; gplib::multioutput_kernels::lmc_kernel::implementation::get_params </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="af76872c2e5eca059d0f1115cb3f34496"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t gplib::multioutput_kernels::lmc_kernel::implementation::in_kernel_np </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -539,7 +828,7 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a0d006eadebc7d5a76a459718ba3effe2"></a>
+<a class="anchor" id="a9be5851892dd9f4d208ad2815f4f5e99"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -555,8 +844,8 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>n_outputs</em> = <code>-1</code>&#160;</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>n_outputs</em> = <code>0</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -712,7 +1001,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Oct 6 2015 22:39:30 for gplib by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jan 18 2016 10:10:04 for gplib by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

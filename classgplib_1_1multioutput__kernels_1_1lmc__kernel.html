@@ -24,7 +24,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">gplib
-   &#160;<span id="projectnumber">0.0.1</span>
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
    <div id="projectbrief">C++ Gaussian Process Library</div>
   </td>
@@ -127,58 +127,83 @@ Classes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:adf9d4f61a4ccc01415eb62f277c92456"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#adf9d4f61a4ccc01415eb62f277c92456">lmc_kernel</a> ()</td></tr>
+<tr class="memdesc:adf9d4f61a4ccc01415eb62f277c92456"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#adf9d4f61a4ccc01415eb62f277c92456">More...</a><br /></td></tr>
 <tr class="separator:adf9d4f61a4ccc01415eb62f277c92456"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa2af98553d00cc5f53ab54d07a074902"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#aa2af98553d00cc5f53ab54d07a074902">lmc_kernel</a> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="classgplib_1_1kernel__class.html">kernel_class</a> &gt;&gt; &amp;kernels, const std::vector&lt; arma::mat &gt; &amp;params)</td></tr>
+<tr class="memdesc:aa2af98553d00cc5f53ab54d07a074902"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor, requires the inner kernels to be used and the parameter matrices.  <a href="#aa2af98553d00cc5f53ab54d07a074902">More...</a><br /></td></tr>
 <tr class="separator:aa2af98553d00cc5f53ab54d07a074902"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a88ad725f720bc6ca27bff17fa4f3af44"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#a88ad725f720bc6ca27bff17fa4f3af44">lmc_kernel</a> (const size_t lf_number, size_t n_outputs)</td></tr>
-<tr class="memdesc:a88ad725f720bc6ca27bff17fa4f3af44"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor with default kernels and parameters.  <a href="#a88ad725f720bc6ca27bff17fa4f3af44">More...</a><br /></td></tr>
+<tr class="memdesc:a88ad725f720bc6ca27bff17fa4f3af44"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor, requires the number of latent functions and the number of outputs to be used, creates default kernels and parameters.  <a href="#a88ad725f720bc6ca27bff17fa4f3af44">More...</a><br /></td></tr>
 <tr class="separator:a88ad725f720bc6ca27bff17fa4f3af44"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a417e48a178231d26b0c39e8ddf80d6a2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#a417e48a178231d26b0c39e8ddf80d6a2">~lmc_kernel</a> ()</td></tr>
+<tr class="memdesc:a417e48a178231d26b0c39e8ddf80d6a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor.  <a href="#a417e48a178231d26b0c39e8ddf80d6a2">More...</a><br /></td></tr>
 <tr class="separator:a417e48a178231d26b0c39e8ddf80d6a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6fa0ef93508c887a91814b647dbc119a"><td class="memItemLeft" align="right" valign="top">arma::mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#a6fa0ef93508c887a91814b647dbc119a">eval</a> (const std::vector&lt; arma::mat &gt; &amp;X, const std::vector&lt; arma::mat &gt; &amp;Y) const </td></tr>
-<tr class="separator:a6fa0ef93508c887a91814b647dbc119a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a29e1c25d36ad935719dc154542693524"><td class="memItemLeft" align="right" valign="top">arma::mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#a29e1c25d36ad935719dc154542693524">derivate</a> (size_t param_id, const std::vector&lt; arma::mat &gt; &amp;X, const std::vector&lt; arma::mat &gt; &amp;Y) const </td></tr>
-<tr class="separator:a29e1c25d36ad935719dc154542693524"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb4e6a48c78ed200c5bc1a463f25cc2f"><td class="memItemLeft" align="right" valign="top">arma::mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#aeb4e6a48c78ed200c5bc1a463f25cc2f">eval</a> (const std::vector&lt; arma::mat &gt; &amp;X, const std::vector&lt; arma::mat &gt; &amp;Y, bool diag=false) const </td></tr>
+<tr class="memdesc:aeb4e6a48c78ed200c5bc1a463f25cc2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluates the kernel function over the provided sets of matrices.  <a href="#aeb4e6a48c78ed200c5bc1a463f25cc2f">More...</a><br /></td></tr>
+<tr class="separator:aeb4e6a48c78ed200c5bc1a463f25cc2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a67019cde2711fad4a735169904429f41"><td class="memItemLeft" align="right" valign="top">arma::mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#a67019cde2711fad4a735169904429f41">derivate</a> (size_t param_id, const std::vector&lt; arma::mat &gt; &amp;X, const std::vector&lt; arma::mat &gt; &amp;Y, bool diag=false) const </td></tr>
+<tr class="memdesc:a67019cde2711fad4a735169904429f41"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the value of the derivative wrt a certain parameter with a a particular pair of input matrices.  <a href="#a67019cde2711fad4a735169904429f41">More...</a><br /></td></tr>
+<tr class="separator:a67019cde2711fad4a735169904429f41"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a67ddecb17f5a838d89df0905a3704dfc"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#a67ddecb17f5a838d89df0905a3704dfc">n_params</a> () const </td></tr>
+<tr class="memdesc:a67ddecb17f5a838d89df0905a3704dfc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the total number of parameters needed by the kernel (parameter matrices, plus the parameters of each inner kernel).  <a href="#a67ddecb17f5a838d89df0905a3704dfc">More...</a><br /></td></tr>
 <tr class="separator:a67ddecb17f5a838d89df0905a3704dfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0eeb9219d25746b736e3a9842543d8b2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#a0eeb9219d25746b736e3a9842543d8b2">set_params_k</a> (const std::vector&lt; arma::mat &gt; &amp;params)</td></tr>
+<tr class="memdesc:a0eeb9219d25746b736e3a9842543d8b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the parameters of the multioutput kernel only, doesn't affect the parameters of the inner kernels.  <a href="#a0eeb9219d25746b736e3a9842543d8b2">More...</a><br /></td></tr>
 <tr class="separator:a0eeb9219d25746b736e3a9842543d8b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab72749709aee9e0c2942fd143614d1cb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#ab72749709aee9e0c2942fd143614d1cb">set_params</a> (const std::vector&lt; double &gt; &amp;params, size_t n_outputs=-1)</td></tr>
-<tr class="separator:ab72749709aee9e0c2942fd143614d1cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4cdccc3f6480a3d378d093604836581e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#a4cdccc3f6480a3d378d093604836581e">set_params</a> (const std::vector&lt; double &gt; &amp;params, size_t n_outputs=0)</td></tr>
+<tr class="memdesc:a4cdccc3f6480a3d378d093604836581e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets all the parameters of the multioutput kernel including those of the inner kernels using a std.  <a href="#a4cdccc3f6480a3d378d093604836581e">More...</a><br /></td></tr>
+<tr class="separator:a4cdccc3f6480a3d378d093604836581e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a98b67042e6c0c2dc21e56790127e1875"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#a98b67042e6c0c2dc21e56790127e1875">set_param</a> (size_t q, size_t a, size_t b, const double param)</td></tr>
+<tr class="memdesc:a98b67042e6c0c2dc21e56790127e1875"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the parameter of the matrix B in multioutput kernel.  <a href="#a98b67042e6c0c2dc21e56790127e1875">More...</a><br /></td></tr>
 <tr class="separator:a98b67042e6c0c2dc21e56790127e1875"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab5ac2e9a3024d69097c0137b1207855b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#ab5ac2e9a3024d69097c0137b1207855b">set_param</a> (size_t q, size_t param_id, const double param)</td></tr>
+<tr class="memdesc:ab5ac2e9a3024d69097c0137b1207855b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the parameter of the matrix B in multioutput kernel.  <a href="#ab5ac2e9a3024d69097c0137b1207855b">More...</a><br /></td></tr>
 <tr class="separator:ab5ac2e9a3024d69097c0137b1207855b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad426c582fe0eac4efec6b83a9c0ac1d3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#ad426c582fe0eac4efec6b83a9c0ac1d3">set_kernels</a> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="classgplib_1_1kernel__class.html">kernel_class</a> &gt;&gt; &amp;kernels)</td></tr>
+<tr class="memdesc:ad426c582fe0eac4efec6b83a9c0ac1d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the inner kernels.  <a href="#ad426c582fe0eac4efec6b83a9c0ac1d3">More...</a><br /></td></tr>
 <tr class="separator:ad426c582fe0eac4efec6b83a9c0ac1d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a85f54b493f40bce234b26088aefd7cff"><td class="memItemLeft" align="right" valign="top">std::vector&lt; arma::mat &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#a85f54b493f40bce234b26088aefd7cff">get_params_k</a> () const </td></tr>
+<tr class="memdesc:a85f54b493f40bce234b26088aefd7cff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a vector of matrices containing the parameters of the multioutput kernel, but not those of the inner kernels (in other words only the parameter matrices).  <a href="#a85f54b493f40bce234b26088aefd7cff">More...</a><br /></td></tr>
 <tr class="separator:a85f54b493f40bce234b26088aefd7cff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d24475a6c9ff45003ab98a4ed82867d"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#a1d24475a6c9ff45003ab98a4ed82867d">get_params</a> () const </td></tr>
+<tr class="memdesc:a1d24475a6c9ff45003ab98a4ed82867d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a std vector containing all of the parameters of the multioutput kernel, including those of each inner kernel.  <a href="#a1d24475a6c9ff45003ab98a4ed82867d">More...</a><br /></td></tr>
 <tr class="separator:a1d24475a6c9ff45003ab98a4ed82867d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8b17a48cdba79b0689359681ac9b1abb"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::shared_ptr&lt; <a class="el" href="classgplib_1_1kernel__class.html">kernel_class</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#a8b17a48cdba79b0689359681ac9b1abb">get_kernels</a> () const </td></tr>
+<tr class="memdesc:a8b17a48cdba79b0689359681ac9b1abb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a shared pointer to a vector containing the inner kernels currently set.  <a href="#a8b17a48cdba79b0689359681ac9b1abb">More...</a><br /></td></tr>
 <tr class="separator:a8b17a48cdba79b0689359681ac9b1abb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae40fd3099e46081cf30c38e578c11003"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#ae40fd3099e46081cf30c38e578c11003">get_param</a> (size_t q, size_t a, size_t b) const </td></tr>
+<tr class="memdesc:ae40fd3099e46081cf30c38e578c11003"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a double with a single parameter of the matrix B of the multioutput kernel.  <a href="#ae40fd3099e46081cf30c38e578c11003">More...</a><br /></td></tr>
 <tr class="separator:ae40fd3099e46081cf30c38e578c11003"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae8ca1628e20e6da81d302fa230f18a62"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#ae8ca1628e20e6da81d302fa230f18a62">get_param</a> (size_t q, size_t param_id) const </td></tr>
+<tr class="memdesc:ae8ca1628e20e6da81d302fa230f18a62"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a double with a single parameter in the inner kernel of the multioutput kernel.  <a href="#ae8ca1628e20e6da81d302fa230f18a62">More...</a><br /></td></tr>
 <tr class="separator:ae8ca1628e20e6da81d302fa230f18a62"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02d523edf8ad21540ef92450ca2cec17"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#a02d523edf8ad21540ef92450ca2cec17">set_lower_bounds</a> (const double &amp;lower_bounds)</td></tr>
+<tr class="memdesc:a02d523edf8ad21540ef92450ca2cec17"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the lower bounds to be used by the kernel during training process including those of the inner kernels.  <a href="#a02d523edf8ad21540ef92450ca2cec17">More...</a><br /></td></tr>
 <tr class="separator:a02d523edf8ad21540ef92450ca2cec17"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a963b4aa98763f52d6344832be1c4cc82"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#a963b4aa98763f52d6344832be1c4cc82">set_upper_bounds</a> (const double &amp;upper_bounds)</td></tr>
+<tr class="memdesc:a963b4aa98763f52d6344832be1c4cc82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the upper bounds to be used by the kernel during training process including those of the inner kernels.  <a href="#a963b4aa98763f52d6344832be1c4cc82">More...</a><br /></td></tr>
 <tr class="separator:a963b4aa98763f52d6344832be1c4cc82"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac7e487f4210c0754aa5ea794d964327a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#ac7e487f4210c0754aa5ea794d964327a">set_lower_bounds</a> (const std::vector&lt; double &gt; &amp;lower_bounds)</td></tr>
+<tr class="memdesc:ac7e487f4210c0754aa5ea794d964327a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the lower bounds to be used by the kernel during training process including thos of the inner kernels.  <a href="#ac7e487f4210c0754aa5ea794d964327a">More...</a><br /></td></tr>
 <tr class="separator:ac7e487f4210c0754aa5ea794d964327a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a946d5bc4568b3638f989ac71f68de6ce"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#a946d5bc4568b3638f989ac71f68de6ce">set_upper_bounds</a> (const std::vector&lt; double &gt; &amp;upper_bounds)</td></tr>
+<tr class="memdesc:a946d5bc4568b3638f989ac71f68de6ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the upper bounds to be used by the kernel during training process including thos of the inner kernels.  <a href="#a946d5bc4568b3638f989ac71f68de6ce">More...</a><br /></td></tr>
 <tr class="separator:a946d5bc4568b3638f989ac71f68de6ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afcc8d1197aacc7863a64df6d52fcff53"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#afcc8d1197aacc7863a64df6d52fcff53">get_lower_bounds</a> () const </td></tr>
+<tr class="memdesc:afcc8d1197aacc7863a64df6d52fcff53"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a vector with the lower bounds of all the parameters, including those of the inner kernels.  <a href="#afcc8d1197aacc7863a64df6d52fcff53">More...</a><br /></td></tr>
 <tr class="separator:afcc8d1197aacc7863a64df6d52fcff53"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a52e272e3200b3eef885d648956fee385"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#a52e272e3200b3eef885d648956fee385">get_upper_bounds</a> () const </td></tr>
+<tr class="memdesc:a52e272e3200b3eef885d648956fee385"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a vector with the upper bounds of all the parameters, including those of the inner kernels.  <a href="#a52e272e3200b3eef885d648956fee385">More...</a><br /></td></tr>
 <tr class="separator:a52e272e3200b3eef885d648956fee385"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classgplib_1_1multioutput__kernel__class"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classgplib_1_1multioutput__kernel__class')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classgplib_1_1multioutput__kernel__class.html">gplib::multioutput_kernel_class</a></td></tr>
 <tr class="memitem:ab724c1412be041211ca1fe8ff4df07f8 inherit pub_methods_classgplib_1_1multioutput__kernel__class"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1multioutput__kernel__class.html#ab724c1412be041211ca1fe8ff4df07f8">multioutput_kernel_class</a> ()</td></tr>
+<tr class="memdesc:ab724c1412be041211ca1fe8ff4df07f8 inherit pub_methods_classgplib_1_1multioutput__kernel__class"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multioutput Kernel Class definition.  <a href="#ab724c1412be041211ca1fe8ff4df07f8">More...</a><br /></td></tr>
 <tr class="separator:ab724c1412be041211ca1fe8ff4df07f8 inherit pub_methods_classgplib_1_1multioutput__kernel__class"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2dd457f2073c332be0fe5aeffa7d9e93 inherit pub_methods_classgplib_1_1multioutput__kernel__class"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1multioutput__kernel__class.html#a2dd457f2073c332be0fe5aeffa7d9e93">multioutput_kernel_class</a> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="classgplib_1_1kernel__class.html">kernel_class</a> &gt;&gt; &amp;kernels, const std::vector&lt; arma::mat &gt; &amp;params)</td></tr>
+<tr class="memdesc:a2dd457f2073c332be0fe5aeffa7d9e93 inherit pub_methods_classgplib_1_1multioutput__kernel__class"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor, requires the inner kernels to be used and the parameter matrices.  <a href="#a2dd457f2073c332be0fe5aeffa7d9e93">More...</a><br /></td></tr>
 <tr class="separator:a2dd457f2073c332be0fe5aeffa7d9e93 inherit pub_methods_classgplib_1_1multioutput__kernel__class"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad8da5fc459fc4c1749b4727ce24f8c57 inherit pub_methods_classgplib_1_1multioutput__kernel__class"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgplib_1_1multioutput__kernel__class.html#ad8da5fc459fc4c1749b4727ce24f8c57">~multioutput_kernel_class</a> ()=default</td></tr>
+<tr class="memdesc:ad8da5fc459fc4c1749b4727ce24f8c57 inherit pub_methods_classgplib_1_1multioutput__kernel__class"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor.  <a href="#ad8da5fc459fc4c1749b4727ce24f8c57">More...</a><br /></td></tr>
 <tr class="separator:ad8da5fc459fc4c1749b4727ce24f8c57 inherit pub_methods_classgplib_1_1multioutput__kernel__class"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
@@ -201,6 +226,8 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Constructor. </p>
 
 </div>
 </div>
@@ -227,10 +254,12 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Constructor, requires the inner kernels to be used and the parameter matrices. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">kernels</td><td>: Kernels used in the latent functions. </td></tr>
-    <tr><td class="paramname">params</td><td>: Matrix of params used in the lmc, 'b' matrix in  </td></tr>
+    <tr><td class="paramname">kernels</td><td>: Shared pointer containing a vector with the inner kernels (<a class="el" href="classgplib_1_1kernel__class.html">kernel_class</a>). </td></tr>
+    <tr><td class="paramname">params</td><td>: Vector containing the parameter matrices. </td></tr>
   </table>
   </dd>
 </dl>
@@ -261,11 +290,11 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Constructor with default kernels and parameters. </p>
+<p>Constructor, requires the number of latent functions and the number of outputs to be used, creates default kernels and parameters. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">lf_number</td><td>: Number of latent functions. </td></tr>
-    <tr><td class="paramname">n_outputs</td><td>: Number of outputs. </td></tr>
+    <tr><td class="paramname">lf_number</td><td>: size_t, Number of latent functions. </td></tr>
+    <tr><td class="paramname">n_outputs</td><td>: size_t, Number of outputs. </td></tr>
   </table>
   </dd>
 </dl>
@@ -285,10 +314,12 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Destructor. </p>
+
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="a29e1c25d36ad935719dc154542693524"></a>
+<a class="anchor" id="a67019cde2711fad4a735169904429f41"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -311,7 +342,13 @@ Private Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const std::vector&lt; arma::mat &gt; &amp;&#160;</td>
-          <td class="paramname"><em>Y</em>&#160;</td>
+          <td class="paramname"><em>Y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>diag</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -326,11 +363,22 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classgplib_1_1multioutput__kernel__class.html#a52e7e7c35b02811cb1ad520a5640ac38">gplib::multioutput_kernel_class</a>.</p>
+<p>Returns the value of the derivative wrt a certain parameter with a a particular pair of input matrices. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">param_id</td><td>: Identifier of the parameter we are derivating with respect to. </td></tr>
+    <tr><td class="paramname">X</td><td>: First vector of matrices for derivative evaluation. </td></tr>
+    <tr><td class="paramname">Y</td><td>: Second vector of matrices for derivative evaluation. </td></tr>
+    <tr><td class="paramname">diag</td><td>: Flag, if it is true the kernel should only be evaluated for the derivative entries pertaining to the diagonal of the answer matrix, this is due to performance reasons while using FITC. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="classgplib_1_1multioutput__kernel__class.html#a59eb5f11c8bc7a06a7296a31b1e706d8">gplib::multioutput_kernel_class</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a6fa0ef93508c887a91814b647dbc119a"></a>
+<a class="anchor" id="aeb4e6a48c78ed200c5bc1a463f25cc2f"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -347,7 +395,13 @@ Private Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const std::vector&lt; arma::mat &gt; &amp;&#160;</td>
-          <td class="paramname"><em>Y</em>&#160;</td>
+          <td class="paramname"><em>Y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>diag</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -362,7 +416,17 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classgplib_1_1multioutput__kernel__class.html#a01f21cd5b6c7825b8a742a654554291d">gplib::multioutput_kernel_class</a>.</p>
+<p>Evaluates the kernel function over the provided sets of matrices. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">X</td><td>: First vector of matrices for kernel evaluation. </td></tr>
+    <tr><td class="paramname">Y</td><td>: Second vector of matrices for kernel evaluation. </td></tr>
+    <tr><td class="paramname">diag</td><td>: Flag, if it is true the kernel should only be evaluated for the entries pertaining to the diagonal of the answer matrix, this is due to performance reasons while using FITC. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="classgplib_1_1multioutput__kernel__class.html#a05cb965e58d3224d02f4a2ee901ae493">gplib::multioutput_kernel_class</a>.</p>
 
 </div>
 </div>
@@ -386,6 +450,8 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Returns a shared pointer to a vector containing the inner kernels currently set. </p>
 
 <p>Implements <a class="el" href="classgplib_1_1multioutput__kernel__class.html#af38c3105197b6ab21fcb5ab91c6cf4b4">gplib::multioutput_kernel_class</a>.</p>
 
@@ -411,6 +477,8 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Returns a vector with the lower bounds of all the parameters, including those of the inner kernels. </p>
 
 <p>Implements <a class="el" href="classgplib_1_1multioutput__kernel__class.html#af0598acedeb09e5df39f716820e3c34a">gplib::multioutput_kernel_class</a>.</p>
 
@@ -446,6 +514,16 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns a double with a single parameter of the matrix B of the multioutput kernel. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">q</td><td>identifier of the latent function. </td></tr>
+    <tr><td class="paramname">a</td><td>identifier of the param row. </td></tr>
+    <tr><td class="paramname">b</td><td>identifier of the param col. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a class="anchor" id="ae8ca1628e20e6da81d302fa230f18a62"></a>
@@ -472,6 +550,15 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns a double with a single parameter in the inner kernel of the multioutput kernel. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">q</td><td>identifier of the inner kernel. </td></tr>
+    <tr><td class="paramname">param_id</td><td>the identifier of the parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a class="anchor" id="a1d24475a6c9ff45003ab98a4ed82867d"></a>
@@ -494,6 +581,8 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Returns a std vector containing all of the parameters of the multioutput kernel, including those of each inner kernel. </p>
 
 <p>Implements <a class="el" href="classgplib_1_1multioutput__kernel__class.html#a80a45d9df82f5ad8cc455e8d21b48444">gplib::multioutput_kernel_class</a>.</p>
 
@@ -520,6 +609,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Returns a vector of matrices containing the parameters of the multioutput kernel, but not those of the inner kernels (in other words only the parameter matrices). </p>
+
 <p>Implements <a class="el" href="classgplib_1_1multioutput__kernel__class.html#aac0520dc981a381d8f3229951e8bb9f7">gplib::multioutput_kernel_class</a>.</p>
 
 </div>
@@ -545,6 +636,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Returns a vector with the upper bounds of all the parameters, including those of the inner kernels. </p>
+
 <p>Implements <a class="el" href="classgplib_1_1multioutput__kernel__class.html#a067c0876239f79e11280ed3afee90a26">gplib::multioutput_kernel_class</a>.</p>
 
 </div>
@@ -569,6 +662,8 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Returns the total number of parameters needed by the kernel (parameter matrices, plus the parameters of each inner kernel). </p>
 
 <p>Implements <a class="el" href="classgplib_1_1multioutput__kernel__class.html#a95f0a1241d7c2b0647cac02b1ad4ad96">gplib::multioutput_kernel_class</a>.</p>
 
@@ -596,6 +691,14 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Sets the inner kernels. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">kernels</td><td>: Shared pointer containing a vector of <a class="el" href="classgplib_1_1kernel__class.html">kernel_class</a> kernels. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p>Implements <a class="el" href="classgplib_1_1multioutput__kernel__class.html#a5c3c5db90a9f815621a7491544ecb6c6">gplib::multioutput_kernel_class</a>.</p>
 
 </div>
@@ -622,6 +725,14 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Sets the lower bounds to be used by the kernel during training process including those of the inner kernels. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">lower_bounds</td><td>: double, the lower bounds of all the parameters will be set to this value. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p>Implements <a class="el" href="classgplib_1_1multioutput__kernel__class.html#adec0209151fef0fca5c586bafe2fdd74">gplib::multioutput_kernel_class</a>.</p>
 
 </div>
@@ -647,6 +758,14 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Sets the lower bounds to be used by the kernel during training process including thos of the inner kernels. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">lower_bounds</td><td>: Vector containing the lower bounds to be used. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p>Implements <a class="el" href="classgplib_1_1multioutput__kernel__class.html#ab212a6701e1b5c5fb893e084fd52e150">gplib::multioutput_kernel_class</a>.</p>
 
@@ -688,6 +807,17 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets the parameter of the matrix B in multioutput kernel. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">q</td><td>identifier of the latent function. </td></tr>
+    <tr><td class="paramname">a</td><td>identifier of the parameter row. </td></tr>
+    <tr><td class="paramname">b</td><td>identifier of the parameter col. </td></tr>
+    <tr><td class="paramname">param</td><td>the value of the parameter to be set. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a class="anchor" id="ab5ac2e9a3024d69097c0137b1207855b"></a>
@@ -720,9 +850,19 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets the parameter of the matrix B in multioutput kernel. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">q</td><td>identifier of the inner kernel. </td></tr>
+    <tr><td class="paramname">param_id</td><td>identifier of the parameter. </td></tr>
+    <tr><td class="paramname">param</td><td>the value of the parameter to be set. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
-<a class="anchor" id="ab72749709aee9e0c2942fd143614d1cb"></a>
+<a class="anchor" id="a4cdccc3f6480a3d378d093604836581e"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -739,7 +879,7 @@ Private Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>n_outputs</em> = <code>-1</code>&#160;</td>
+          <td class="paramname"><em>n_outputs</em> = <code>0</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -754,7 +894,16 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classgplib_1_1multioutput__kernel__class.html#aaf751130e60a85073e2d94ddb10fcc50">gplib::multioutput_kernel_class</a>.</p>
+<p>Sets all the parameters of the multioutput kernel including those of the inner kernels using a std. </p>
+<p>vector. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">params</td><td>: vector containing all the parameters needed by the multioutput kernel. </td></tr>
+    <tr><td class="paramname">n_outputs</td><td>: If passed a number bigger than 0 the parameter matrices will be shaped according to the number received. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="classgplib_1_1multioutput__kernel__class.html#a3b95dd9de71934ca4088cf60c373e546">gplib::multioutput_kernel_class</a>.</p>
 
 </div>
 </div>
@@ -779,6 +928,14 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Sets the parameters of the multioutput kernel only, doesn't affect the parameters of the inner kernels. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">params</td><td>: Vector of matrices containing the parameters the size of the vector should be the same as the number of latent functions (inner kernels). </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p>Implements <a class="el" href="classgplib_1_1multioutput__kernel__class.html#ae728e87a470e61e19cf88f285ee849ab">gplib::multioutput_kernel_class</a>.</p>
 
@@ -806,6 +963,14 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Sets the upper bounds to be used by the kernel during training process including those of the inner kernels. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">upper_bounds</td><td>: double, the upper bounds of all the parameters will be set to this value. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p>Implements <a class="el" href="classgplib_1_1multioutput__kernel__class.html#a8a4db2e3fef46974afcd95f43d90fe75">gplib::multioutput_kernel_class</a>.</p>
 
 </div>
@@ -831,6 +996,14 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Sets the upper bounds to be used by the kernel during training process including thos of the inner kernels. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">upper_bounds</td><td>: Vector containing the upper bounds to be used. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p>Implements <a class="el" href="classgplib_1_1multioutput__kernel__class.html#a693f6db5e0b77c05d49e273b5f87450a">gplib::multioutput_kernel_class</a>.</p>
 
@@ -864,7 +1037,7 @@ Private Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Oct 6 2015 22:39:30 for gplib by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jan 18 2016 10:10:04 for gplib by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

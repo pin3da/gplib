@@ -1,5 +1,7 @@
 var searchData=
 [
+  ['m',['M',['../structgplib_1_1gp__reg__multi_1_1implementation.html#a495488ed5e5b694713fab562cae1a816',1,'gplib::gp_reg_multi::implementation']]],
+  ['m_5fpi',['m_pi',['../test__gp__reg__multi_8cc.html#a9e669d363edb6f7cf7cf0b7932681a65',1,'test_gp_reg_multi.cc']]],
   ['mainpage_2emd',['mainpage.md',['../mainpage_8md.html',1,'']]],
   ['marginal',['marginal',['../structgplib_1_1gp__reg_1_1implementation.html#a2550c6c051dd1e7584e47617c4fa4079',1,'gplib::gp_reg::implementation::marginal()'],['../structgplib_1_1gp__reg__multi_1_1implementation.html#aaaed1035aab9ec604f5c69de8a7fed8d',1,'gplib::gp_reg_multi::implementation::marginal()']]],
   ['marginalize_5fhidden',['marginalize_hidden',['../structgplib_1_1mv__gauss_1_1implementation.html#a62c3fc9a6152f275680b355aa1afdd63',1,'gplib::mv_gauss::implementation::marginalize_hidden()'],['../classgplib_1_1mv__gauss.html#a8dc4a7e7c0a4be0b9fb33d6c1de8a359',1,'gplib::mv_gauss::marginalize_hidden()']]],

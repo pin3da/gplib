@@ -24,7 +24,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">gplib
-   &#160;<span id="projectnumber">0.0.1</span>
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
    <div id="projectbrief">C++ Gaussian Process Library</div>
   </td>
@@ -97,8 +97,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>This is the complete list of members for <a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html">gplib::multioutput_kernels::lmc_kernel</a>, including all inherited members.</p>
 <table class="directory">
-  <tr class="even"><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#a29e1c25d36ad935719dc154542693524">derivate</a>(size_t param_id, const std::vector&lt; arma::mat &gt; &amp;X, const std::vector&lt; arma::mat &gt; &amp;Y) const </td><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html">gplib::multioutput_kernels::lmc_kernel</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#a6fa0ef93508c887a91814b647dbc119a">eval</a>(const std::vector&lt; arma::mat &gt; &amp;X, const std::vector&lt; arma::mat &gt; &amp;Y) const </td><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html">gplib::multioutput_kernels::lmc_kernel</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#a67019cde2711fad4a735169904429f41">derivate</a>(size_t param_id, const std::vector&lt; arma::mat &gt; &amp;X, const std::vector&lt; arma::mat &gt; &amp;Y, bool diag=false) const </td><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html">gplib::multioutput_kernels::lmc_kernel</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#aeb4e6a48c78ed200c5bc1a463f25cc2f">eval</a>(const std::vector&lt; arma::mat &gt; &amp;X, const std::vector&lt; arma::mat &gt; &amp;Y, bool diag=false) const </td><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html">gplib::multioutput_kernels::lmc_kernel</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#a8b17a48cdba79b0689359681ac9b1abb">get_kernels</a>() const </td><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html">gplib::multioutput_kernels::lmc_kernel</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#afcc8d1197aacc7863a64df6d52fcff53">get_lower_bounds</a>() const </td><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html">gplib::multioutput_kernels::lmc_kernel</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#ae40fd3099e46081cf30c38e578c11003">get_param</a>(size_t q, size_t a, size_t b) const </td><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html">gplib::multioutput_kernels::lmc_kernel</a></td><td class="entry"></td></tr>
@@ -118,7 +118,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <tr class="even"><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#ac7e487f4210c0754aa5ea794d964327a">set_lower_bounds</a>(const std::vector&lt; double &gt; &amp;lower_bounds)</td><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html">gplib::multioutput_kernels::lmc_kernel</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#a98b67042e6c0c2dc21e56790127e1875">set_param</a>(size_t q, size_t a, size_t b, const double param)</td><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html">gplib::multioutput_kernels::lmc_kernel</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#ab5ac2e9a3024d69097c0137b1207855b">set_param</a>(size_t q, size_t param_id, const double param)</td><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html">gplib::multioutput_kernels::lmc_kernel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#ab72749709aee9e0c2942fd143614d1cb">set_params</a>(const std::vector&lt; double &gt; &amp;params, size_t n_outputs=-1)</td><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html">gplib::multioutput_kernels::lmc_kernel</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#a4cdccc3f6480a3d378d093604836581e">set_params</a>(const std::vector&lt; double &gt; &amp;params, size_t n_outputs=0)</td><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html">gplib::multioutput_kernels::lmc_kernel</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#a0eeb9219d25746b736e3a9842543d8b2">set_params_k</a>(const std::vector&lt; arma::mat &gt; &amp;params)</td><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html">gplib::multioutput_kernels::lmc_kernel</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#a963b4aa98763f52d6344832be1c4cc82">set_upper_bounds</a>(const double &amp;upper_bounds)</td><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html">gplib::multioutput_kernels::lmc_kernel</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html#a946d5bc4568b3638f989ac71f68de6ce">set_upper_bounds</a>(const std::vector&lt; double &gt; &amp;upper_bounds)</td><td class="entry"><a class="el" href="classgplib_1_1multioutput__kernels_1_1lmc__kernel.html">gplib::multioutput_kernels::lmc_kernel</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
@@ -127,7 +127,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </table></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Oct 6 2015 22:39:30 for gplib by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jan 18 2016 10:10:04 for gplib by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>
