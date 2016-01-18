@@ -140,7 +140,7 @@ namespace gplib{
 
       mat derivate_wrt_data_num(size_t param_id, const vector<mat> &X,
         const vector<mat> &Y, size_t ans_rows, size_t ans_cols,
-        bool diag = false){
+        bool diag = false) {
 
         //Puut together a vector of sizes
         vector<size_t> x_sizes (X.size());
@@ -166,7 +166,7 @@ namespace gplib{
         mat ans = zeros<mat>(ans_rows, ans_cols);
         vector<mat> tmp;
         double eps = 1e-5;
-        if (u){
+        if (u) {
           tmp = X;
           row = param_id / tmp[which_u].n_cols;
           col = param_id % tmp[which_u].n_cols;
@@ -193,20 +193,20 @@ namespace gplib{
 
       mat derivative_wrt_B(size_t q, size_t param_id, const vector<mat> &X,
         const vector<mat> &Y, size_t ans_rows, size_t ans_cols,
-        bool diag = false){
+        bool diag = false) {
 
         mat ans = zeros<mat>(ans_rows, ans_cols);
         size_t id_out_1 = param_id / B[q].n_rows;
         size_t id_out_2 = param_id % B[q].n_rows;
         size_t first_row = 0, first_col = 0;
-        if (diag){
+        if (diag) {
           for (size_t i = 0; i < X.size(); i++) {
             mat ans_ab = zeros<mat> (X[i].n_rows, Y[i].n_rows);
             if (i == id_out_1) {
               ans_ab = A[q](id_out_1, id_out_2) *
                        (kernels[q]-> eval(X[i], Y[i], diag));
             }
-            if (i * X.size() + i == param_id){
+            if (i * X.size() + i == param_id) {
               ans.submat (first_row, first_col, first_row + X[i].n_rows - 1,
                   first_col + Y[i].n_rows - 1) = ans_ab;
             }
@@ -226,7 +226,7 @@ namespace gplib{
               } else if (i == id_out_1) {
                 ans_ab = A[q](j, id_out_2) * (kernels[q]-> eval(X[i], Y[j]));
               }
-              if (i * X.size() + j == param_id){
+              if (i * X.size() + j == param_id) {
                 ans.submat (first_row, first_col, first_row + X[i].n_rows - 1,
                     first_col + Y[j].n_rows - 1) = ans_ab;
               }
@@ -241,7 +241,7 @@ namespace gplib{
 
       mat derivative_wrt_kernels(size_t q, size_t param_id, const vector<mat>
         &X, const vector<mat> &Y, size_t ans_rows, size_t ans_cols,
-        bool diag = false){
+        bool diag = false) {
         mat ans = zeros<mat>(ans_rows, ans_cols);
         size_t first_row = 0, first_col = 0;
         if (diag) {
@@ -256,7 +256,7 @@ namespace gplib{
         } else {
           for (size_t i = 0; i < X.size(); i++) {
             for (size_t j = 0; j < Y.size(); j++) {
-              if ((diag && i == j) || !diag){
+              if ((diag && i == j) || !diag) {
                 mat ans_ab = B[q](i, j) *
                   kernels[q]-> derivate(param_id, X[i], Y[j], diag);
                 ans.submat (first_row, first_col, first_row + X[i].n_rows - 1,
@@ -477,9 +477,9 @@ namespace gplib{
       void set_upper_bounds(const double &u_bound) {
         vector<double> upper_bound(n_params(), u_bound);
         size_t iter = 0;
-        for (size_t q = 0; q < A.size(); ++q){
-          for (size_t i = 0; i < A[q].n_rows; ++i){
-            for (size_t j = 0; j < A[q].n_cols; ++j){
+        for (size_t q = 0; q < A.size(); ++q) {
+          for (size_t i = 0; i < A[q].n_rows; ++i) {
+            for (size_t j = 0; j < A[q].n_cols; ++j) {
               if (j > i)
                 upper_bound[iter] = 0.0;
               iter++;

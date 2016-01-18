@@ -16,7 +16,7 @@ namespace gplib {
     */
     class squared_exponential : public kernel_class {
       /**
-       * Squared Exponential class definition
+       * Squared Exponential Class definition
        **/
       private:
         struct implementation;
@@ -29,8 +29,8 @@ namespace gplib {
         squared_exponential();
 
         /**
-         *  Constructor with params.
-         *  @param params : Temporal
+         *  Constructor, requires the hiperparameter.
+         *  @param params : Vector of hiperparameters
          **/
         squared_exponential(const std::vector<double> &params);
         /**
@@ -38,46 +38,63 @@ namespace gplib {
          **/
         ~squared_exponential();
         /**
-         *  @param X : Temporal.
-         *  @param Y : Temporal.
-         *  @param diag : Temporal.
+         *  Evaluates the kernel function over the provided matrices.
+         *  @param X : First matrix for kernel evaluation.
+         *  @param Y : Second matrix for kernel evaluation.
+         *  @param diag : Flag, if it is true the kernel should only be evaluated
+         *                for the entries pertaining to the diagonal of the answer
+         *                matrix, this is due to performance reasons while using
+         *                FITC.
          **/
         arma::mat eval(const arma::mat &X, const arma::mat &Y,
           bool diag = false) const;
         /**
-         *  @param param_id : Temporal.
-         *  @param X : Temporal.
-         *  @param Y : Temporal.
-         *  @param diag : Temporal.
+         *  Returns the value of the derivative wrt a certain parameter with a
+         *  a particular pair of input matrices.
+         *  @param param_id : Identifier of the parameter we are derivating with
+         *                    respect to.
+         *  @param X : First matrix for derivative evaluation.
+         *  @param Y : Second matrix for derivative evaluation.
+         *  @param diag : Flag, if it is true the kernel should only be evaluated
+         *                for the derivative entries pertaining to the diagonal of
+         *                the answer matrix, this is due to performance reasons
+         *                while using FITC.
          **/
         arma::mat derivate(size_t param_id, const arma::mat &X,
           const arma::mat &Y, bool diag = false) const;
         /**
-         *  Temporal.
+         *  Returns the number of params needed by the kernel.
          **/
         size_t n_params() const;
         /**
-         *  @param params : Temporal.
+         *  Sets the parameters of the kernel using the proided vector
+         *  @param params : vector containing all the parameters needed by the
+         *  kernel.
          **/
         void set_params(const std::vector<double> &params);
         /**
-         *  @param lower_bounds : Temporal.
+         *  Sets the lower bounds to be used by the kernel during training process
+         *  @param lower_bounds : Vector containing the lower bounds to be used.
          **/
         void set_lower_bounds(const std::vector<double> &lower_bounds);
         /**
-         *  @param upper_bounds : Temporal.
+         *  Sets the upper bounds to be used by the kernel during training process
+         *  @param upper_bounds : Vector containing the upper bounds to be used.
          **/
         void set_upper_bounds(const std::vector<double> &upper_bounds);
         /**
-         *  Temporal.
+         *  Returns a vector with the current values of the parameters of the
+         *  kernel.
          **/
         std::vector<double> get_params() const;
         /**
-         *  Temporal.
+         *  Returns a vector with the current values of the lower_bounds for each
+         *  of the parameters of the kernel.
          **/
         std::vector<double> get_lower_bounds() const;
         /**
-         *  Temporal.
+         *  Returns a vector with the current values of the upper_bounds for each
+         *  of the parameters of the kernel.
          **/
         std::vector<double> get_upper_bounds() const;
     };

@@ -335,6 +335,15 @@ namespace gplib {
        **/
       double train(const int max_iter, const double tol,
         const std::vector<size_t> num_pi);
+       /* *
+       *  @param num_pi : A vector containing the inducing points for each
+       *                  output class, each matrix should be smaller than
+       *                  the corresponding number of inputs for the
+       *                  output class, use of this parameter triggers the use
+       *                  of FITC instead of the full regression.
+       * */
+      double train(const int max_iter, const double tol,
+        const std::vector<arma::mat> num_pi);
       /**
        *  Uses the already trained model to predict output values for new
        *  inputs provided in the parameter,this method returns the complete
