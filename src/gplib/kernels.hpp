@@ -9,10 +9,14 @@ namespace gplib {
    /**
     * Squared exponential kernel with noise inference.
     *
-    * This kernel is defined as sig ^ 2 * exp(- ((x - xp) * (x - xp)')/ 2 * l) + sig_noise ^ 2 * I
+    * This kernel is defined as:
+    * sig ^ 2 * exp(- ((x - xp) * (x - xp)')/ 2 * l) + sig_noise ^ 2 * I
     *
     * @note
-    *   params : vector of hyperparameters 0 : sig, 1 : l (length scale), 2 : sig_noise.
+    *   params : vector of hyperparameters
+    *   0 : sig,
+    *   1 : l (length scale),
+    *   2 : sig_noise.
     */
     class squared_exponential : public kernel_class {
       /**
@@ -29,8 +33,8 @@ namespace gplib {
         squared_exponential();
 
         /**
-         *  Constructor, requires the hiperparameter.
-         *  @param params : Vector of hiperparameters
+         *  Constructor, requires the hyperparameter.
+         *  @param params : Vector of hyperparameters
          **/
         squared_exponential(const std::vector<double> &params);
         /**

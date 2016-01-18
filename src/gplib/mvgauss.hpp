@@ -90,18 +90,20 @@ namespace gplib {
        *  Returns the marginal distribution after integrating out the
        *  non observed variables. If the value of observed[i] is true then
        *  the variable is assumed observed, otherwise it is integrated out.
-       *  @param observed : boolean vector who indicate which values are observed.
+       *  @param observed : boolean vector which indicates which values
+       *                    are observed.
        **/
       mv_gauss marginalize_hidden(const std::vector<bool> &observed) const;
 
       /**
        *  Returns the conditional distribution of the hidden variables given the
-       *  an observation of the observed variables. Only the values for which the
-       *  observed vector is true are considered on vector observation.
-       *  @param observation : vector, indicate the observed values.
-       *  @param observed : boolean vector, indicate which values are observed.
+       *  an observation of the observed variables. Only the values for which
+       *  the observed vector is true are considered on vector observation.
+       *  @param observation : vector, indicates the observed values.
+       *  @param observed : boolean vector, indicates which values are observed.
        **/
-      mv_gauss conditional(const arma::vec &observation, const std::vector<bool> &observed) const;
+      mv_gauss conditional(const arma::vec &observation,
+          const std::vector<bool> &observed) const;
 
       /**
        *  Overload of the operand = to work with Multivariate Gaussian class.

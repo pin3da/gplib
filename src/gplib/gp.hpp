@@ -160,8 +160,9 @@ namespace gplib {
        *                   kernels (kernel_class).
        *  @param params : Parameter matrices.
        **/
-      multioutput_kernel_class (const std::vector<std::shared_ptr<kernel_class>> &kernels,
-            const std::vector<arma::mat> &params) {}
+      multioutput_kernel_class (
+          const std::vector<std::shared_ptr<kernel_class>> &kernels,
+          const std::vector<arma::mat> &params) {}
       /**
        * Destructor
        **/
@@ -192,7 +193,7 @@ namespace gplib {
       virtual arma::mat derivate(size_t param_id, const std::vector<arma::mat> &X,
           const std::vector<arma::mat> &Y, bool diag = false) const = 0;
       /**
-       *  Return the total number of parameters needed bythe kernel (parameter
+       *  Returns the total number of parameters needed bythe kernel (parameter
        *  matrices, plus the parameters of each inner kernel).
        **/
       virtual size_t n_params() const = 0;
@@ -213,13 +214,15 @@ namespace gplib {
        *                     matrices will be shaped according to the number
        *                     received.
        **/
-      virtual void set_params(const std::vector<double> &params, size_t n_outputs = 0) = 0;
+      virtual void set_params(const std::vector<double> &params,
+          size_t n_outputs = 0) = 0;
       /**
        *  Sets the inner kernels.
        *  @param kernels : Shared pointer containing a vector of kernel_class
        *                   kernels.
        **/
-      virtual void set_kernels(const std::vector<std::shared_ptr<kernel_class>> &kernels) = 0;
+      virtual void set_kernels(
+          const std::vector<std::shared_ptr<kernel_class>> &kernels) = 0;
       /**
        *  Returns a vector of matrices containing the parameters of the
        *  multioutput kernel, but not those of the inner kernels (in other words
