@@ -328,7 +328,8 @@ namespace gplib {
        *                  output class, use of this parameter triggers the use
        *                  of FITC instead of the full regression.
        **/
-      double train(const int max_iter, const double tol, const size_t num_pi);
+      double train(const int max_iter, const double tol, const size_t num_pi,
+        bool opt_pi = false);
       /**
        *  @param num_pi : A vector containing the number of inducing points for
        *                  each output class, each value should be smaller than
@@ -337,7 +338,7 @@ namespace gplib {
        *                  of FITC instead of the full regression.
        **/
       double train(const int max_iter, const double tol,
-        const std::vector<size_t> num_pi);
+        const std::vector<size_t> num_pi, bool opt_pi = false);
        /* *
        *  @param num_pi : A vector containing the inducing points for each
        *                  output class, each matrix should be smaller than
@@ -346,7 +347,7 @@ namespace gplib {
        *                  of FITC instead of the full regression.
        * */
       double train(const int max_iter, const double tol,
-        const std::vector<arma::mat> num_pi);
+        const std::vector<arma::mat> num_pi, bool opt_pi = false);
       /**
        *  Uses the already trained model to predict output values for new
        *  inputs provided in the parameter,this method returns the complete
@@ -369,10 +370,16 @@ namespace gplib {
       arma::vec predict(const std::vector<arma::mat> &new_data) const;
       /**
        *  Returns a vector with the complete set of parameters required by the
-       *  multioutput regression (pseudo-inputs if using FITC, multioutput
+       *  multioutput regression (except pseudo-inputs using FITC, multioutput
        *  kernel parameters and inner kernel parameters).
        **/
       std::vector<double> get_params() const;
+      /**
+       *  Returns a vector with the complete set of parameters required by the
+       *  multioutput regression (pseudo-inputs if using FITC, multioutput
+       *  kernel parameters and inner kernel parameters).
+       **/
+      std::vector<double> get_all_params() const;
       /**
        *  Sets all the parameters of the multioutput regression using the Vector
        *  prvided.
@@ -381,6 +388,7 @@ namespace gplib {
        *                  multioutput kernel parameters and inner kernel
        *                  parameters).
        **/
+
       void set_params(const std::vector<double> &params);
       enum {FULL, FITC};
     };
