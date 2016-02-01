@@ -245,7 +245,7 @@ namespace gplib {
       return error;
     }
 
-    double train_FITC(int max_iter, double tol, bool opt_pi = false) {
+    double train_FITC(int max_iter, double tol, bool opt_pi) {
       size_t M_size = 0;
       if (opt_pi)
         for (size_t i = 0; i < M.size(); ++i)
@@ -329,7 +329,7 @@ namespace gplib {
       }
     }
     pimpl-> state = FITC;
-    return pimpl-> train_FITC(max_iter, tol);
+    return pimpl-> train_FITC(max_iter, tol, opt_pi);
   }
 
   double gp_reg_multi::train(const int max_iter, const double tol,
@@ -360,7 +360,7 @@ namespace gplib {
       }
     }
     pimpl-> state = FITC;
-    return pimpl-> train_FITC(max_iter, tol);
+    return pimpl-> train_FITC(max_iter, tol, opt_pi);
   }
 
   double gp_reg_multi::train(const int max_iter, const double tol,
@@ -380,7 +380,7 @@ namespace gplib {
     }
     pimpl-> M = num_pi;
     pimpl-> state = FITC;
-    return pimpl-> train_FITC(max_iter, tol);
+    return pimpl-> train_FITC(max_iter, tol, opt_pi);
   }
 
   mv_gauss gp_reg_multi::full_predict(const vector<mat> &new_data) {
