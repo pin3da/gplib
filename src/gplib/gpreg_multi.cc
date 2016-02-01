@@ -58,8 +58,8 @@ namespace gplib {
     }
 
     mv_gauss predict_FITC(const vector<mat> &new_x) {
-      mat Qn = comp_Q(X, X, M);
-      mat Qm = comp_Q(new_x, new_x, M);
+      mat Qn = force_symmetric(comp_Q(X, X, M));
+      mat Qm = force_symmetric(comp_Q(new_x, new_x, M));
       mat Kff_diag = kernel-> eval(X, X, true);
       mat lambda = Kff_diag - diagmat(Qn);
       mat Kuu = kernel-> eval(M, M);
@@ -73,7 +73,6 @@ namespace gplib {
       mat Y = flatten(y);
       mat mean = Knu * E * Kuf * lambda * Y;
       mat cov = Knn - Qm + Knu * E * Kun;
-
       return mv_gauss(mean, cov);
     }
 
@@ -274,7 +273,6 @@ namespace gplib {
         x = get_params();
       best.optimize(x, error);
       set_params(x);
-
       return error;
     }
 
