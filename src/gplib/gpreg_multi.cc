@@ -323,7 +323,10 @@ namespace gplib {
         double step = (col_max - col_min) / num_pi;
         double cur = col_min;
         for (size_t k = 0; k < num_pi; ++k) {
-          pimpl-> M[i](k, j) = cur;
+          if (cur > col_max)
+            pimpl-> M[i](k, j) = col_max;
+          else
+            pimpl-> M[i](k, j) = cur;
           cur += step;
         }
       }
@@ -354,7 +357,10 @@ namespace gplib {
         double step = (col_max - col_min) / num_pi[i];
         double cur = col_min;
         for (size_t k = 0; k < num_pi[i]; ++k) {
-          pimpl-> M[i](k, j) = cur;
+          if (cur > col_max)
+            pimpl-> M[i](k, j) = col_max;
+          else
+            pimpl-> M[i](k, j) = cur;
           cur += step;
         }
       }
