@@ -20,6 +20,16 @@ In the second image we can see that the FITC implementation is faster than the F
 ![Single Output times large](./img/over_1000.png)
 
 
+#### Note:
+
+There is something really cool, if you know where to put your inducing points you can
+avoid optimize them. It will be a lot faster, check the following graphs.
+
+![Single Output times](./img/so_fitc_noip_small.png)
+
+![Single Output times](./img/so_fitc_noip_large.png)
+
+
 ### Multi output GP
 
 For multiple outputs it behaves as for a single output
@@ -27,3 +37,9 @@ For multiple outputs it behaves as for a single output
 ![Multi Output times](./img/times_mo.png)
 
 ![Multi Output times large](./img/mo_huge.png)
+
+#### Multi output without training inducing points:
+
+![Multiple Output times](./img/mo_fitc_noip_small.png)
+
+![Multiple Output times](./img/mo_fitc_noip_large.png)
