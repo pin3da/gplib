@@ -11,7 +11,7 @@ using namespace arma;
 using namespace gplib;
 
 const size_t MN = 100,
-             num_pi = ceil(MN * 0.24),
+             num_pi = MN * 0.24,
              iter = 1000;
 
 const double tol = 1e-4;

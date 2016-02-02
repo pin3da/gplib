@@ -58,8 +58,8 @@ namespace gplib {
     }
 
     mv_gauss predict_FITC(const vector<mat> &new_x) {
-      mat Qn = comp_Q(X, X, M);
-      mat Qm = comp_Q(new_x, new_x, M);
+      mat Qn = force_symmetric(comp_Q(X, X, M));
+      mat Qm = force_symmetric(comp_Q(new_x, new_x, M));
       mat Kff_diag = kernel-> eval(X, X, true);
       mat lambda = Kff_diag - diagmat(Qn);
       mat Kuu = kernel-> eval(M, M);
@@ -73,7 +73,6 @@ namespace gplib {
       mat Y = flatten(y);
       mat mean = Knu * E * Kuf * lambda * Y;
       mat cov = Knn - Qm + Knu * E * Kun;
-
       return mv_gauss(mean, cov);
     }
 
@@ -274,7 +273,6 @@ namespace gplib {
         x = get_params();
       best.optimize(x, error);
       set_params(x);
-
       return error;
     }
 
@@ -323,7 +321,10 @@ namespace gplib {
         double step = (col_max - col_min) / num_pi;
         double cur = col_min;
         for (size_t k = 0; k < num_pi; ++k) {
-          pimpl-> M[i](k, j) = cur;
+          if (cur > col_max)
+            pimpl-> M[i](k, j) = col_max;
+          else
+            pimpl-> M[i](k, j) = cur;
           cur += step;
         }
       }
@@ -354,7 +355,10 @@ namespace gplib {
         double step = (col_max - col_min) / num_pi[i];
         double cur = col_min;
         for (size_t k = 0; k < num_pi[i]; ++k) {
-          pimpl-> M[i](k, j) = cur;
+          if (cur > col_max)
+            pimpl-> M[i](k, j) = col_max;
+          else
+            pimpl-> M[i](k, j) = cur;
           cur += step;
         }
       }
@@ -377,6 +381,18 @@ namespace gplib {
         throw length_error("Too many inducing points");
       if (num_pi[i].size() == 0)
         throw length_error("No inducing points assigned");
+      //Check inducing points dimension
+      if (num_pi[i].n_cols != pimpl-> X[i].n_cols)
+        throw logic_error("Inducing points dimension mismatched");
+      //Check range of inducing points
+      for (size_t j = 0; j < pimpl-> X[i].n_cols; ++j) {
+        double col_X_max = pimpl-> X[i].col(j).max();
+        double col_X_min = pimpl-> X[i].col(j).min();
+        double col_pi_max = num_pi[i].col(j).max();
+        double col_pi_min = num_pi[i].col(j).min();
+        if (col_pi_max > col_X_max or col_pi_min < col_X_min)
+          throw logic_error("Inducing points out of range");
+      }
     }
     pimpl-> M = num_pi;
     pimpl-> state = FITC;

@@ -65,7 +65,7 @@ namespace gplib {
 
   mv_gauss::mv_gauss(const vec& mean, const mat& cov) : mv_gauss() {
     pimpl->mean = mean;
-    pimpl->cov = force_diag(cov);
+    pimpl->cov = force_diag(force_symmetric(cov));
     pimpl->cov_chol = chol(pimpl-> cov);
   }
 
