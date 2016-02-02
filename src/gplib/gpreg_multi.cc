@@ -68,7 +68,10 @@ namespace gplib {
       mat Knn = kernel-> eval(new_x, new_x);
       mat Kun = kernel-> eval(M, new_x);
       mat Knu = kernel-> eval(new_x, M);
-      lambda = (lambda + sigma * eye(lambda.n_rows, lambda.n_cols)).i();
+
+      lambda = force_diag(lambda + sigma * eye(lambda.n_rows, lambda.n_cols));
+      lambda = lambda.i();
+
       mat E = (Kuu + Kuf * lambda * Kfu).i();
       mat Y = flatten(y);
       mat mean = Knu * E * Kuf * lambda * Y;
