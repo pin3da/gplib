@@ -381,6 +381,18 @@ namespace gplib {
         throw length_error("Too many inducing points");
       if (num_pi[i].size() == 0)
         throw length_error("No inducing points assigned");
+      //Check inducing points dimension
+      if (num_pi[i].n_cols != pimpl-> X[i].n_cols)
+        throw logic_error("Inducing points dimension mismatched");
+      //Check range of inducing points
+      for (size_t j = 0; j < pimpl-> X[i].n_cols; ++j) {
+        double col_X_max = pimpl-> X[i].col(j).max();
+        double col_X_min = pimpl-> X[i].col(j).min();
+        double col_pi_max = num_pi[i].col(j).max();
+        double col_pi_min = num_pi[i].col(j).min();
+        if (col_pi_max > col_X_max or col_pi_min < col_X_min)
+          throw logic_error("Inducing points out of range");
+      }
     }
     pimpl-> M = num_pi;
     pimpl-> state = FITC;
