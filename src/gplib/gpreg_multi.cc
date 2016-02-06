@@ -58,8 +58,8 @@ namespace gplib {
     }
 
     mv_gauss predict_FITC(const vector<mat> &new_x) {
-      mat Qn = comp_Q(X, X, M);
-      mat Qm = comp_Q(new_x, new_x, M);
+      mat Qn = force_symmetric(comp_Q(X, X, M));
+      mat Qm = force_symmetric(comp_Q(new_x, new_x, M));
       mat Kff_diag = kernel-> eval(X, X, true);
       mat lambda = Kff_diag - diagmat(Qn);
       mat Kuu = kernel-> eval(M, M);
@@ -68,12 +68,12 @@ namespace gplib {
       mat Knn = kernel-> eval(new_x, new_x);
       mat Kun = kernel-> eval(M, new_x);
       mat Knu = kernel-> eval(new_x, M);
-      lambda = (lambda + sigma * eye(lambda.n_rows, lambda.n_cols)).i();
+      lambda = force_diag(lambda + sigma * eye(lambda.n_rows, lambda.n_cols));
+      lambda = lambda.i();
       mat E = (Kuu + Kuf * lambda * Kfu).i();
       mat Y = flatten(y);
       mat mean = Knu * E * Kuf * lambda * Y;
       mat cov = Knn - Qm + Knu * E * Kun;
-
       return mv_gauss(mean, cov);
     }
 
@@ -84,21 +84,36 @@ namespace gplib {
     }
 
     void set_params(const vector<double> &params) {
-      size_t M_size = 0;
-      sigma = params.back();
-      for(size_t i = 0; i < M.size(); ++i) {
-        M_size += M[i].size();
+      if (params.size() > kernel-> n_params() + 1){
+        size_t M_size = 0;
+        sigma = params.back();
+        for(size_t i = 0; i < M.size(); ++i) {
+          M_size += M[i].size();
+        }
+        vector<double> kernel_params(params.size() - M_size - 1), M_params(M_size);
+        split(params, kernel_params, M_params);
+        kernel-> set_params(kernel_params);
+        M = unflatten(M_params, M);
+      } else if (params.size() == kernel-> n_params() + 1){
+        sigma = params.back();
+        vector<double> kernel_params = params;
+        kernel_params.pop_back();
+        kernel-> set_params(kernel_params);
+      } else {
+        throw length_error("Wrong parameter vector length");
       }
-      vector<double> kernel_params(params.size() - M_size - 1), M_params(M_size);
-      split(params, kernel_params, M_params);
-      kernel-> set_params(kernel_params);
-      M = unflatten(M_params, M);
     }
 
-    vector<double> get_params() {
+    vector<double> get_all_params() {
       vector<double> params = kernel-> get_params();
       vector<double> flatten_M = flatten(M);
       params.insert(params.end(), flatten_M.begin(), flatten_M.end());
+      params.push_back(sigma);
+      return params;
+    }
+
+    vector<double> get_params(){
+      vector<double> params = kernel-> get_params();
       params.push_back(sigma);
       return params;
     }
@@ -230,10 +245,11 @@ namespace gplib {
       return error;
     }
 
-    double train_FITC(int max_iter, double tol) {
+    double train_FITC(int max_iter, double tol, bool opt_pi) {
       size_t M_size = 0;
-      for (size_t i = 0; i < M.size(); ++i)
-        M_size += M[i].size();
+      if (opt_pi)
+        for (size_t i = 0; i < M.size(); ++i)
+          M_size += M[i].size();
       size_t n_params = kernel-> n_params() + M_size + 1; // added sigma
       nlopt::opt best(nlopt::LD_MMA, n_params);
       best.set_max_objective(implementation::training_obj_FITC, this);
@@ -241,19 +257,23 @@ namespace gplib {
       best.set_maxeval(max_iter);
       vector<double> lb = kernel-> get_lower_bounds();
       vector<double> ub = kernel-> get_upper_bounds();
-
-      lb.resize(lb.size() + M_size, -HUGE_VAL);
-      ub.resize(ub.size() + M_size, HUGE_VAL);
+      if (opt_pi){
+        lb.resize(lb.size() + M_size, -HUGE_VAL);
+        ub.resize(ub.size() + M_size, HUGE_VAL);
+      }
       lb.push_back(0.0);
       ub.push_back(HUGE_VAL);
       best.set_lower_bounds(lb);
       best.set_upper_bounds(ub);
 
       double error; //final value of error function
-      vector<double> x = get_params();
+      vector<double> x;
+      if (opt_pi)
+        x = get_all_params();
+      else
+        x = get_params();
       best.optimize(x, error);
       set_params(x);
-
       return error;
     }
 
@@ -283,7 +303,7 @@ namespace gplib {
   }
 
   double gp_reg_multi::train(const int max_iter, const double tol,
-    const size_t num_pi) {
+    const size_t num_pi, bool opt_pi) {
     //Initial check
     if (pimpl-> X.size() == 0 || pimpl-> X[0].size() == 0)
       throw logic_error("Parameters Uninitialized");
@@ -302,17 +322,20 @@ namespace gplib {
         double step = (col_max - col_min) / num_pi;
         double cur = col_min;
         for (size_t k = 0; k < num_pi; ++k) {
-          pimpl-> M[i](k, j) = cur;
+          if (cur > col_max)
+            pimpl-> M[i](k, j) = col_max;
+          else
+            pimpl-> M[i](k, j) = cur;
           cur += step;
         }
       }
     }
     pimpl-> state = FITC;
-    return pimpl-> train_FITC(max_iter, tol);
+    return pimpl-> train_FITC(max_iter, tol, opt_pi);
   }
 
   double gp_reg_multi::train(const int max_iter, const double tol,
-    const vector<size_t> num_pi) {
+    const vector<size_t> num_pi, bool opt_pi) {
     //Initial check
     if (pimpl-> X.size() == 0 || pimpl-> X[0].size() == 0)
       throw logic_error("Parameters Uninitialized");
@@ -333,17 +356,20 @@ namespace gplib {
         double step = (col_max - col_min) / num_pi[i];
         double cur = col_min;
         for (size_t k = 0; k < num_pi[i]; ++k) {
-          pimpl-> M[i](k, j) = cur;
+          if (cur > col_max)
+            pimpl-> M[i](k, j) = col_max;
+          else
+            pimpl-> M[i](k, j) = cur;
           cur += step;
         }
       }
     }
     pimpl-> state = FITC;
-    return pimpl-> train_FITC(max_iter, tol);
+    return pimpl-> train_FITC(max_iter, tol, opt_pi);
   }
 
   double gp_reg_multi::train(const int max_iter, const double tol,
-    const vector<mat> num_pi) {
+    const vector<mat> num_pi, bool opt_pi) {
     //Initial check
     if (pimpl-> X.size() == 0 || pimpl-> X[0].size() == 0)
       throw logic_error("Parameters Uninitialized");
@@ -356,10 +382,22 @@ namespace gplib {
         throw length_error("Too many inducing points");
       if (num_pi[i].size() == 0)
         throw length_error("No inducing points assigned");
+      //Check inducing points dimension
+      if (num_pi[i].n_cols != pimpl-> X[i].n_cols)
+        throw logic_error("Inducing points dimension mismatched");
+      //Check range of inducing points
+      for (size_t j = 0; j < pimpl-> X[i].n_cols; ++j) {
+        double col_X_max = pimpl-> X[i].col(j).max();
+        double col_X_min = pimpl-> X[i].col(j).min();
+        double col_pi_max = num_pi[i].col(j).max();
+        double col_pi_min = num_pi[i].col(j).min();
+        if (col_pi_max > col_X_max or col_pi_min < col_X_min)
+          throw logic_error("Inducing points out of range");
+      }
     }
     pimpl-> M = num_pi;
     pimpl-> state = FITC;
-    return pimpl-> train_FITC(max_iter, tol);
+    return pimpl-> train_FITC(max_iter, tol, opt_pi);
   }
 
   mv_gauss gp_reg_multi::full_predict(const vector<mat> &new_data) {
@@ -381,7 +419,9 @@ namespace gplib {
   vector<double> gp_reg_multi::get_params() const {
     return pimpl-> get_params();
   }
-
+  vector<double> gp_reg_multi::get_all_params() const {
+    return pimpl-> get_all_params();
+  }
   void gp_reg_multi::set_params(const vector<double> &params) {
     pimpl-> set_params(params);
   }
